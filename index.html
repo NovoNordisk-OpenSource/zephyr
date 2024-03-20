@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="Defines common standards, workflows, and actions for new R packages.">
-<title>Template repository for new ATMOS R packages • Rtemplate</title>
+<title>Template repository for new ATMOS R packages • zephyr</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
@@ -24,7 +24,7 @@
 
     <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
     
-    <a class="navbar-brand me-2" href="index.html">Rtemplate</a>
+    <a class="navbar-brand me-2" href="index.html">zephyr</a>
 
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
 
@@ -51,73 +51,20 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="rtemplate">Rtemplate<a class="anchor" aria-label="anchor" href="#rtemplate"></a>
+<div class="page-header"><h1 id="zephyr">zephyr<a class="anchor" aria-label="anchor" href="#zephyr"></a>
 </h1></div>
 <!-- badges: start -->
 
-<p>This package is a template for future R packages developed by the ATMOS team.</p>
-<p>The template sets branch policies, package development standards, and GitHub action workflows. For details see below:</p>
-<p>To create a new package you have two options:</p>
-<ol style="list-style-type: decimal">
-<li>
-<p>Press “Use this template” to create a new repository based on this template. Settings are not copied, and have to be manually set or set using the following functions from your editor:</p>
-<ol style="list-style-type: decimal">
-<li>
-<code><a href="reference/use_atmos_rulesets.html">use_atmos_rulesets()</a></code>: Copies rule sets for branch protection etc.</li>
-<li>
-<code><a href="reference/use_atmos_pages.html">use_atmos_pages()</a></code>: Enables GitHub pages</li>
-<li>
-<code><a href="reference/use_atmos_settings.html">use_atmos_settings()</a></code>: Copies general settings</li>
-</ol>
-</li>
-<li><p>Use the R function <code><a href="reference/create_atmos_package.html">create_atmos_package()</a></code> from your editor to create a new repository based on this template. By default this also sets all settings to be equal to the settings applied to this template repository.</p></li>
-</ol>
+<p>This package is used to filter and enrich data and return a structured object, which can seamlessly be passed to other functionalities to create summaries and in the end tables, figures and listings for clinical trials.</p>
 <div class="section level2">
-<h2 id="branch-policies">Branch policies<a class="anchor" aria-label="anchor" href="#branch-policies"></a>
+<h2 id="functionalities-in-the-package-to-do">Functionalities in the package (to do)<a class="anchor" aria-label="anchor" href="#functionalities-in-the-package-to-do"></a>
 </h2>
-<p>The following applies to the <code>main</code> branch:</p>
+<p>The package will have functions that:</p>
 <ul>
-<li>Requires a pull request before merging</li>
-<li>Pull requests has to be approved by 2 reviewers</li>
-<li>Pull requests has to be reviewed by at least one code owner</li>
-<li>All conversations on code must be resolved before a pull request can be merged</li>
-<li>When merging pull requests only merge and squash commits are enabled</li>
-<li>TODO: Requirement of linked issues</li>
-</ul>
-</div>
-<div class="section level2">
-<h2 id="standards">Standards<a class="anchor" aria-label="anchor" href="#standards"></a>
-</h2>
-<ul>
-<li>Set licence to Apache licence version 2.0 with Novo Nordisk A/S as the copyright holder. Check that year is correct!</li>
-<li>Use a README.Rmd</li>
-<li>Use <code>testthat</code> for testing</li>
-<li>Use <code>pkgdown</code> to create a documentation webpage</li>
-<li>Setup <code>lintr</code> with default style</li>
-</ul>
-</div>
-<div class="section level2">
-<h2 id="github-actions">GitHub actions<a class="anchor" aria-label="anchor" href="#github-actions"></a>
-</h2>
-<ul>
-<li>Checks:
-<ul>
-<li>styling: MegaLinter (calls <code>lintr</code> for R scripts)</li>
-<li>updated documentation</li>
-<li>updated README</li>
-</ul>
-</li>
-<li>R CMD Check</li>
-<li>Test coverage</li>
-<li>Pkgdown webpage hosted on GitHub pages. Pags for pull requests are also hosted under “base-url/dev/PR-number”.</li>
-<li>Upon creation a pull request is created with all package specific files updated to use the new package name.</li>
-</ul>
-</div>
-<div class="section level2">
-<h2 id="design-todo">Design (todo)<a class="anchor" aria-label="anchor" href="#design-todo"></a>
-</h2>
-<ul>
-<li>Some great design guide to be followed and include some awesome CSS</li>
+<li><p>Wrapper that creates an object with a filtered adsl and other specified adam data</p></li>
+<li><p>Functions to enrich data with information about fx. parameters</p></li>
+<li><p>Wrapper around the above functionalities to create an object with a filtered adsl data, other adam data, information about that data/parameters, etc.</p></li>
+<li><p>Wrapper that “understands” where to look for information as default if given an object that reads from a data base.</p></li>
 </ul>
 </div>
 </div>
@@ -133,7 +80,7 @@
 <div class="citation">
 <h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li><a href="authors.html#citation">Citing Rtemplate</a></li>
+<li><a href="authors.html#citation">Citing zephyr</a></li>
 </ul>
 </div>
 
@@ -148,7 +95,7 @@
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/NN-OpenSource/Rtemplate/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/NN-OpenSource/Rtemplate/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://github.com/NN-OpenSource/zephyr/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/NN-OpenSource/zephyr/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
 </ul>
 </div>
 
