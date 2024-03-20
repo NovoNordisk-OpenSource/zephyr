@@ -5,7 +5,7 @@
 #' @return [invisible] output from the GitHUb Api when creating the repository
 #' @export
 
-create_atmos_package <- function(repo, template = "NN-OpenSource/Rtemplate", use_standards = TRUE) {
+create_atmos_package <- function(repo, template = "NN-OpenSource/zephyr", use_standards = TRUE) {
   x <- gh::gh(
     "POST /repos/{template}/generate",
     template = template,
@@ -41,7 +41,7 @@ create_atmos_package <- function(repo, template = "NN-OpenSource/Rtemplate", use
 #' @return [invisible] output from the GitHUb Api when creating the repository
 #' @export
 
-use_atmos_rulesets <- function(repo, template = "NN-OpenSource/Rtemplate") {
+use_atmos_rulesets <- function(repo, template = "NN-OpenSource/zephyr") {
   rulesets <- gh::gh(
     "GET /repos/{template}/rulesets",
     template = template,
@@ -153,7 +153,7 @@ use_atmos_pages <- function(repo) {
 #' @return [invisible] output from the GitHUb Api when creating the repository
 #' @export
 
-use_atmos_settings <- function(repo, homepage, template = "NN-OpenSource/Rtemplate") {
+use_atmos_settings <- function(repo, homepage, template = "NN-OpenSource/zephyr") {
   tmpl_settings <- gh::gh(
     "GET /repos/{repo}",
     repo = template,

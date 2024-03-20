@@ -1,4 +1,4 @@
-Package: Rtemplate
+Package: zephyr
 Title: Template repository for new ATMOS R packages
 Version: 0.0.0.9000
 Authors@R: c(

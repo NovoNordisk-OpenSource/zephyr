@@ -1,11 +1,11 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# Rtemplate
+# zephyr
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/NN-OpenSource/Rtemplate/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/NN-OpenSource/Rtemplate/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/NN-OpenSource/zephyr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/NN-OpenSource/zephyr/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 This package is a template for future R packages developed by the ATMOS
