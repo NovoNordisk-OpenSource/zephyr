@@ -14,15 +14,16 @@
 #' the namespace of the package where the function at the top of the call stack
 #' comes from
 #'
-#' @return
+#' @return Value of the option
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' callisto::hello <- function() {
-#'   zephyr::write_msg("testing")
-#' }
-#'
+#' # Setting a "global option" overwrites the behavior, i.e. example below will
+#' # never write anything to the console no matter the option set in the
+#' # callisto package
+#' withr::with_options(list(atmos.verbosity_level = "quiet",
+#'                          callisto.verbosity_level = "verbose"),
+#'                     zephyr::write_msg("hej"))
 get_opt <- function(opt_name = NULL,
                     global_opt_name = paste0("atmos.", opt_name),
                     env = ns_of_call()) {
@@ -47,7 +48,6 @@ get_opt <- function(opt_name = NULL,
 #'
 #' @return The namespace of the package that function in `sys.call(which)`
 #' belongs to
-#' @export
 #'
 #' @examples
 #' # Get the namespace of package from which the top function in the call stack
