@@ -6,33 +6,37 @@
 \usage{
 write_msg(
   message,
-  verbosity_levels = c("verbose", "debug"),
+  levels_to_write = c("verbose", "debug"),
   msg_fun = cli::cli_h1,
-  env = rlang::ns_env(),
+  opt_name = "verbosity_level",
+  global_opt_name = paste0("atmos.", opt_name),
   ...
 )
 }
 \arguments{
 \item{message}{\code{character} of message to write}
 
-\item{verbosity_levels}{\code{character} vector of levels of verbosity for which}
+\item{levels_to_write}{\code{character} vector of levels of verbosity for which
+to display the message}
 
 \item{msg_fun}{\code{function} taking \code{message} as first argument. Usually a
 \code{cli_...} function}
 
-\item{...}{Additional arguments passed to \code{msg_fun}}
+\item{opt_name}{\code{character} name of the option. Passed to \code{\link[=get_opt]{get_opt()}}}
 
-\item{x}{Code to be printed based on verbosity level}
+\item{global_opt_name}{\code{character} name of the global option which, if set,
+will overwrite the package level option. Passed to \code{\link[=get_opt]{get_opt()}}}
+
+\item{...}{Additional arguments passed to \code{msg_fun}}
 }
 \description{
 Write based on verbosity level set as option in package
-(see \link{options}),
 }
 \examples{
 # Use the `write_msg` function to fx. create headlines for big steps in the
 # TFL creation process
 write_msg("Initialising {.field ingest_tfl} object",
-          verbosity_levels = c("verbose", "debug"),
+          levels_to_write = c("verbose", "debug"),
           msg_fun = cli::cli_h1)
 
 ingest_init(pharmaverseadam::adae, filter = SAFFL == "Y")
