@@ -36,5 +36,9 @@ function allows a global option to overwrite individual package options.
 # callisto package
 withr::with_options(list(atmos.verbosity_level = "quiet",
                          callisto.verbosity_level = "verbose"),
-                    zephyr::write_msg("hej"))
+                    callisto::filter_with_popdata(
+                       pharmaverseadam::adlb,
+                       infilter = PARAMCD == "BILIS",
+                       popdata = pharmaverseadam::adsl,
+                       popfilter = SAFFL == "Y"))
 }

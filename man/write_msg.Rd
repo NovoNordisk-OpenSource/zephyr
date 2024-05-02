@@ -33,17 +33,14 @@ will overwrite the package level option. Passed to \code{\link[=get_opt]{get_opt
 Write based on verbosity level set as option in package
 }
 \examples{
-# Use the `write_msg` function to fx. create headlines for big steps in the
-# TFL creation process
-write_msg("Initialising {.field ingest_tfl} object",
-          levels_to_write = c("verbose", "debug"),
-          msg_fun = cli::cli_h1)
+# Use the `write_msg` function to give end user information depending on the
+# verbosity level set in the package options. Inside other package function
+# definition, use like so
+callisto::filter_with_popdata(data, ...) {
+ write_msg("Filtering {.field data} with {.field popdata}",
+           levels_to_write = c("verbose", "debug"))
 
-ingest_init(pharmaverseadam::adae, filter = SAFFL == "Y")
-
-# Use the `with_verbose` function to
-data \%>\%
-  dplyr::filter(SAFFL == "Y") \%>\%
-  with_verbose()
+ dplyr::filter(data, ...)
+}
 
 }

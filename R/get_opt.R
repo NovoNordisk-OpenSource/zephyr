@@ -23,7 +23,11 @@
 #' # callisto package
 #' withr::with_options(list(atmos.verbosity_level = "quiet",
 #'                          callisto.verbosity_level = "verbose"),
-#'                     zephyr::write_msg("hej"))
+#'                     callisto::filter_with_popdata(
+#'                        pharmaverseadam::adlb,
+#'                        infilter = PARAMCD == "BILIS",
+#'                        popdata = pharmaverseadam::adsl,
+#'                        popfilter = SAFFL == "Y"))
 get_opt <- function(opt_name = NULL,
                     global_opt_name = paste0("atmos.", opt_name),
                     env = ns_of_call()) {
