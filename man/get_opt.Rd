@@ -7,7 +7,7 @@
 get_opt(
   opt_name = NULL,
   global_opt_name = paste0("atmos.", opt_name),
-  env = ns_of_call()
+  env = parent.frame()
 )
 }
 \arguments{
@@ -24,10 +24,7 @@ comes from}
 Value of the option
 }
 \description{
-Get option using the \code{options} package, as a default from the package from
-which the function at the top of the call stack originates, so other
-functions in this package can be used inside any package, and it will
-automatically use the options set within that package. Also, the
+Get option using the \code{options} package, where the
 function allows a global option to overwrite individual package options.
 }
 \examples{

@@ -39,13 +39,47 @@ write_msg <- function(message,
             choices = c("quiet", "verbose", "debug"),
             several.ok = TRUE)
 
+  ns_of_prev_fun <- ns_of_call()
   # Get value of option
   verbosity_level <- get_opt(opt_name = opt_name,
-                             global_opt_name = global_opt_name)
+                             global_opt_name = global_opt_name,
+                             env = ns_of_prev_fun)
 
   if (verbosity_level %in% levels_to_write) {
     msg_fun(message, ...)
   }
 
   invisible()
+}
+
+#' Get the namespace of function in the call stack
+#'
+#' @description Get the namespace of the function somewhere in the call stack.
+#' Default behavior will get the namespace of the package of the function that
+#' called the function from which this is called. Used inside [write_msg()], so
+#' the verbosity level set in the package, which uses [write_msg()], will be used
+#'
+#' @param which Passed onto [base::sys.call()]
+#'
+#' @return The namespace of the package that function in `sys.call(which)`
+#' belongs to
+#'
+#' @examples
+#' # Get the namespace of package of the function that called this function
+#' ns_of_call()
+ns_of_call <- function(which = -2) {
+  call_of_fun <- base::sys.call(which = which)
+
+  if (rlang::is_call_simple(call_of_fun, ns = TRUE)) {
+    # If the call is like pkgname::funname, get the namespace of pkg directly
+    ns_name <- rlang::call_ns(call_of_fun)
+    ns <- getNamespace(ns_name)
+  } else {
+    # If call is just funname, get the namespace of the package by looking for
+    # it
+    call_name <- rlang::call_name(call_of_fun)
+    ns <- environment(get(call_name))
+  }
+
+  return(ns)
 }
