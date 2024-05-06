@@ -2,3 +2,7 @@
 
 export(get_opt)
 export(write_msg)
+importFrom(options,define_option)
+importFrom(options,opt)
+importFrom(rlang,call_name)
+importFrom(rlang,call_ns)
