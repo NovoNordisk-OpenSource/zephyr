@@ -4,7 +4,7 @@
 \alias{ns_of_call}
 \title{Get the namespace of function in the call stack}
 \usage{
-ns_of_call(which = -2)
+ns_of_call(which = 0)
 }
 \arguments{
 \item{which}{Passed onto \code{\link[base:sys.parent]{base::sys.call()}}}
@@ -20,6 +20,20 @@ called the function from which this is called. Used inside \code{\link[=write_ms
 the verbosity level set in the package, which uses \code{\link[=write_msg]{write_msg()}}, will be used
 }
 \examples{
+# Get the namespace of the function that this is in
+zephyr:::ns_of_call()
+
+\dontrun{
 # Get the namespace of package of the function that called this function
-ns_of_call()
+ns_of_call(which = -1)
+
+# Use case of write_msg function: Get the namespace of package of the
+# function that called write_msg
+write_msg <- function(...) {
+ ...
+ ns_of_call(which = -2)
+ ...
+}
+}
+
 }

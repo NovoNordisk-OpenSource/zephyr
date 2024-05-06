@@ -49,7 +49,7 @@ write_msg <- function(message,
   # If it is called within another function call, get the options defined within
   # the namespace that function lives in and use msg_fun based on that option
   if (called_within) {
-    ns_of_prev_fun <- ns_of_call()
+    ns_of_prev_fun <- ns_of_call(which = -2)
     # Get value of option
     verbosity_level <- get_opt(opt_name = opt_name,
                                global_opt_name = global_opt_name,
@@ -79,9 +79,23 @@ write_msg <- function(message,
 #' belongs to
 #'
 #' @examples
+#' # Get the namespace of the function that this is in
+#' zephyr:::ns_of_call()
+#'
+#' \dontrun{
 #' # Get the namespace of package of the function that called this function
-#' ns_of_call()
-ns_of_call <- function(which = -2) {
+#' ns_of_call(which = -1)
+#'
+#' # Use case of write_msg function: Get the namespace of package of the
+#' # function that called write_msg
+#' write_msg <- function(...) {
+#'  ...
+#'  ns_of_call(which = -2)
+#'  ...
+#' }
+#' }
+#'
+ns_of_call <- function(which = 0) {
   call_of_fun <- base::sys.call(which = which)
 
   if (rlang::is_call_simple(call_of_fun, ns = TRUE)) {
