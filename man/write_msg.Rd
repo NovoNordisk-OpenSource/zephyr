@@ -7,10 +7,10 @@
 write_msg(
   message,
   levels_to_write = c("verbose", "debug"),
-  msg_fun = cli::cli_h1,
+  msg_fun = cli::cli_alert_info,
+  ...,
   opt_name = "verbosity_level",
-  global_opt_name = paste0("atmos.", opt_name),
-  ...
+  global_opt_name = paste0("atmos.", opt_name)
 )
 }
 \arguments{
@@ -22,25 +22,29 @@ to display the message}
 \item{msg_fun}{\code{function} taking \code{message} as first argument. Usually a
 \code{cli_...} function}
 
+\item{...}{Additional arguments passed to \code{msg_fun}}
+
 \item{opt_name}{\code{character} name of the option. Passed to \code{\link[=get_opt]{get_opt()}}}
 
 \item{global_opt_name}{\code{character} name of the global option which, if set,
 will overwrite the package level option. Passed to \code{\link[=get_opt]{get_opt()}}}
-
-\item{...}{Additional arguments passed to \code{msg_fun}}
 }
 \description{
 Write based on verbosity level set as option in package
 }
 \examples{
+\dontrun{
 # Use the `write_msg` function to give end user information depending on the
-# verbosity level set in the package options. Inside other package function
-# definition, use like so
-callisto::filter_with_popdata(data, ...) {
+# verbosity level set in the package options. Fx. if such an option is set
+# in a pckage called `callisto`, then `write_msg` can be used inside function
+# definition in that package like so:
+callisto::filter_with_popdata <- function(data, ...) {
  write_msg("Filtering {.field data} with {.field popdata}",
-           levels_to_write = c("verbose", "debug"))
+           levels_to_write = c("verbose", "debug"),
+           msg_fun = cli::cli_h2)
 
  dplyr::filter(data, ...)
+}
 }
 
 }
