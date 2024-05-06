@@ -31,6 +31,7 @@ function allows a global option to overwrite individual package options.
 # Setting a "global option" overwrites the behavior, i.e. example below will
 # never write anything to the console no matter the option set in the
 # callisto package
+\dontrun{
 withr::with_options(list(atmos.verbosity_level = "quiet",
                          callisto.verbosity_level = "verbose"),
                     callisto::filter_with_popdata(
@@ -38,4 +39,5 @@ withr::with_options(list(atmos.verbosity_level = "quiet",
                        infilter = PARAMCD == "BILIS",
                        popdata = pharmaverseadam::adsl,
                        popfilter = SAFFL == "Y"))
+}
 }
