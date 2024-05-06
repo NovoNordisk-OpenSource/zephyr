@@ -49,7 +49,7 @@ write_msg <- function(message,
   # If it is called within another function call, get the options defined within
   # the namespace that function lives in and use msg_fun based on that option
   if (called_within) {
-    ns_of_prev_fun <- ns_of_call(which = -2)
+    ns_of_prev_fun <- ns_of_fun(which = -2)
     # Get value of option
     verbosity_level <- get_opt(opt_name = opt_name,
                                global_opt_name = global_opt_name,
@@ -80,34 +80,23 @@ write_msg <- function(message,
 #'
 #' @examples
 #' # Get the namespace of the function that this is in
-#' zephyr:::ns_of_call()
+#' zephyr:::ns_of_fun()
 #'
 #' \dontrun{
 #' # Get the namespace of package of the function that called this function
-#' ns_of_call(which = -1)
+#' ns_of_fun(which = -1)
 #'
 #' # Use case of write_msg function: Get the namespace of package of the
 #' # function that called write_msg
 #' write_msg <- function(...) {
 #'  ...
-#'  ns_of_call(which = -2)
+#'  ns_of_fun(which = -2)
 #'  ...
 #' }
 #' }
 #'
-ns_of_call <- function(which = 0) {
-  call_of_fun <- base::sys.call(which = which)
+ns_of_fun <- function(which = 0) {
+  fun_in_stack <- sys.function(which = which)
 
-  if (rlang::is_call_simple(call_of_fun, ns = TRUE)) {
-    # If the call is like pkgname::funname, get the namespace of pkg directly
-    ns_name <- rlang::call_ns(call_of_fun)
-    ns <- getNamespace(ns_name)
-  } else {
-    # If call is just funname, get the namespace of the package by looking for
-    # it
-    call_name <- rlang::call_name(call_of_fun)
-    ns <- environment(get(call_name))
-  }
-
-  return(ns)
+  environment(fun_in_stack)
 }
