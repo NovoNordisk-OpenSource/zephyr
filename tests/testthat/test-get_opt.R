@@ -12,7 +12,8 @@ test_that("Option can be extracted", {
 })
 
 test_that("Option can be overwritten with global option", {
-  glob_opt_list <- list(atmos.test_opt = "glob_opt")
+  glob_opt_list <- list(atmos.test_opt = "glob_opt",
+                        globalenv.test_opt = "test_opt")
 
   opt <- withr::with_options(glob_opt_list,
                              get_opt(opt_name = "test_opt",
