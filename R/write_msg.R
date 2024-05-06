@@ -16,36 +16,50 @@
 #'
 #'
 #' @examples
+#' \dontrun{
 #' # Use the `write_msg` function to give end user information depending on the
-#' # verbosity level set in the package options. Inside other package function
-#' # definition, use like so
-#' callisto::filter_with_popdata(data, ...) {
+#' # verbosity level set in the package options. Fx. if such an option is set
+#' # in a pckage called `callisto`, then `write_msg` can be used inside function
+#' # definition in that package like so:
+#' callisto::filter_with_popdata <- function(data, ...) {
 #'  write_msg("Filtering {.field data} with {.field popdata}",
-#'            levels_to_write = c("verbose", "debug"))
+#'            levels_to_write = c("verbose", "debug"),
+#'            msg_fun = cli::cli_h2)
 #'
 #'  dplyr::filter(data, ...)
+#' }
 #' }
 #'
 #' @export
 write_msg <- function(message,
                       levels_to_write = c("verbose", "debug"),
-                      msg_fun = cli::cli_h1,
+                      msg_fun = cli::cli_alert_info,
+                      ...,
                       opt_name = "verbosity_level",
-                      global_opt_name = paste0("atmos.", opt_name),
-                      ...) { # TODO add a destination argument to control
+                      global_opt_name = paste0("atmos.", opt_name)) { # TODO add a destination argument to control
   # whether to write to console, write to a file, etc.
 
   match.arg(levels_to_write,
             choices = c("quiet", "verbose", "debug"),
             several.ok = TRUE)
 
-  ns_of_prev_fun <- ns_of_call()
-  # Get value of option
-  verbosity_level <- get_opt(opt_name = opt_name,
-                             global_opt_name = global_opt_name,
-                             env = ns_of_prev_fun)
+  # Is write_msg called within another function call?
+  called_within <- length(sys.calls()) > 1
 
-  if (verbosity_level %in% levels_to_write) {
+  # If it is called within another function call, get the options defined within
+  # the namespace that function lives in and use msg_fun based on that option
+  if (called_within) {
+    ns_of_prev_fun <- ns_of_call()
+    # Get value of option
+    verbosity_level <- get_opt(opt_name = opt_name,
+                               global_opt_name = global_opt_name,
+                               env = ns_of_prev_fun)
+
+    if (verbosity_level %in% levels_to_write) {
+      msg_fun(message, ...)
+    }
+  } else {
+    # If write_msg is called by itelf, use msg_fun
     msg_fun(message, ...)
   }
 
