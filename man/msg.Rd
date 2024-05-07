@@ -10,7 +10,9 @@ msg(
   msg_fun = cli::cli_alert_info,
   ...,
   opt_name = "verbosity_level",
-  global_opt_name = paste0("atmos.", opt_name)
+  global_opt_name = paste0("atmos.", opt_name),
+  which = -1,
+  .envir = parent.frame()
 )
 }
 \arguments{
