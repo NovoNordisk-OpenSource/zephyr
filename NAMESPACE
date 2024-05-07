@@ -2,6 +2,8 @@
 
 export(get_opt)
 export(msg)
+export(msg_debug)
+export(msg_success)
 importFrom(options,define_option)
 importFrom(options,opt)
 importFrom(rlang,call_name)

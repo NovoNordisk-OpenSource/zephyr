@@ -32,11 +32,13 @@
 #'
 #' @export
 msg <- function(message,
-                      levels_to_write = c("verbose", "debug"),
-                      msg_fun = cli::cli_alert_info,
-                      ...,
-                      opt_name = "verbosity_level",
-                      global_opt_name = paste0("atmos.", opt_name)) { # TODO add a destination argument to control
+                levels_to_write = c("verbose", "debug"),
+                msg_fun = cli::cli_alert_info,
+                ...,
+                opt_name = "verbosity_level",
+                global_opt_name = paste0("atmos.", opt_name),
+                which = -1,
+                .envir = parent.frame()) { # TODO add a destination argument to control
   # whether to write to console, write to a file, etc.
 
   match.arg(levels_to_write,
@@ -50,14 +52,14 @@ msg <- function(message,
   # the namespace of that function. Then use msg_fun based on that option
   if (called_within) {
     # Get the namespace of the function that called msg
-    ns_of_prev_fun <- environment(sys.function(-1))
+    ns_of_prev_fun <- environment(sys.function(which = which))
     # Get value of option
     verbosity_level <- get_opt(opt_name = opt_name,
                                global_opt_name = global_opt_name,
                                env = ns_of_prev_fun)
 
     if (verbosity_level %in% levels_to_write) {
-      msg_fun(message, ..., .envir = parent.frame())
+      msg_fun(message, ..., .envir = .envir)
     }
   } else {
     # If msg is called by itelf, use msg_fun
@@ -67,28 +69,34 @@ msg <- function(message,
   invisible()
 }
 
+#' @export
 msg_debug <- function(message,
                       ...,
                       msg_fun = cli::cli_inform,
                       opt_name = "verbosity_level",
                       global_opt_name = paste0("atmos.", opt_name)) {
   msg(message,
-            levels_to_write = "debug",
-            msg_fun = msg_fun,
-            ...,
-            opt_name = opt_name,
-            global_opt_name = global_opt_name)
+      levels_to_write = "debug",
+      msg_fun = msg_fun,
+      ...,
+      opt_name = opt_name,
+      global_opt_name = global_opt_name,
+      which = -2,
+      .envir = parent.frame())
 }
 
+#' @export
 msg_success <- function(message,
                         ...,
-                        msg_fun = cli::cli_success,
+                        msg_fun = cli::cli_alert_success,
                         opt_name = "verbosity_level",
                         global_opt_name = paste0("atmos.", opt_name)) {
   msg(message,
-            levels_to_write = c("verbose", "debug"),
-            msg_fun = msg_fun,
-            ...,
-            opt_name = opt_name,
-            global_opt_name = global_opt_name)
+      levels_to_write = c("verbose", "debug"),
+      msg_fun = msg_fun,
+      ...,
+      opt_name = opt_name,
+      global_opt_name = global_opt_name,
+      which = -2,
+      .envir = parent.frame())
 }
