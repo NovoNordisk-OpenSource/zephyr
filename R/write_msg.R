@@ -17,12 +17,12 @@
 #'
 #' @examples
 #' \dontrun{
-#' # Use the `write_msg` function to give end user information depending on the
+#' # Use the `msg` function to give end user information depending on the
 #' # verbosity level set in the package options. Fx. if such an option is set
-#' # in a pckage called `callisto`, then `write_msg` can be used inside function
+#' # in a pckage called `callisto`, then `msg` can be used inside function
 #' # definition in that package like so:
 #' callisto::filter_with_popdata <- function(data, ...) {
-#'  write_msg("Filtering {.field data} with {.field popdata}",
+#'  msg("Filtering {.field data} with {.field popdata}",
 #'            levels_to_write = c("verbose", "debug"),
 #'            msg_fun = cli::cli_h2)
 #'
@@ -31,7 +31,7 @@
 #' }
 #'
 #' @export
-write_msg <- function(message,
+msg <- function(message,
                       levels_to_write = c("verbose", "debug"),
                       msg_fun = cli::cli_alert_info,
                       ...,
@@ -43,13 +43,13 @@ write_msg <- function(message,
             choices = c("quiet", "verbose", "debug"),
             several.ok = TRUE)
 
-  # Is write_msg called within another function call?
+  # Is msg called within another function call?
   called_within <- length(sys.calls()) > 1
 
-  # If write_msg is called within another function definition, get the options defined within
+  # If msg is called within another function definition, get the options defined within
   # the namespace of that function. Then use msg_fun based on that option
   if (called_within) {
-    # Get the namespace of the function that called write_msg
+    # Get the namespace of the function that called msg
     ns_of_prev_fun <- environment(sys.function(-1))
     # Get value of option
     verbosity_level <- get_opt(opt_name = opt_name,
@@ -60,7 +60,7 @@ write_msg <- function(message,
       msg_fun(message, ..., .envir = parent.frame())
     }
   } else {
-    # If write_msg is called by itelf, use msg_fun
+    # If msg is called by itelf, use msg_fun
     msg_fun(message, ...)
   }
 
@@ -72,7 +72,7 @@ msg_debug <- function(message,
                       msg_fun = cli::cli_inform,
                       opt_name = "verbosity_level",
                       global_opt_name = paste0("atmos.", opt_name)) {
-  write_msg(message,
+  msg(message,
             levels_to_write = "debug",
             msg_fun = msg_fun,
             ...,
@@ -85,7 +85,7 @@ msg_success <- function(message,
                         msg_fun = cli::cli_success,
                         opt_name = "verbosity_level",
                         global_opt_name = paste0("atmos.", opt_name)) {
-  write_msg(message,
+  msg(message,
             levels_to_write = c("verbose", "debug"),
             msg_fun = msg_fun,
             ...,
