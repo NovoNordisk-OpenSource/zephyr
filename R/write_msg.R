@@ -66,3 +66,29 @@ write_msg <- function(message,
 
   invisible()
 }
+
+msg_debug <- function(message,
+                      ...,
+                      msg_fun = cli::cli_inform,
+                      opt_name = "verbosity_level",
+                      global_opt_name = paste0("atmos.", opt_name)) {
+  write_msg(message,
+            levels_to_write = "debug",
+            msg_fun = msg_fun,
+            ...,
+            opt_name = opt_name,
+            global_opt_name = global_opt_name)
+}
+
+msg_success <- function(message,
+                        ...,
+                        msg_fun = cli::cli_success,
+                        opt_name = "verbosity_level",
+                        global_opt_name = paste0("atmos.", opt_name)) {
+  write_msg(message,
+            levels_to_write = c("verbose", "debug"),
+            msg_fun = msg_fun,
+            ...,
+            opt_name = opt_name,
+            global_opt_name = global_opt_name)
+}
