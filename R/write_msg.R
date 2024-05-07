@@ -46,17 +46,18 @@ write_msg <- function(message,
   # Is write_msg called within another function call?
   called_within <- length(sys.calls()) > 1
 
-  # If it is called within another function call, get the options defined within
-  # the namespace that function lives in and use msg_fun based on that option
+  # If write_msg is called within another function definition, get the options defined within
+  # the namespace of that function. Then use msg_fun based on that option
   if (called_within) {
-    ns_of_prev_fun <- ns_of_fun(which = -2)
+    # Get the namespace of the function that called write_msg
+    ns_of_prev_fun <- environment(sys.function(-1))
     # Get value of option
     verbosity_level <- get_opt(opt_name = opt_name,
                                global_opt_name = global_opt_name,
                                env = ns_of_prev_fun)
 
     if (verbosity_level %in% levels_to_write) {
-      msg_fun(message, ...)
+      msg_fun(message, ..., .envir = parent.frame())
     }
   } else {
     # If write_msg is called by itelf, use msg_fun
@@ -64,39 +65,4 @@ write_msg <- function(message,
   }
 
   invisible()
-}
-
-#' Get the namespace of function in the call stack
-#'
-#' @description Get the namespace of the function somewhere in the call stack.
-#' Default behavior will get the namespace of the package of the function that
-#' called the function from which this is called. Used inside [write_msg()], so
-#' the verbosity level set in the package, which uses [write_msg()], will be used
-#'
-#' @param which Passed onto [base::sys.call()]
-#'
-#' @return The namespace of the package that function in `sys.call(which)`
-#' belongs to
-#'
-#' @examples
-#' # Get the namespace of the function that this is in
-#' zephyr:::ns_of_fun()
-#'
-#' \dontrun{
-#' # Get the namespace of package of the function that called this function
-#' ns_of_fun(which = -1)
-#'
-#' # Use case of write_msg function: Get the namespace of package of the
-#' # function that called write_msg
-#' write_msg <- function(...) {
-#'  ...
-#'  ns_of_fun(which = -2)
-#'  ...
-#' }
-#' }
-#'
-ns_of_fun <- function(which = 0) {
-  fun_in_stack <- sys.function(which = which)
-
-  environment(fun_in_stack)
 }
