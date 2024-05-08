@@ -2,31 +2,49 @@
 #'
 #' @description
 #'
-#' Write based on verbosity level set as option in package
+#' The `msg` function is a general function for writing messages to the console
+#' based on options set using the [options] package. As a default, an option
+#' called `verbosity_level` set in the package defining a function calling `msg`
+#' is used. If a global option is set, it will overwrite the package level
+#' option.
 #'
 #' @param message `character` of message to write
 #' @param levels_to_write `character` vector of levels of verbosity for which
 #' to display the message
 #' @param msg_fun `function` taking `message` as first argument. Usually a
 #' `cli_...` function
-#' @param opt_name `character` name of the option. Passed to [get_opt()]
+#' @param ... Additional arguments passed to `msg_fun`
+#' @param opt_name `character` name of the option set by the [options] package.
+#' Passed to [get_opt()]
 #' @param global_opt_name `character` name of the global option which, if set,
 #' will overwrite the package level option. Passed to [get_opt()]
-#' @param ... Additional arguments passed to `msg_fun`
+#' @param which `integer` passed to [sys.function()]. Default is -1, meaning
+#' `sys.function(-1)` will return the function that called `msg`
+#' @param .envir `environment` passed to `msg_fun`
 #'
+#' @details
+#' The `msg` function is a general function, which can be used to write messages
+#' based on options.
+#'
+#' The `msg_debug` function is a wrapper around `msg` with
+#' `levels_to_write = "debug"` and `msg_fun = cli::cli_inform`, while the
+#' `msg_success` function is a wrapper around `msg` with
+#' `levels_to_write = c("verbose", "debug")` and `msg_fun = cli::cli_alert_success`.
 #'
 #' @examples
 #' \dontrun{
 #' # Use the `msg` function to give end user information depending on the
 #' # verbosity level set in the package options. Fx. if such an option is set
-#' # in a pckage called `callisto`, then `msg` can be used inside function
-#' # definition in that package like so:
-#' callisto::filter_with_popdata <- function(data, ...) {
-#'  msg("Filtering {.field data} with {.field popdata}",
+#' # in a package called `callisto` with `options::define_option("verbosity_level", ...)`,
+#' # then `msg` can be used inside function definition in that package like so:
+#' callisto::filter_with_popdata <- function(data, popfilter, ...) {
+#'  msg("Filtering {.field data} with {.field {popfilter}}",
 #'            levels_to_write = c("verbose", "debug"),
 #'            msg_fun = cli::cli_h2)
 #'
+#'  msg_debug("Trying to filter data")
 #'  dplyr::filter(data, ...)
+#'  msg_success("Filtered data with filter {.field {popfilter}}")
 #' }
 #' }
 #'
@@ -69,34 +87,36 @@ msg <- function(message,
   invisible()
 }
 
+#' @rdname msg
 #' @export
 msg_debug <- function(message,
                       ...,
-                      msg_fun = cli::cli_inform,
                       opt_name = "verbosity_level",
-                      global_opt_name = paste0("atmos.", opt_name)) {
+                      global_opt_name = paste0("atmos.", opt_name),
+                      .envir = parent.frame()) {
   msg(message,
       levels_to_write = "debug",
-      msg_fun = msg_fun,
+      msg_fun = cli::cli_inform,
       ...,
       opt_name = opt_name,
       global_opt_name = global_opt_name,
       which = -2,
-      .envir = parent.frame())
+      .envir = .envir)
 }
 
+#' @rdname msg
 #' @export
 msg_success <- function(message,
                         ...,
-                        msg_fun = cli::cli_alert_success,
                         opt_name = "verbosity_level",
-                        global_opt_name = paste0("atmos.", opt_name)) {
+                        global_opt_name = paste0("atmos.", opt_name),
+                        .envir = parent.frame()) {
   msg(message,
       levels_to_write = c("verbose", "debug"),
-      msg_fun = msg_fun,
+      msg_fun = cli::cli_alert_success,
       ...,
       opt_name = opt_name,
       global_opt_name = global_opt_name,
       which = -2,
-      .envir = parent.frame())
+      .envir = .envir)
 }

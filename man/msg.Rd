@@ -2,6 +2,8 @@
 % Please edit documentation in R/write_msg.R
 \name{msg}
 \alias{msg}
+\alias{msg_debug}
+\alias{msg_success}
 \title{Write messages based on verbosity level}
 \usage{
 msg(
@@ -12,6 +14,22 @@ msg(
   opt_name = "verbosity_level",
   global_opt_name = paste0("atmos.", opt_name),
   which = -1,
+  .envir = parent.frame()
+)
+
+msg_debug(
+  message,
+  ...,
+  opt_name = "verbosity_level",
+  global_opt_name = paste0("atmos.", opt_name),
+  .envir = parent.frame()
+)
+
+msg_success(
+  message,
+  ...,
+  opt_name = "verbosity_level",
+  global_opt_name = paste0("atmos.", opt_name),
   .envir = parent.frame()
 )
 }
@@ -26,26 +44,47 @@ to display the message}
 
 \item{...}{Additional arguments passed to \code{msg_fun}}
 
-\item{opt_name}{\code{character} name of the option. Passed to \code{\link[=get_opt]{get_opt()}}}
+\item{opt_name}{\code{character} name of the option set by the \link{options} package.
+Passed to \code{\link[=get_opt]{get_opt()}}}
 
 \item{global_opt_name}{\code{character} name of the global option which, if set,
 will overwrite the package level option. Passed to \code{\link[=get_opt]{get_opt()}}}
+
+\item{which}{\code{integer} passed to \code{\link[=sys.function]{sys.function()}}. Default is -1, meaning
+\code{sys.function(-1)} will return the function that called \code{msg}}
+
+\item{.envir}{\code{environment} passed to \code{msg_fun}}
 }
 \description{
-Write based on verbosity level set as option in package
+The \code{msg} function is a general function for writing messages to the console
+based on options set using the \link{options} package. As a default, an option
+called \code{verbosity_level} set in the package defining a function calling \code{msg}
+is used. If a global option is set, it will overwrite the package level
+option.
+}
+\details{
+The \code{msg} function is a general function, which can be used to write messages
+based on options.
+
+The \code{msg_debug} function is a wrapper around \code{msg} with
+\code{levels_to_write = "debug"} and \code{msg_fun = cli::cli_inform}, while the
+\code{msg_success} function is a wrapper around \code{msg} with
+\code{levels_to_write = c("verbose", "debug")} and \code{msg_fun = cli::cli_alert_success}.
 }
 \examples{
 \dontrun{
 # Use the `msg` function to give end user information depending on the
 # verbosity level set in the package options. Fx. if such an option is set
-# in a pckage called `callisto`, then `msg` can be used inside function
-# definition in that package like so:
-callisto::filter_with_popdata <- function(data, ...) {
- msg("Filtering {.field data} with {.field popdata}",
+# in a package called `callisto` with `options::define_option("verbosity_level", ...)`,
+# then `msg` can be used inside function definition in that package like so:
+callisto::filter_with_popdata <- function(data, popfilter, ...) {
+ msg("Filtering {.field data} with {.field {popfilter}}",
            levels_to_write = c("verbose", "debug"),
            msg_fun = cli::cli_h2)
 
+ msg_debug("Trying to filter data")
  dplyr::filter(data, ...)
+ msg_success("Filtered data with filter {.field {popfilter}}")
 }
 }
 
