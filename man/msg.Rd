@@ -29,7 +29,7 @@ msg_success(
 \item{message}{\code{character} of message to write}
 
 \item{levels_to_write}{\code{character} vector of levels of verbosity for which
-to display the message}
+to display the message. Valid values are \code{quiet}, \code{verbose} and \code{debug}}
 
 \item{msg_fun}{\code{function} taking \code{message} as first argument. Usually a
 \code{cli_...} function}
@@ -48,8 +48,14 @@ Passed to \code{\link[=get_opt]{get_opt()}}}
 The \code{msg} function is a general function for writing messages to the console
 based on options set using the \link{options} package. As a default, an option
 called \code{verbosity_level} set in the package defining a function calling \code{msg}
-is used. If a global option is set, it will overwrite the package level
-option.
+is used. If a global option with prefix \code{zephyr.} is set, it will overwrite
+the package level option.
+
+Valid values are \code{quiet}, \code{verbose} and \code{debug}.
+\code{verbose} is used in \code{levels_to_write} vector argument when the developer
+wants to inform the user about something. \code{debug} is ised when the developer
+wants to give the user extra information that can help with debugging. See
+example for possible use case.
 }
 \details{
 The \code{msg} function is a general function, which can be used to write messages

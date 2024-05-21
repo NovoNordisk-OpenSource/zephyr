@@ -5,12 +5,18 @@
 #' The `msg` function is a general function for writing messages to the console
 #' based on options set using the [options] package. As a default, an option
 #' called `verbosity_level` set in the package defining a function calling `msg`
-#' is used. If a global option is set, it will overwrite the package level
-#' option.
+#' is used. If a global option with prefix `zephyr.` is set, it will overwrite
+#' the package level option.
+#'
+#' Valid values are `quiet`, `verbose` and `debug`.
+#' `verbose` is used in `levels_to_write` vector argument when the developer
+#' wants to inform the user about something. `debug` is ised when the developer
+#' wants to give the user extra information that can help with debugging. See
+#' example for possible use case.
 #'
 #' @param message `character` of message to write
 #' @param levels_to_write `character` vector of levels of verbosity for which
-#' to display the message
+#' to display the message. Valid values are `quiet`, `verbose` and `debug`
 #' @param msg_fun `function` taking `message` as first argument. Usually a
 #' `cli_...` function
 #' @param ... Additional arguments passed to `msg_fun`
