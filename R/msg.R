@@ -16,8 +16,6 @@
 #' @param ... Additional arguments passed to `msg_fun`
 #' @param opt_name `character` name of the option set by the [options] package.
 #' Passed to [get_opt()]
-#' @param global_opt_name `character` name of the global option which, if set,
-#' will overwrite the package level option. Passed to [get_opt()]
 #' @param which `integer` passed to [sys.function()]. Default is -1, meaning
 #' `sys.function(-1)` will return the function that called `msg`
 #' @param .envir `environment` passed to `msg_fun`
@@ -54,7 +52,6 @@ msg <- function(message,
                 msg_fun = cli::cli_alert_info,
                 ...,
                 opt_name = "verbosity_level",
-                global_opt_name = paste0("atmos.", opt_name),
                 which = -1,
                 .envir = parent.frame()) { # TODO add a destination argument to control
   # whether to write to console, write to a file, etc.
@@ -73,7 +70,6 @@ msg <- function(message,
     ns_of_prev_fun <- environment(sys.function(which = which))
     # Get value of option
     verbosity_level <- get_opt(opt_name = opt_name,
-                               global_opt_name = global_opt_name,
                                env = ns_of_prev_fun)
 
     if (verbosity_level %in% levels_to_write) {
@@ -92,14 +88,12 @@ msg <- function(message,
 msg_debug <- function(message,
                       ...,
                       opt_name = "verbosity_level",
-                      global_opt_name = paste0("atmos.", opt_name),
                       .envir = parent.frame()) {
   msg(message,
       levels_to_write = "debug",
       msg_fun = cli::cli_inform,
       ...,
       opt_name = opt_name,
-      global_opt_name = global_opt_name,
       which = -2,
       .envir = .envir)
 }
@@ -109,14 +103,12 @@ msg_debug <- function(message,
 msg_success <- function(message,
                         ...,
                         opt_name = "verbosity_level",
-                        global_opt_name = paste0("atmos.", opt_name),
                         .envir = parent.frame()) {
   msg(message,
       levels_to_write = c("verbose", "debug"),
       msg_fun = cli::cli_alert_success,
       ...,
       opt_name = opt_name,
-      global_opt_name = global_opt_name,
       which = -2,
       .envir = .envir)
 }

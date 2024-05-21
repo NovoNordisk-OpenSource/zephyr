@@ -4,17 +4,10 @@
 \alias{get_opt}
 \title{Get option using the \code{options} package, allowing a global option}
 \usage{
-get_opt(
-  opt_name = NULL,
-  global_opt_name = paste0("atmos.", opt_name),
-  env = parent.frame()
-)
+get_opt(opt_name = NULL, env = parent.frame())
 }
 \arguments{
 \item{opt_name}{\code{character} name of the option}
-
-\item{global_opt_name}{\code{character} name of the global option which, if set,
-will overwrite the package level option}
 
 \item{env}{\code{environment} the environment to get the option from. As default
 the namespace of the package where the function at the top of the call stack
@@ -32,7 +25,7 @@ function allows a global option to overwrite individual package options.
 # never write anything to the console no matter the option set in the
 # callisto package
 \dontrun{
-withr::with_options(list(atmos.verbosity_level = "quiet",
+withr::with_options(list(zephyr.verbosity_level = "quiet",
                          callisto.verbosity_level = "verbose"),
                     callisto::filter_with_popdata(
                        pharmaverseadam::adlb,

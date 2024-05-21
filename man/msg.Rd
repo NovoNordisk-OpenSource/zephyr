@@ -12,24 +12,16 @@ msg(
   msg_fun = cli::cli_alert_info,
   ...,
   opt_name = "verbosity_level",
-  global_opt_name = paste0("atmos.", opt_name),
   which = -1,
   .envir = parent.frame()
 )
 
-msg_debug(
-  message,
-  ...,
-  opt_name = "verbosity_level",
-  global_opt_name = paste0("atmos.", opt_name),
-  .envir = parent.frame()
-)
+msg_debug(message, ..., opt_name = "verbosity_level", .envir = parent.frame())
 
 msg_success(
   message,
   ...,
   opt_name = "verbosity_level",
-  global_opt_name = paste0("atmos.", opt_name),
   .envir = parent.frame()
 )
 }
@@ -46,9 +38,6 @@ to display the message}
 
 \item{opt_name}{\code{character} name of the option set by the \link{options} package.
 Passed to \code{\link[=get_opt]{get_opt()}}}
-
-\item{global_opt_name}{\code{character} name of the global option which, if set,
-will overwrite the package level option. Passed to \code{\link[=get_opt]{get_opt()}}}
 
 \item{which}{\code{integer} passed to \code{\link[=sys.function]{sys.function()}}. Default is -1, meaning
 \code{sys.function(-1)} will return the function that called \code{msg}}
