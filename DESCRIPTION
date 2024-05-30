@@ -14,7 +14,8 @@ RoxygenNote: 7.3.1
 Suggests: 
     testthat (>= 3.0.0),
     pharmaverseadam,
-    withr
+    withr,
+    checkmate
 Config/testthat/edition: 3
 URL: https://jubilant-adventure-yr95p3g.pages.github.io/
 Imports: 
