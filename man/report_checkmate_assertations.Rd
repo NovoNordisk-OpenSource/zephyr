@@ -4,12 +4,18 @@
 \alias{report_checkmate_assertations}
 \title{Report collection of assertations}
 \usage{
-report_checkmate_assertations(collection, msg = "Invalid input(s):")
+report_checkmate_assertations(
+  collection,
+  msg = "Invalid input(s):",
+  env = parent.frame()
+)
 }
 \arguments{
 \item{collection}{A collection of assertations created with \code{\link[checkmate:AssertCollection]{checkmate::makeAssertCollection()}}}
 
 \item{msg}{\code{\link[=character]{character()}} Header of the error message if any assertations failed}
+
+\item{env}{\code{\link[=environment]{environment()}} Environment to use for the error message}
 }
 \description{
 Improved reporting of \code{AssertColellections} created with the \code{\link[checkmate:AssertCollection]{checkmate::makeAssertCollection()}} package
