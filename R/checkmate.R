@@ -6,6 +6,7 @@
 #' THe function is inteded to be used inside a function that performs assertations on its input arguments. See below for an example.
 #' @param collection A collection of assertations created with [checkmate::makeAssertCollection()]
 #' @param msg [character()] Header of the error message if any assertations failed
+#' @param env [environment()] Environment to use for the error message
 #' @examples
 #' add_numbers <- function(a, b) {
 #'   collection <- checkmate::makeAssertCollection()
@@ -21,13 +22,11 @@
 #' }
 #' @export
 
-report_checkmate_assertations <- function(collection, msg = "Invalid input(s):") {
+report_checkmate_assertations <- function(collection, msg = "Invalid input(s):", env = parent.frame()) {
 
-  if (class(collection)[[1]] != "AssertCollection") {
-    cli::cli_abort("collection must be an AssertCollection object")
-  }
+  checkmate::assert_class(collection, "AssertCollection")
 
-  env <- parent.frame()
+  # env <- parent.frame()
   if (!collection$isEmpty()) {
     c(msg, rlang::set_names(collection$getMessages(), "x")) |>
       cli::cli_abort(.envir = env)
