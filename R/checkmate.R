@@ -4,7 +4,7 @@
 #' using [cli::cli_abort()] instead of [checkmate::reportAssertions()] in order to provide a more
 #' informative error message.
 #'
-#' THe function is intended to be used inside a function that performs assertations on its input arguments.
+#' The function is intended to be used inside a function that performs assertations on its input arguments.
 #' See below for an example.
 #' @param collection A collection of assertations created with [checkmate::makeAssertCollection()]
 #' @param msg [character()] Header of the error message if any assertations failed

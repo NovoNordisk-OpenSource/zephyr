@@ -19,9 +19,11 @@ report_checkmate_assertations(
 }
 \description{
 Improved reporting of \code{AssertColellections} created with the \code{\link[checkmate:AssertCollection]{checkmate::makeAssertCollection()}} package
-using \code{\link[cli:cli_abort]{cli::cli_abort()}} instead of \code{\link[checkmate:AssertCollection]{checkmate::reportAssertions()}} in order to provide a more informative error message.
+using \code{\link[cli:cli_abort]{cli::cli_abort()}} instead of \code{\link[checkmate:AssertCollection]{checkmate::reportAssertions()}} in order to provide a more
+informative error message.
 
-THe function is inteded to be used inside a function that performs assertations on its input arguments. See below for an example.
+The function is intended to be used inside a function that performs assertations on its input arguments.
+See below for an example.
 }
 \examples{
 add_numbers <- function(a, b) {
