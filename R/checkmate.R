@@ -1,6 +1,6 @@
 #' Report collection of assertations
 #' @description
-#' Improved reporting of `AssertColellections` created with the [checkmate::makeAssertCollection()] package
+#' Improved reporting of `AssertCollections` created with the [checkmate::makeAssertCollection()] package
 #' using [cli::cli_abort()] instead of [checkmate::reportAssertions()] in order to provide a more
 #' informative error message.
 #'
@@ -17,11 +17,11 @@
 #'   report_checkmate_assertations(collection)
 #'   return(a + b)
 #' }
-#' \donttest{
+#'
 #' add_numbers(1, 2)
-#' add_numbers(1, "b")
-#' add_numbers("a", "b")
-#' }
+#' try(add_numbers(1, "b"))
+#' try(add_numbers("a", "b"))
+#'
 #' @export
 
 report_checkmate_assertations <- function(collection, msg = "Invalid input(s):", env = parent.frame()) {
