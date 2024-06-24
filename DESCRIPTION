@@ -1,12 +1,20 @@
 Package: zephyr
-Title: Template repository for new ATMOS R packages
-Version: 0.0.0.9000
+Title: Tools for informing users based on package options
+Version: 0.1.0
 Authors@R: c(
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID")),
-    person("Novo Nordisk A/S", role = c("cph"))
+    person("Aksel",
+           "Thomsen",
+           "oath@novonordisk.com",
+           role = c("aut", "cre")),
+    person("Mathias Lerbech",
+           "Jeppesen",
+           "nmlj@novonordisk.com",
+           role = c("aut")),
+    person("Novo Nordisk A/S",
+           role = c("cph"))
   )
-Description: Defines common standards, workflows, and actions for new R packages.
+Description: This package has tools for developers of R packages,
+enabling writing messages based on options set in the developer’s package
 License: Apache License (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
