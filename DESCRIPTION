@@ -3,11 +3,11 @@ Title: Tools for informing users based on package options
 Version: 0.1.0
 Authors@R: c(
     person("Aksel",
-           "Thomsen",
+           "Thomsen", ,
            "oath@novonordisk.com",
            role = c("aut", "cre")),
     person("Mathias Lerbech",
-           "Jeppesen",
+           "Jeppesen", ,
            "nmlj@novonordisk.com",
            role = c("aut")),
     person("Novo Nordisk A/S",
