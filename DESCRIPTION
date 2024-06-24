@@ -14,7 +14,7 @@ Authors@R: c(
            role = c("cph"))
   )
 Description: This package has tools for developers of R packages,
-enabling writing messages based on options set in the developer’s package
+    enabling writing messages based on options set in the developer’s package
 License: Apache License (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
