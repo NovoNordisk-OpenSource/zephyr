@@ -10,6 +10,10 @@ Authors@R: c(
            "Jeppesen", ,
            "nmlj@novonordisk.com",
            role = c("aut")),
+    person("Steffen Falgreen",
+           "Larsen", ,
+           "sffl@novonordisk.com",
+           role = c("aut")),
     person("Novo Nordisk A/S",
            role = c("cph"))
   )
