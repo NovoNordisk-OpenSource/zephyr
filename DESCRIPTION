@@ -1,6 +1,6 @@
 Package: zephyr
 Title: Tools for informing users based on package options
-Version: 0.1.0
+Version: 0.0.1
 Authors@R: c(
     person("Aksel",
            "Thomsen", ,
@@ -17,8 +17,8 @@ Authors@R: c(
     person("Novo Nordisk A/S",
            role = c("cph"))
   )
-Description: This package has tools for developers of R packages,
-    enabling writing messages based on options set in the developer’s package
+Description: Tools for helping developers of R packages inform their users.
+    Package enables writing messages based on package level options
 License: Apache License (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
