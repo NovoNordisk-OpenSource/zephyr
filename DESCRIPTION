@@ -2,20 +2,14 @@ Package: zephyr
 Title: Tools for informing users based on package options
 Version: 0.0.1
 Authors@R: c(
-    person("Aksel",
-           "Thomsen", ,
-           "oath@novonordisk.com",
-           role = c("aut", "cre")),
-    person("Mathias Lerbech",
-           "Jeppesen", ,
-           "nmlj@novonordisk.com",
-           role = c("aut")),
-    person("Steffen Falgreen",
-           "Larsen", ,
-           "sffl@novonordisk.com",
-           role = c("aut")),
-    person("Novo Nordisk A/S",
-           role = c("cph"))
+    person("Mathias Lerbech", "Jeppesen", , "nmlj@novonordisk.com", role = c("aut", "cre")),
+    person("Aksel", "Thomsen", , "oath@novonordisk.com", role = "aut"),
+    person("Cervan", "Girard", , "cgid@novonordisk.com", role = c("aut", "cre")),
+    person("Kristian Troejelsgaard", "Nielsen", , "ktqn@novonordisk.com", role = "aut"),
+    person("Lovemore", "Gakava", , "lvgk@novonordisk.com", role = "aut"),
+    person("Steffen Falgreen", "Larsen", , "sffl@novonordisk.com", role = "aut"),
+    person("Vladimir", "Obucina", , "vlob@novonordisk.com", role = c("aut")),
+    person("Novo Nordisk A/S", role = c("cph"))
   )
 Description: Tools for helping developers of R packages inform their users.
     Package enables writing messages based on package level options
