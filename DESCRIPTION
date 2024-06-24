@@ -4,7 +4,7 @@ Version: 0.0.1
 Authors@R: c(
     person("Aksel", "Thomsen", , "oath@novonordisk.com", role = c("aut", "cre")),
     person("Mathias Lerbech", "Jeppesen", , "nmlj@novonordisk.com", role = "aut"),
-    person("Cervan", "Girard", , "cgid@novonordisk.com", role = "aut",
+    person("Cervan", "Girard", , "cgid@novonordisk.com", role = "aut"),
     person("Kristian Troejelsgaard", "Nielsen", , "ktqn@novonordisk.com", role = "aut"),
     person("Lovemore", "Gakava", , "lvgk@novonordisk.com", role = "aut"),
     person("Steffen Falgreen", "Larsen", , "sffl@novonordisk.com", role = "aut"),
