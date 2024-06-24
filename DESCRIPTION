@@ -12,7 +12,7 @@ Authors@R: c(
     person("Novo Nordisk A/S", role = c("cph"))
   )
 Description: Tools for helping developers of R packages inform their users.
-    Package enables writing messages based on package level options
+    Package enables writing messages based on package level options.
 License: Apache License (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
