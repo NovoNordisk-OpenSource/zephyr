@@ -58,5 +58,4 @@ withr::with_options(
        filter_data(data = cars, infilter = speed > 12)
 )
 
-
 }
