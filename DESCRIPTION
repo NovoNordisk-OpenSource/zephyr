@@ -2,11 +2,11 @@ Package: zephyr
 Title: Template repository for new ATMOS R packages
 Version: 0.0.0.9000
 Authors@R: c(
-    person("Mathias Lerbech", "Jeppesen", , "nmlj@novonordisk.com", role = c("aut", "cre")),
-    person("Aksel", "Thomsen", , "oath@novonordisk.com", role = "aut"),
-    person("Cervan", "Girard", , "cgid@novonordisk.com", role = c("aut")),
+    person("Aksel", "Thomsen", , "oath@novonordisk.com", role = c("aut", "cre")),
+    person("Cervan", "Girard", , "cgid@novonordisk.com", role = "aut"),
     person("Kristian Troejelsgaard", "Nielsen", , "ktqn@novonordisk.com", role = "aut"),
     person("Lovemore", "Gakava", , "lvgk@novonordisk.com", role = "aut"),
+    person("Mathias Lerbech", "Jeppesen", , "nmlj@novonordisk.com", role = "aut"),
     person("Steffen Falgreen", "Larsen", , "sffl@novonordisk.com", role = "aut"),
     person("Vladimir", "Obucina", , "vlob@novonordisk.com", role = c("aut")),
     person("Novo Nordisk A/S", role = c("cph"))
@@ -20,10 +20,12 @@ Suggests:
     testthat (>= 3.0.0),
     pharmaverseadam,
     withr,
-    checkmate
+    checkmate,
+    dplyr
 Config/testthat/edition: 3
 URL: https://jubilant-adventure-yr95p3g.pages.github.io/
 Imports: 
     cli,
     options,
     rlang
+    
