@@ -1,10 +1,10 @@
-test_that("report assertations", {
+test_that("report assertions", {
 
   add_numbers <- function(a, b) {
     collection <- checkmate::makeAssertCollection()
     checkmate::assert_numeric(x = a, add = collection)
     checkmate::assert_numeric(x = b, add = collection)
-    report_checkmate_assertations(collection)
+    report_checkmate_assertions(collection)
     return(a + b)
   }
 
