@@ -1,3 +1,3 @@
-# zephyr (development version)
+# zephyr 0.0.1
 
-* Initial CRAN submission.
+* Added initial tools for writing messages to console based on package options
