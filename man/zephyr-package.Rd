@@ -4,7 +4,7 @@
 \name{zephyr-package}
 \alias{zephyr}
 \alias{zephyr-package}
-\title{zephyr: Tools for informing users based on package options}
+\title{zephyr: Tools for Informing Users Based on Package Options}
 \description{
 Tools for helping developers of R packages inform their users. Package enables writing messages based on package level options.
 }
