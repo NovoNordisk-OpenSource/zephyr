@@ -4,9 +4,9 @@
 \name{zephyr-package}
 \alias{zephyr}
 \alias{zephyr-package}
-\title{zephyr: Template repository for new ATMOS R packages}
+\title{zephyr: Tools for informing users based on package options}
 \description{
-Defines common standards, workflows, and actions for new R packages.
+Tools for helping developers of R packages inform their users. Package enables writing messages based on package level options.
 }
 \seealso{
 Useful links:
@@ -16,7 +16,17 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: First Last \email{first.last@example.com} (\href{https://orcid.org/YOUR-ORCID-ID}{ORCID})
+\strong{Maintainer}: Aksel Thomsen \email{oath@novonordisk.com}
+
+Authors:
+\itemize{
+  \item Mathias Lerbech Jeppesen \email{nmlj@novonordisk.com}
+  \item Cervan Girard \email{cgid@novonordisk.com}
+  \item Kristian Troejelsgaard Nielsen \email{ktqn@novonordisk.com}
+  \item Lovemore Gakava \email{lvgk@novonordisk.com}
+  \item Steffen Falgreen Larsen \email{sffl@novonordisk.com}
+  \item Vladimir Obucina \email{vlob@novonordisk.com}
+}
 
 Other contributors:
 \itemize{
