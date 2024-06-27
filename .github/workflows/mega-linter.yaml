@@ -19,7 +19,8 @@ env:
   APPLY_FIXES: all
   APPLY_FIXES_EVENT: none
   APPLY_FIXES_MODE: pull_request
-  KICS_EXCLUDE_QUERIES: 555ab8f9-2001-455e-a077-f2d0f41e2fb9 # Exclude check: https://docs.kics.io/latest/queries/cicd-queries/common/555ab8f9-2001-455e-a077-f2d0f41e2fb9/
+  KICS_EXCLUDE_QUERIES: 555ab8f9-2001-455e-a077-f2d0f41e2fb9 # Exclude check: https://docs.kics.io/latest/queries/cicd-queries/555ab8f9-2001-455e-a077-f2d0f41e2fb9/
+  SPELL_LYCHEE_ARGUMENTS: --exclude '^.*\{\{.+\}\}.$'
   SPELL_LYCHEE_FILE_EXTENSIONS: '*' # Check all file types for dead links
 
 concurrency:
