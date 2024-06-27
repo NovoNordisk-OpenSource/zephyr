@@ -1,5 +1,5 @@
 ## Overview
-* This is a new lightweight package that provide a wrapper around the cli package as a useful way of providing messages for both users and developers when using functions developed with the current messages functions. 
+* This is a new lightweight package that provide a wrapper around the cli package as a useful way of providing messages for both users and developers when developing new functions
 
 * The messages can be turned on/off by utilizing environmental options which is a convenient way of controlling the level of messages for both users and developers.  
 
