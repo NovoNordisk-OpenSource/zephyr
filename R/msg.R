@@ -35,6 +35,8 @@
 #' `msg_success` function is a wrapper around `msg` with
 #' `levels_to_write = c("verbose", "debug")` and `msg_fun = cli::cli_alert_success`.
 #'
+#' @return None
+#'
 #' @examples
 #' \dontrun{
 #' # Use the `msg` function to give end user information depending on the
@@ -74,6 +76,7 @@ msg <- function(message,
   if (called_within) {
     # Get the namespace of the function that called msg
     ns_of_prev_fun <- environment(sys.function(which = which))
+
     # Get value of option
     verbosity_level <- get_opt(opt_name = opt_name,
                                env = ns_of_prev_fun)
