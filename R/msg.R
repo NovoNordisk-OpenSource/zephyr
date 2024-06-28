@@ -20,11 +20,13 @@
 #' @param msg_fun `function` taking `message` as first argument. Usually a
 #' `cli_...` function
 #' @param ... Additional arguments passed to `msg_fun`
-#' @param opt_name `character` name of the option set by the [options] package.
-#' Passed to [get_verbosity_level()]
-#' @param which `integer` passed to [sys.function()]. Default is -1, meaning
-#' `sys.function(-1)` will return the function that called `msg`
-#' @param .envir `environment` passed to `msg_fun`
+#' @param verbosity_level The verbosity level to use. If `NULL`, the function
+#' will use the `which` argument to determine the environment in which to find
+#' and option called `verbosity_level`. By default, it will look in the environment
+#' of the function calling `msg(_...)`. If no option is set in this calling
+#' environment, it will look in the `zephyr` namespace.
+#' @param which `integer` passed to [sys.function()] in case `verbosity_level = NULL`.
+#' Default is -1, meaning it will look in the environment of the function calling `msg(_...)`.
 #'
 #' @details
 #' The `msg` function is a general function, which can be used to write messages
@@ -116,9 +118,4 @@ msg_success <- function(message,
       ...,
       verbosity_level = verbosity_level,
       which = -1+which)
-}
-
-
-testing_msg <- function(message = "hej") {
-  msg_debug(message)
 }

@@ -30,13 +30,14 @@ to display the message. Valid values are \code{quiet}, \code{verbose} and \code{
 
 \item{...}{Additional arguments passed to \code{msg_fun}}
 
-\item{which}{\code{integer} passed to \code{\link[=sys.function]{sys.function()}}. Default is -1, meaning
-\code{sys.function(-1)} will return the function that called \code{msg}}
+\item{verbosity_level}{The verbosity level to use. If \code{NULL}, the function
+will use the \code{which} argument to determine the environment in which to find
+and option called \code{verbosity_level}. By default, it will look in the environment
+of the function calling \verb{msg(_...)}. If no option is set in this calling
+environment, it will look in the \code{zephyr} namespace.}
 
-\item{opt_name}{\code{character} name of the option set by the \link{options} package.
-Passed to \code{\link[=get_verbosity_level]{get_verbosity_level()}}}
-
-\item{.envir}{\code{environment} passed to \code{msg_fun}}
+\item{which}{\code{integer} passed to \code{\link[=sys.function]{sys.function()}} in case \code{verbosity_level = NULL}.
+Default is -1, meaning it will look in the environment of the function calling \verb{msg(_...)}.}
 }
 \value{
 None
