@@ -35,7 +35,7 @@ get_verbosity_level <- function(env = parent.frame()) {
   }
 
   pkg_verbosity_level_source <- options::opt_source("verbosity_level",
-                                                       env = env)
+                                                    env = env)
   pkg_verbosity_level <- options::opt("verbosity_level", env = env)
 
   # If option is set on "zephyr level" use that one

@@ -103,7 +103,7 @@ msg_debug <- function(message,
       msg_fun = cli::cli_inform,
       ...,
       verbosity_level = verbosity_level,
-      which = -1+which)
+      which = -1 + which)
 }
 
 #' @rdname msg
@@ -117,5 +117,5 @@ msg_success <- function(message,
       msg_fun = cli::cli_alert_success,
       ...,
       verbosity_level = verbosity_level,
-      which = -1+which)
+      which = -1 + which)
 }
