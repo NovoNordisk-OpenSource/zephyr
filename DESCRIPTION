@@ -1,5 +1,5 @@
 Package: zephyr
-Title: Tools for informing users based on package options
+Title: Tools For Informing Users Based On Package Options
 Version: 0.0.1
 Authors@R: c(
     person("Aksel", "Thomsen", , "oath@novonordisk.com", role = c("aut", "cre")),
@@ -27,4 +27,5 @@ URL: https://jubilant-adventure-yr95p3g.pages.github.io/
 Imports: 
     cli,
     options,
-    rlang
+    rlang,
+    utils
