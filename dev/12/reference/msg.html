@@ -77,19 +77,13 @@ example for possible use case.</p>
 <span>  levels_to_write <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"verbose"</span>, <span class="st">"debug"</span><span class="op">)</span>,</span>
 <span>  msg_fun <span class="op">=</span> <span class="fu">cli</span><span class="fu">::</span><span class="va"><a href="https://cli.r-lib.org/reference/cli_alert.html" class="external-link">cli_alert_info</a></span>,</span>
 <span>  <span class="va">...</span>,</span>
-<span>  opt_name <span class="op">=</span> <span class="st">"verbosity_level"</span>,</span>
-<span>  which <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,</span>
-<span>  .envir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">parent.frame</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  verbosity_level <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  which <span class="op">=</span> <span class="op">-</span><span class="fl">1</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">msg_debug</span><span class="op">(</span><span class="va">message</span>, <span class="va">...</span>, opt_name <span class="op">=</span> <span class="st">"verbosity_level"</span>, .envir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">parent.frame</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">msg_debug</span><span class="op">(</span><span class="va">message</span>, <span class="va">...</span>, verbosity_level <span class="op">=</span> <span class="cn">NULL</span>, which <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">msg_success</span><span class="op">(</span></span>
-<span>  <span class="va">message</span>,</span>
-<span>  <span class="va">...</span>,</span>
-<span>  opt_name <span class="op">=</span> <span class="st">"verbosity_level"</span>,</span>
-<span>  .envir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">parent.frame</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">msg_success</span><span class="op">(</span><span class="va">message</span>, <span class="va">...</span>, verbosity_level <span class="op">=</span> <span class="cn">NULL</span>, which <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -112,20 +106,25 @@ to display the message. Valid values are <code>quiet</code>, <code>verbose</code
 <dd><p>Additional arguments passed to <code>msg_fun</code></p></dd>
 
 
-<dt>opt_name</dt>
-<dd><p><code>character</code> name of the option set by the <a href="https://rdrr.io/r/base/options.html" class="external-link">options</a> package.
-Passed to <code><a href="get_opt.html">get_opt()</a></code></p></dd>
+<dt>verbosity_level</dt>
+<dd><p>The verbosity level to use. If <code>NULL</code>, the function
+will use the <code>which</code> argument to determine the environment in which to find
+and option called <code>verbosity_level</code>. By default, it will look in the environment
+of the function calling <code>msg(_...)</code>. If no option is set in this calling
+environment, it will look in the <code>zephyr</code> namespace.</p></dd>
 
 
 <dt>which</dt>
-<dd><p><code>integer</code> passed to <code><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">sys.function()</a></code>. Default is -1, meaning
-<code>sys.function(-1)</code> will return the function that called <code>msg</code></p></dd>
-
-
-<dt>.envir</dt>
-<dd><p><code>environment</code> passed to <code>msg_fun</code></p></dd>
+<dd><p><code>integer</code> passed to <code><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">sys.function()</a></code> in case <code>verbosity_level = NULL</code>.
+Default is -1, meaning it will look in the environment of the function calling <code>msg(_...)</code>.</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    
+
+<p>None</p>
+    </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The <code>msg</code> function is a general function, which can be used to write messages
