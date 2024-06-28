@@ -49,8 +49,20 @@ test_that("verbosity_level is automatically chosen as value of option in calling
     expect_message(foo_pkg$foo(), "test")
   })
 
+  withr::with_options(list(foo_pkg.verbosity_level = "verbose"), {
+    expect_message(foo_pkg$foo(msg_fun = msg_success), "test")
+  })
+
+  withr::with_options(list(foo_pkg.verbosity_level = "verbose"), {
+    expect_no_message(foo_pkg$foo(msg_fun = msg_debug))
+  })
+
   withr::with_options(list(foo_pkg.verbosity_level = "debug"), {
     expect_message(foo_pkg$foo(), "test")
+  })
+
+  withr::with_options(list(foo_pkg.verbosity_level = "debug"), {
+    expect_message(foo_pkg$foo(msg_fun = msg_debug), "test")
   })
 })
 
