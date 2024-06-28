@@ -6,6 +6,9 @@
 \usage{
 get_verbosity_level(env = parent.frame())
 }
+\arguments{
+\item{env}{Environment to get the option from (set with the \code{options} package)}
+}
 \value{
 Value of the option
 }
