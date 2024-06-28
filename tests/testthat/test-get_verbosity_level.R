@@ -1,6 +1,14 @@
+env_without_option <- create_env_with_fun(add_option = FALSE)
+
+test_that("The function extracts the zephyr set option if no package option is set", {
+  opt <- get_verbosity_level(env = env_without_option)
+
+  expect_equal(opt, "verbose")
+})
+
 # Create an environment and define a test option in it
 foo_pkg <- create_env_with_fun("foo",
-                               default = "test")
+                                       default = "test")
 
 test_that("Option can be extracted", {
   opt <- get_verbosity_level(env = foo_pkg)

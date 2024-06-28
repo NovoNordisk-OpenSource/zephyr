@@ -4,6 +4,8 @@
 #' Get option using the `options` package, where the
 #' function allows a global option to overwrite individual package options.
 #'
+#' @param env Environment to get the option from (set with the `options` package)
+#'
 #' @return Value of the option
 #' @export
 #'
@@ -25,6 +27,12 @@ get_verbosity_level <- function(env = parent.frame()) {
   zephyr_verbosity_level_source <- options::opt_source("verbosity_level",
                                                        env = getNamespace("zephyr"))
   zephyr_verbosity_level <- options::opt("verbosity_level", env = getNamespace("zephyr"))
+
+  # If option is not defined for the specified environment, we use the option
+  # set on zephyr level (using default is nothing is done)
+  if (is.null(attr(env$.options, "spec"))) {
+    return(zephyr_verbosity_level)
+  }
 
   pkg_verbosity_level_source <- options::opt_source("verbosity_level",
                                                        env = env)
