@@ -35,7 +35,7 @@ test_that("verbosity_level is automatically chosen as value of option in calling
     expect_no_message(foo_pkg$foo())
   })
 
-  withr::with_envvar(list(FOO_PKG_VERBOSITY_LEVEL = "quiet"), {
+  withr::with_envvar(list(R_FOO_PKG_VERBOSITY_LEVEL = "quiet"), {
     expect_no_message(foo_pkg$foo())
   })
 
