@@ -137,16 +137,23 @@
 <p>We create an environment with an option of <code>verbosity_level</code> set (<strong>Note if looking into the helper script that the option is set differently than described above for a package - when you define an option in your package, use the above approach</strong>), and a function <code>foo</code> that uses the <code>msg(_...)</code> function inside like so:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="st">"R/test_vignette_helpers.R"</span><span class="op">)</span></span>
-<span><span class="va">foo_pkg</span> <span class="op">&lt;-</span> <span class="fu">create_env_with_fun</span><span class="op">(</span>message <span class="op">=</span> <span class="st">"Hello from foo_pkg!"</span><span class="op">)</span></span>
+<span><span class="va">foo_pkg</span> <span class="op">&lt;-</span> <span class="fu">create_env_with_fun</span><span class="op">(</span>message <span class="op">=</span> <span class="st">"Hello from foo_pkg!"</span>,</span>
+<span>                               fun_name <span class="op">=</span> <span class="st">"foo"</span>,</span>
+<span>                               fun <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
+<span>                                 <span class="fu"><a href="reference/msg.html">msg_debug</a></span><span class="op">(</span><span class="st">"Inform my user the function is trying to do stuff"</span><span class="op">)</span></span>
+<span>                                 <span class="co"># Do stuff</span></span>
+<span>                                 <span class="fu"><a href="reference/msg.html">msg_success</a></span><span class="op">(</span><span class="st">"Inform my user that stuff succeeded"</span><span class="op">)</span></span>
+<span>                               <span class="op">}</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># foo function</span></span>
 <span><span class="va">foo_pkg</span><span class="op">$</span><span class="va">foo</span></span>
-<span><span class="co">#&gt; function (msg_fun = msg, ...) </span></span>
-<span><span class="co">#&gt; {</span></span>
-<span><span class="co">#&gt;     Sys.sleep(0.5)</span></span>
-<span><span class="co">#&gt;     msg_fun(message, ...)</span></span>
-<span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;environment: 0x00000230bf935848&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt; function() {</span></span>
+<span><span class="co">#&gt;                                  msg_debug("Inform my user the function is trying to do stuff")</span></span>
+<span><span class="co">#&gt;                                  # Do stuff</span></span>
+<span><span class="co">#&gt;                                  msg_success("Inform my user that stuff succeeded")</span></span>
+<span><span class="co">#&gt;                                }</span></span>
+<span><span class="co">#&gt; &lt;environment: 0x0000020acc344760&gt;</span></span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Option set in package:</span></span>
@@ -170,10 +177,11 @@
 <span><span class="op">}</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Writes a message</span></span>
-<span><span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_options.html" class="external-link">with_options</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>foo_pkg.verbosity_level <span class="op">=</span> <span class="st">"verbose"</span><span class="op">)</span>, <span class="op">{</span></span>
+<span><span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_options.html" class="external-link">with_options</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>foo_pkg.verbosity_level <span class="op">=</span> <span class="st">"debug"</span><span class="op">)</span>, <span class="op">{</span></span>
 <span>  <span class="va">foo_pkg</span><span class="op">$</span><span class="fu">foo</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
-<span><span class="co">#&gt; ℹ Hello from foo_pkg!</span></span></code></pre></div>
+<span><span class="co">#&gt; Inform my user the function is trying to do stuff</span></span>
+<span><span class="co">#&gt; ✔ Inform my user that stuff succeeded</span></span></code></pre></div>
 <p>However, a feature of the package (specifically the <code>get_verbosity_level</code> function) is that you can set the verbosity level for <code>zephyr</code> functionalities globally by setting the <code>zephyr.verbosity_level</code> option, which will override individual package level options:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Writes a message</span></span>
@@ -181,7 +189,7 @@
 <span>                         zephyr.verbosity_level <span class="op">=</span> <span class="st">"verbose"</span><span class="op">)</span>, <span class="op">{</span></span>
 <span>  <span class="va">foo_pkg</span><span class="op">$</span><span class="fu">foo</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
-<span><span class="co">#&gt; ℹ Hello from foo_pkg!</span></span></code></pre></div>
+<span><span class="co">#&gt; ✔ Inform my user that stuff succeeded</span></span></code></pre></div>
 <p>Setting an environmental variable of <code>R_ZEPHYR_VERBOSITY_LEVEL</code> will only override the package level option in case the package level option is not set using <code>foo_pkg_verbosity_level</code>:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Will not write a message since the Zephyr environment variable overrides the package level</span></span>
@@ -196,7 +204,7 @@
 <span>                             <span class="va">foo_pkg</span><span class="op">$</span><span class="fu">foo</span><span class="op">(</span><span class="op">)</span></span>
 <span>                           <span class="op">}</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
-<span><span class="co">#&gt; ℹ Hello from foo_pkg!</span></span></code></pre></div>
+<span><span class="co">#&gt; ✔ Inform my user that stuff succeeded</span></span></code></pre></div>
 </div>
 <div class="section level6">
 <h6 id="controlling-verbosity-level-through-options-with-more-transparency-for-the-user">Controlling verbosity level through options with more transparency for the user<a class="anchor" aria-label="anchor" href="#controlling-verbosity-level-through-options-with-more-transparency-for-the-user"></a>
