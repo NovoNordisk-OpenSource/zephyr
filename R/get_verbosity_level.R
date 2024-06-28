@@ -50,7 +50,7 @@ get_verbosity_level <- function(env = parent.frame()) {
 
   # If option is not set as an option on package level, and zephyr option is set
   # using environment variable, use that one
-  if (zephyr_verbosity_level_source == "envvar") {
+  if (zephyr_verbosity_level_source %in% c("envvar", "envir")) {
     return(zephyr_verbosity_level)
   }
 
