@@ -156,16 +156,23 @@ package, use the above approach**), and a function `foo` that uses the
 
 ``` r
 source("R/test_vignette_helpers.R")
-foo_pkg <- create_env_with_fun(message = "Hello from foo_pkg!")
+foo_pkg <- create_env_with_fun(message = "Hello from foo_pkg!",
+                               fun_name = "foo",
+                               fun = function() {
+                                 msg_debug("Inform my user the function is trying to do stuff")
+                                 # Do stuff
+                                 msg_success("Inform my user that stuff succeeded")
+                               }
+)
 
 # foo function
 foo_pkg$foo
-#> function (msg_fun = msg, ...) 
-#> {
-#>     Sys.sleep(0.5)
-#>     msg_fun(message, ...)
-#> }
-#> <environment: 0x00000230bf935848>
+#> function() {
+#>                                  msg_debug("Inform my user the function is trying to do stuff")
+#>                                  # Do stuff
+#>                                  msg_success("Inform my user that stuff succeeded")
+#>                                }
+#> <environment: 0x0000020acc344760>
 ```
 
 ``` r
@@ -194,10 +201,11 @@ withr::with_envvar(list(R_FOO_PKG_VERBOSITY_LEVEL = "quiet"), {
 })
 
 # Writes a message
-withr::with_options(list(foo_pkg.verbosity_level = "verbose"), {
+withr::with_options(list(foo_pkg.verbosity_level = "debug"), {
   foo_pkg$foo()
 })
-#> ℹ Hello from foo_pkg!
+#> Inform my user the function is trying to do stuff
+#> ✔ Inform my user that stuff succeeded
 ```
 
 However, a feature of the package (specifically the
@@ -212,7 +220,7 @@ withr::with_options(list(foo_pkg.verbosity_level = "quiet",
                          zephyr.verbosity_level = "verbose"), {
   foo_pkg$foo()
 })
-#> ℹ Hello from foo_pkg!
+#> ✔ Inform my user that stuff succeeded
 ```
 
 Setting an environmental variable of `R_ZEPHYR_VERBOSITY_LEVEL` will
@@ -232,7 +240,7 @@ withr::with_envvar(list(R_ZEPHYR_VERBOSITY_LEVEL = "quiet"), {
                              foo_pkg$foo()
                            })
 })
-#> ℹ Hello from foo_pkg!
+#> ✔ Inform my user that stuff succeeded
 ```
 
 ###### Controlling verbosity level through options with more transparency for the user

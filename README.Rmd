@@ -91,7 +91,14 @@ We create an environment with an option of `verbosity_level` set (**Note if look
 
 ```{r}
 source("R/test_vignette_helpers.R")
-foo_pkg <- create_env_with_fun(message = "Hello from foo_pkg!")
+foo_pkg <- create_env_with_fun(message = "Hello from foo_pkg!",
+                               fun_name = "foo",
+                               fun = function() {
+                                 msg_debug("Inform my user the function is trying to do stuff")
+                                 # Do stuff
+                                 msg_success("Inform my user that stuff succeeded")
+                               }
+)
 
 # foo function
 foo_pkg$foo
@@ -111,7 +118,7 @@ withr::with_envvar(list(R_FOO_PKG_VERBOSITY_LEVEL = "quiet"), {
 })
 
 # Writes a message
-withr::with_options(list(foo_pkg.verbosity_level = "verbose"), {
+withr::with_options(list(foo_pkg.verbosity_level = "debug"), {
   foo_pkg$foo()
 })
 ```
