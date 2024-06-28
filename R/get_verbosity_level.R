@@ -50,11 +50,31 @@ get_verbosity_level <- function(env = parent.frame()) {
 
   # If option is not set as an option on package level, and zephyr option is set
   # using environment variable, use that one
-  if (zephyr_verbosity_level_source %in% c("envvar", "envir")) {
+  if (zephyr_verbosity_level_source == get_envname_options()) {
     return(zephyr_verbosity_level)
   }
 
   # If zephyr level option is not set, use the option set on package level, whether
   # default or envvar
   return(pkg_verbosity_level)
+}
+
+#' Get the value of the `opt_source` for an environment variable based on `options` package version
+#'
+#' See breaking change in version 0.2.0 in the changelog here:
+#' https://dgkf.github.io/options/news/index.html. Function gives the value that is
+#' returned by [opt_source()].
+#'
+#' @return `character` with the value of the `opt_source` for an environment variable
+#'
+#' @export
+get_envname_options <- function() {
+  options_version_numeric <- gsub("\\.", "", as.character(packageVersion("options"))) |>
+    as.numeric()
+
+  if (options_version_numeric < 20) {
+    "envir"
+  } else {
+    "envvar"
+  }
 }
