@@ -63,11 +63,14 @@ get_verbosity_level <- function(env = parent.frame()) {
 #'
 #' See breaking change in version 0.2.0 in the changelog here:
 #' https://dgkf.github.io/options/news/index.html. Function gives the value that is
-#' returned by [opt_source()].
+#' returned by [opt_source()]. Is used inside the [get_verbosity_level()] function.
 #'
 #' @return `character` with the value of the `opt_source` for an environment variable
 #'
 #' @export
+#'
+#' @examples
+#' get_envname_options()
 get_envname_options <- function() {
   options_version_numeric <- gsub("\\.", "", as.character(packageVersion("options"))) |>
     as.numeric()
