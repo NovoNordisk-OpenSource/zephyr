@@ -28,10 +28,10 @@ test_that("Option can be overwritten with global option or envvar", {
   glob_env_list <- list(R_ZEPHYR_VERBOSITY_LEVEL = "glob_opt",
                         R_FOO_PKG_VERBOSITY_LEVEL = "pkg_opt")
 
-  opt2 <- withr::with_envvar(glob_env_list, {
-    get_verbosity_level(env = foo_pkg)
+  withr::with_envvar(glob_env_list, {
+    opt2 <- get_verbosity_level(env = foo_pkg)
+    expect_equal(opt2, "glob_opt")
   })
-  expect_equal(opt2, "glob_opt")
 
   opt3 <- withr::with_envvar(list(R_ZEPHYR_VERBOSITY_LEVEL = "glob_opt"), {
     withr::with_options(list(foo_pkg.verbosity_level = "pkg_opt"), {
