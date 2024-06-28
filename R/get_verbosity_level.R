@@ -1,13 +1,8 @@
-#' Get option using the `options` package, allowing a global option
+#' Get `verbosity_level` option using the `options` package, allowing a global option
 #'
 #' @description
 #' Get option using the `options` package, where the
 #' function allows a global option to overwrite individual package options.
-#'
-#' @param opt_name `character` name of the option
-#' @param env `environment` the environment to get the option from. As default
-#' the namespace of the package where the function at the top of the call stack
-#' comes from
 #'
 #' @return Value of the option
 #' @export
@@ -25,15 +20,12 @@
 #'                        popdata = pharmaverseadam::adsl,
 #'                        popfilter = SAFFL == "Y"))
 #' }
-get_opt <- function(opt_name = NULL,
-                    env = parent.frame()) {
+get_verbosity_level <- function(env = parent.frame()) {
 
-  # If a global option is set, use that
-  global_opt <- getOption(paste0("zephyr.", opt_name))
-  if (!is.null(global_opt)) {
-    return(global_opt)
+  if (options::opt_source("verbosity_level",
+                          env = getNamespace("zephyr")) != "default") {
+    return(options::opt("verbosity_level", env = getNamespace("zephyr")))
   }
 
-  # Get the option from the namespace of the package used "from start"
-  return(options::opt(opt_name, env = env))
+  return(options::opt("verbosity_level", env = env))
 }

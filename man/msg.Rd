@@ -11,19 +11,13 @@ msg(
   levels_to_write = c("verbose", "debug"),
   msg_fun = cli::cli_alert_info,
   ...,
-  opt_name = "verbosity_level",
-  which = -1,
-  .envir = parent.frame()
+  verbosity_level = NULL,
+  which = -1
 )
 
-msg_debug(message, ..., opt_name = "verbosity_level", .envir = parent.frame())
+msg_debug(message, ..., verbosity_level = NULL, which = -1)
 
-msg_success(
-  message,
-  ...,
-  opt_name = "verbosity_level",
-  .envir = parent.frame()
-)
+msg_success(message, ..., verbosity_level = NULL, which = -1)
 }
 \arguments{
 \item{message}{\code{character} of message to write}
@@ -36,13 +30,16 @@ to display the message. Valid values are \code{quiet}, \code{verbose} and \code{
 
 \item{...}{Additional arguments passed to \code{msg_fun}}
 
-\item{opt_name}{\code{character} name of the option set by the \link{options} package.
-Passed to \code{\link[=get_opt]{get_opt()}}}
-
 \item{which}{\code{integer} passed to \code{\link[=sys.function]{sys.function()}}. Default is -1, meaning
 \code{sys.function(-1)} will return the function that called \code{msg}}
 
+\item{opt_name}{\code{character} name of the option set by the \link{options} package.
+Passed to \code{\link[=get_verbosity_level]{get_verbosity_level()}}}
+
 \item{.envir}{\code{environment} passed to \code{msg_fun}}
+}
+\value{
+None
 }
 \description{
 The \code{msg} function is a general function for writing messages to the console
