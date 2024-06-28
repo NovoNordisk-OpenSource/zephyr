@@ -43,10 +43,12 @@ down to this section to see how to use it in your package.
 
 ### Basic features
 
-There are functions `msg(_...)` that write messages to the console
-dependent on a `verbosity_level` set. Specifically, below it’s visible
-that the message is only written to the console when the
-`verbosity_level` is matching a level in `levels_to_write`.
+There are functions `msg`, `msg_debug` and `msg_success` collectively
+referred to in the remainder of this README as `msg` functions. These
+write messages to the console dependent on a `verbosity_level` set.
+Specifically, below it’s visible that the message is only written to the
+console when the `verbosity_level` is matching a level in
+`levels_to_write`.
 
 ``` r
 msg("testing",
@@ -76,7 +78,7 @@ controlled through package level options. By default,
 option set in the `zephyr` package when the function is used ‘directly’,
 and if the function is used inside another function, it will fetch the
 `verbosity_level` option set in the package of the function that called
-the `msg(_...)` function.
+the `msg` function.
 
 #### Setting a package option using the `options` package
 
@@ -109,8 +111,8 @@ options::define_option(
 #>  *default : "verbose"
 ```
 
-Not specifying a `verbosity_level` argument in the `msg(_...)` function
-will fetch the `verbosity_level` option set in the `zephyr` package:
+Not specifying a `verbosity_level` argument in the `msg` function will
+fetch the `verbosity_level` option set in the `zephyr` package:
 
 ``` r
 # Will not write a message
@@ -139,12 +141,11 @@ In the above, we describe how to set a `verbosity_level` option in a
 package, and this same procedure can be performed in a developer’s R
 package to set a package level option.
 
-Then, the behavior of the `msg(_...)` functions will be controlled
-through that package level option that users can then use to easily
-control the verbosity level in the entire package. This is done by the
-fact that as a default, the `msg(_...)` functions will fetch the
-`verbosity_level` option set in the package of the function that called
-the `msg(_...)` function.
+Then, the behavior of the `msg` functions will be controlled through
+that package level option that users can then use to easily control the
+verbosity level in the entire package. This is done by the fact that as
+a default, the `msg` functions will fetch the `verbosity_level` option
+set in the package of the function that called the `msg` function.
 
 ##### Simulating creation of a package
 
@@ -152,7 +153,7 @@ We create an environment with an option of `verbosity_level` set (**Note
 if looking into the helper script that the option is set differently
 than described above for a package - when you define an option in your
 package, use the above approach**), and a function `foo` that uses the
-`msg(_...)` function inside like so:
+`msg` function inside like so:
 
 ``` r
 source("R/test_vignette_helpers.R")
@@ -172,7 +173,7 @@ foo_pkg$foo
 #>                                  # Do stuff
 #>                                  msg_success("Inform my user that stuff succeeded")
 #>                                }
-#> <environment: 0x0000020acc344760>
+#> <environment: 0x0000025cbb37fea0>
 ```
 
 ``` r
@@ -189,10 +190,10 @@ foo_pkg$.options
 #>  *default : default
 ```
 
-###### Default (implicit) behavior when using `msg(_...)` functions in your package
+###### Default (implicit) behavior when using `msg` functions in your package
 
-As a default the `msg(_...)` functions will fetch the `verbosity_level`
-option set in `foo_pkg` when calling `foo`:
+As a default the `msg` functions will fetch the `verbosity_level` option
+set in `foo_pkg` when calling `foo`:
 
 ``` r
 # Does not write a message
