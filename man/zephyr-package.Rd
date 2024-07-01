@@ -22,7 +22,7 @@ Authors:
 \itemize{
   \item Mathias Lerbech Jeppesen \email{nmlj@novonordisk.com}
   \item Cervan Girard \email{cgid@novonordisk.com}
-  \item Kristian Troejelsgaard Nielsen \email{ktqn@novonordisk.com}
+  \item Kristian, Troejelsgaard ktqn@novonordisk.com
   \item Lovemore Gakava \email{lvgk@novonordisk.com}
   \item Steffen Falgreen Larsen \email{sffl@novonordisk.com}
   \item Vladimir Obucina \email{vlob@novonordisk.com}
