@@ -4,7 +4,7 @@
 \name{zephyr-package}
 \alias{zephyr}
 \alias{zephyr-package}
-\title{zephyr: Tools For Informing Users Based On Package Options}
+\title{zephyr: Tools for Informing Users Based on Package Options}
 \description{
 Tools for helping developers of R packages inform their users. Package enables writing messages based on package level options.
 }
@@ -22,7 +22,7 @@ Authors:
 \itemize{
   \item Mathias Lerbech Jeppesen \email{nmlj@novonordisk.com}
   \item Cervan Girard \email{cgid@novonordisk.com}
-  \item Kristian Troejelsgaard Nielsen \email{ktqn@novonordisk.com}
+  \item Kristian, Troejelsgaard ktqn@novonordisk.com
   \item Lovemore Gakava \email{lvgk@novonordisk.com}
   \item Steffen Falgreen Larsen \email{sffl@novonordisk.com}
   \item Vladimir Obucina \email{vlob@novonordisk.com}

@@ -44,7 +44,8 @@ down to this section to see how to use it in your package.
 ### Basic features
 
 There are functions `msg`, `msg_debug` and `msg_success` collectively
-referred to in the remainder of this README as `msg` functions. These
+referred to in the remainder of this README as `msg` functions, and they
+have a common documentation page that can be accessed `?msg`. These
 write messages to the console dependent on a `verbosity_level` set.
 Specifically, below it’s visible that the message is only written to the
 console when the `verbosity_level` is matching a level in
@@ -55,9 +56,6 @@ msg("testing",
     levels_to_write = c("verbose", "debug"),
     verbosity_level = "verbose")
 #> ℹ testing
-```
-
-``` r
 
 msg("testing",
     levels_to_write = c("verbose", "debug"),
@@ -173,10 +171,7 @@ foo_pkg$foo
 #>                                  # Do stuff
 #>                                  msg_success("Inform my user that stuff succeeded")
 #>                                }
-#> <environment: 0x0000025cbb37fea0>
-```
-
-``` r
+#> <environment: 0x4dfdc98>
 
 # Option set in package:
 foo_pkg$.options

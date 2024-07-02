@@ -8,3 +8,4 @@
 ^\.lintr$
 ^\.github$
 ^cspell\.yaml$
+^cran-comments\.md$

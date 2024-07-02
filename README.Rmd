@@ -173,3 +173,4 @@ foo <- function(my_arg,
 1. Set a `verbosity_level` package level option in your package (see the `R/package_options.R` file in the `zephyr` package for an example as shown [in this earlier section](#sec:set_opt))
 2. Develop your functions to include `zephyr` functionalities when you want to inform your user - allowing them to specify a `verbosity_level` directly as an argument or only through options.
 3. Write in the documentation of your functions that verbosity level can be controlled through options - see more about how to easily write resuable documentation from the `options` package [here](https://dgkf.github.io/options/articles/options.html#documentation)
+
