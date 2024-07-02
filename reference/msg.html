@@ -138,21 +138,44 @@ based on options.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span><span class="co"># Use the `msg` function to give end user information depending on the</span></span></span>
-<span class="r-in"><span><span class="co"># verbosity level set in the package options. Fx. if such an option is set</span></span></span>
-<span class="r-in"><span><span class="co"># in a package called `callisto` with `options::define_option("verbosity_level", ...)`,</span></span></span>
-<span class="r-in"><span><span class="co"># then `msg` can be used inside function definition in that package like so:</span></span></span>
-<span class="r-in"><span><span class="fu">callisto</span><span class="fu">::</span><span class="va">filter_with_popdata</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">popfilter</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span> <span class="fu">msg</span><span class="op">(</span><span class="st">"Filtering {.field data} with {.field {popfilter}}"</span>,</span></span>
-<span class="r-in"><span>           levels_to_write <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"verbose"</span>, <span class="st">"debug"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>           msg_fun <span class="op">=</span> <span class="fu">cli</span><span class="fu">::</span><span class="va"><a href="https://cli.r-lib.org/reference/cli_h1.html" class="external-link">cli_h2</a></span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">filter_data</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">infilter</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span> <span class="fu">msg_debug</span><span class="op">(</span><span class="st">"Trying to filter data"</span><span class="op">)</span></span></span>
-<span class="r-in"><span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span></span>
-<span class="r-in"><span> <span class="fu">msg_success</span><span class="op">(</span><span class="st">"Filtered data with filter {.field {popfilter}}"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span>  <span class="co">#Defusing the filter arguments</span></span></span>
+<span class="r-in"><span>  <span class="va">infilter_e</span> <span class="op">&lt;-</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/enquo.html" class="external-link">enquo</a></span><span class="op">(</span><span class="va">infilter</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">infilter_lb</span> <span class="op">&lt;-</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/as_label.html" class="external-link">as_label</a></span><span class="op">(</span><span class="va">infilter_e</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="fu">msg</span><span class="op">(</span><span class="st">"Filtering {.field data} by {.field {infilter_lb}}"</span>,</span></span>
+<span class="r-in"><span>    levels_to_write <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"verbose"</span>, <span class="st">"debug"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    msg_fun <span class="op">=</span> <span class="fu">cli</span><span class="fu">::</span><span class="va"><a href="https://cli.r-lib.org/reference/cli_h1.html" class="external-link">cli_h2</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="co">#Adding a debug message that only will appear if verbosity level is set to</span></span></span>
+<span class="r-in"><span>  <span class="st">"debug"</span></span></span>
+<span class="r-in"><span>  <span class="fu">msg_debug</span><span class="op">(</span><span class="st">"Trying to filter data"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="va">data</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">{</span><span class="op">{</span><span class="va">infilter</span><span class="op">}</span><span class="op">}</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="fu">msg_success</span><span class="op">(</span><span class="st">"Data filtered by {.field {infilter_lb}}"</span><span class="op">)</span></span></span>
+<span class="r-in"><span> <span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_options.html" class="external-link">with_options</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>zephyr.verbosity_level <span class="op">=</span> <span class="st">"verbose"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>     <span class="fu">filter_data</span><span class="op">(</span>data <span class="op">=</span> <span class="va">cars</span>, infilter <span class="op">=</span> <span class="va">speed</span> <span class="op">&gt;</span> <span class="fl">12</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Filtering </span><span style="color: #00BB00; font-weight: bold;">data</span><span style="font-weight: bold;"> by </span><span style="color: #00BB00; font-weight: bold;">speed &gt; 12</span> ──</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Data filtered by <span style="color: #00BB00;">speed &gt; 12</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_options.html" class="external-link">with_options</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>zephyr.verbosity_level <span class="op">=</span> <span class="st">"debug"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>       <span class="fu">filter_data</span><span class="op">(</span>data <span class="op">=</span> <span class="va">cars</span>, infilter <span class="op">=</span> <span class="va">speed</span> <span class="op">&gt;</span> <span class="fl">12</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Filtering </span><span style="color: #00BB00; font-weight: bold;">data</span><span style="font-weight: bold;"> by </span><span style="color: #00BB00; font-weight: bold;">speed &gt; 12</span> ──</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Trying to filter data</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Data filtered by <span style="color: #00BB00;">speed &gt; 12</span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
@@ -161,7 +184,7 @@ based on options.</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Aksel Thomsen, Mathias Lerbech Jeppesen, Cervan Girard, Kristian Troejelsgaard Nielsen, Lovemore Gakava, Steffen Falgreen Larsen, Vladimir Obucina.</p>
+  <p>Developed by Aksel Thomsen, Mathias Lerbech Jeppesen, Cervan Girard, Kristian, Troejelsgaard <a href="mailto:ktqn@novonordisk.com" class="email">ktqn@novonordisk.com</a>, Lovemore Gakava, Steffen Falgreen Larsen, Vladimir Obucina.</p>
 </div>
 
 <div class="pkgdown-footer-right">
