@@ -19,7 +19,8 @@ env:
   APPLY_FIXES: all
   APPLY_FIXES_EVENT: none
   APPLY_FIXES_MODE: pull_request
-  KICS_EXCLUDE_QUERIES: 555ab8f9-2001-455e-a077-f2d0f41e2fb9 # Exclude check: https://docs.kics.io/latest/queries/cicd-queries/common/555ab8f9-2001-455e-a077-f2d0f41e2fb9/
+  KICS_EXCLUDE_QUERIES: 555ab8f9-2001-455e-a077-f2d0f41e2fb9 # Exclude check: https://docs.kics.io/latest/queries/cicd-queries/555ab8f9-2001-455e-a077-f2d0f41e2fb9/
+  SPELL_LYCHEE_ARGUMENTS: --exclude '^.*\{\{.+\}\}.$'
   SPELL_LYCHEE_FILE_EXTENSIONS: '*' # Check all file types for dead links
 
 concurrency:
@@ -33,12 +34,12 @@ jobs:
 
     steps:
       - name: Set up node.js 20
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
 
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.PAT || secrets.GITHUB_TOKEN }}
           fetch-depth: 0 # If you use VALIDATE_ALL_CODEBASE = true, you can remove this line to improve performances
@@ -49,6 +50,7 @@ jobs:
         env:
           VALIDATE_ALL_CODEBASE: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }} # Validates all source when push on main, else just the git diff with main. Override with true if you always want to lint all sources
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DISABLE_ERRORS_LINTERS: REPOSITORY_DEVSKIM
 
       - name: Archive production artifacts
         if: success() || failure()

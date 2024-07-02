@@ -67,20 +67,34 @@ The \code{msg_debug} function is a wrapper around \code{msg} with
 \code{levels_to_write = c("verbose", "debug")} and \code{msg_fun = cli::cli_alert_success}.
 }
 \examples{
-\dontrun{
-# Use the `msg` function to give end user information depending on the
-# verbosity level set in the package options. Fx. if such an option is set
-# in a package called `callisto` with `options::define_option("verbosity_level", ...)`,
-# then `msg` can be used inside function definition in that package like so:
-callisto::filter_with_popdata <- function(data, popfilter, ...) {
- msg("Filtering {.field data} with {.field {popfilter}}",
-           levels_to_write = c("verbose", "debug"),
-           msg_fun = cli::cli_h2)
+filter_data <- function(data, infilter, ...) {
 
- msg_debug("Trying to filter data")
- dplyr::filter(data, ...)
- msg_success("Filtered data with filter {.field {popfilter}}")
-}
-}
+  #Defusing the filter arguments
+  infilter_e <- rlang::enquo(infilter)
+  infilter_lb <- rlang::as_label(infilter_e)
+
+  msg("Filtering {.field data} by {.field {infilter_lb}}",
+    levels_to_write = c("verbose", "debug"),
+    msg_fun = cli::cli_h2)
+
+  #Adding a debug message that only will appear if verbosity level is set to
+  "debug"
+  msg_debug("Trying to filter data")
+
+  data |>
+    dplyr::filter({{infilter}})
+
+  msg_success("Data filtered by {.field {infilter_lb}}")
+ }
+
+withr::with_options(
+list(zephyr.verbosity_level = "verbose"),
+     filter_data(data = cars, infilter = speed > 12)
+)
+
+withr::with_options(
+  list(zephyr.verbosity_level = "debug"),
+       filter_data(data = cars, infilter = speed > 12)
+)
 
 }
