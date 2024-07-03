@@ -78,12 +78,25 @@ example for possible use case.</p>
 <span>  msg_fun <span class="op">=</span> <span class="fu">cli</span><span class="fu">::</span><span class="va"><a href="https://cli.r-lib.org/reference/cli_alert.html" class="external-link">cli_alert_info</a></span>,</span>
 <span>  <span class="va">...</span>,</span>
 <span>  verbosity_level <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  which <span class="op">=</span> <span class="op">-</span><span class="fl">1</span></span>
+<span>  which <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,</span>
+<span>  .envir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">parent.frame</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">msg_debug</span><span class="op">(</span><span class="va">message</span>, <span class="va">...</span>, verbosity_level <span class="op">=</span> <span class="cn">NULL</span>, which <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="fu">msg_debug</span><span class="op">(</span></span>
+<span>  <span class="va">message</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  verbosity_level <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  which <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,</span>
+<span>  .envir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">parent.frame</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">msg_success</span><span class="op">(</span><span class="va">message</span>, <span class="va">...</span>, verbosity_level <span class="op">=</span> <span class="cn">NULL</span>, which <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">msg_success</span><span class="op">(</span></span>
+<span>  <span class="va">message</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  verbosity_level <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  which <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,</span>
+<span>  .envir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">parent.frame</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -118,6 +131,10 @@ environment, it will look in the <code>zephyr</code> namespace.</p></dd>
 <dd><p><code>integer</code> passed to <code><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">sys.function()</a></code> in case <code>verbosity_level = NULL</code>.
 Default is -1, meaning it will look in the environment of the function calling <code>msg(_...)</code>.</p></dd>
 
+
+<dt>.envir</dt>
+<dd><p><code>environment</code> passed to <code>msg_fun</code></p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -143,7 +160,7 @@ based on options.</p>
 <span class="r-in"><span>  <span class="va">infilter_e</span> <span class="op">&lt;-</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/enquo.html" class="external-link">enquo</a></span><span class="op">(</span><span class="va">infilter</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="va">infilter_lb</span> <span class="op">&lt;-</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/as_label.html" class="external-link">as_label</a></span><span class="op">(</span><span class="va">infilter_e</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span>  <span class="fu">msg</span><span class="op">(</span><span class="st">"Filtering {.field data} by {.field {infilter_lb}}"</span>,</span></span>
+<span class="r-in"><span>  <span class="fu">msg</span><span class="op">(</span><span class="st">"Attempting to filter {.field data} by {.field {infilter_lb}}"</span>,</span></span>
 <span class="r-in"><span>    levels_to_write <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"verbose"</span>, <span class="st">"debug"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    msg_fun <span class="op">=</span> <span class="fu">cli</span><span class="fu">::</span><span class="va"><a href="https://cli.r-lib.org/reference/cli_h1.html" class="external-link">cli_h2</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
@@ -161,17 +178,20 @@ based on options.</p>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>zephyr.verbosity_level <span class="op">=</span> <span class="st">"verbose"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>     <span class="fu">filter_data</span><span class="op">(</span>data <span class="op">=</span> <span class="va">cars</span>, infilter <span class="op">=</span> <span class="va">speed</span> <span class="op">&gt;</span> <span class="fl">12</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in "msg_fun(message, ...)":</span> <span style="color: #BBBB00;">!</span> Could not evaluate cli `{}` expression: `infilter_lb`.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error</span> in `eval(expr, envir = envir)`:</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> object 'infilter_lb' not found</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Attempting to filter </span><span style="color: #00BB00; font-weight: bold;">data</span><span style="font-weight: bold;"> by </span><span style="color: #00BB00; font-weight: bold;">speed &gt; 12</span> ──</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Data filtered by <span style="color: #00BB00;">speed &gt; 12</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_options.html" class="external-link">with_options</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>zephyr.verbosity_level <span class="op">=</span> <span class="st">"debug"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>       <span class="fu">filter_data</span><span class="op">(</span>data <span class="op">=</span> <span class="va">cars</span>, infilter <span class="op">=</span> <span class="va">speed</span> <span class="op">&gt;</span> <span class="fl">12</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in "msg_fun(message, ...)":</span> <span style="color: #BBBB00;">!</span> Could not evaluate cli `{}` expression: `infilter_lb`.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error</span> in `eval(expr, envir = envir)`:</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> object 'infilter_lb' not found</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Attempting to filter </span><span style="color: #00BB00; font-weight: bold;">data</span><span style="font-weight: bold;"> by </span><span style="color: #00BB00; font-weight: bold;">speed &gt; 12</span> ──</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Trying to filter data</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Data filtered by <span style="color: #00BB00;">speed &gt; 12</span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

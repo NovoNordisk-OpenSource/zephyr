@@ -96,9 +96,10 @@ function allows a global option to overwrite individual package options.</p>
 <span class="r-in"><span>     newpacakge.verbosity_level <span class="op">=</span> <span class="st">"verbose"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>     <span class="fu">filter_data</span><span class="op">(</span>data <span class="op">=</span> <span class="va">cars</span>, infilter <span class="op">=</span> <span class="va">speed</span> <span class="op">&gt;</span> <span class="fl">12</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in "msg_fun(message, ...)":</span> <span style="color: #BBBB00;">!</span> Could not evaluate cli `{}` expression: `infilter_lb`.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error</span> in `eval(expr, envir = envir)`:</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> object 'infilter_lb' not found</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Filtering </span><span style="color: #00BB00; font-weight: bold;">data</span><span style="font-weight: bold;"> by </span><span style="color: #00BB00; font-weight: bold;">speed &gt; 12</span> ──</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Data filtered by <span style="color: #00BB00;">speed &gt; 12</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_options.html" class="external-link">with_options</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>zephyr.verbosity_level <span class="op">=</span> <span class="st">"quiet"</span>,</span></span>
