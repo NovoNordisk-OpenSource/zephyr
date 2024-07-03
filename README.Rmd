@@ -89,6 +89,23 @@ Then, the behavior of the `msg` functions will be controlled through that packag
 
 We create an environment with an option of `verbosity_level` set (**Note if looking into the helper script that the option is set differently than described above for a package - when you define an option in your package, use the above approach**), and a function `foo` that uses the `msg` function inside like so:
 
+```{r}
+source("R/test_vignette_helpers.R")
+foo_pkg <- create_env_with_fun(message = "Hello from foo_pkg!",
+                               fun_name = "foo",
+                               fun = function() {
+                                 msg_debug("Inform my user the function is trying to do stuff")
+                                 # Do stuff
+                                 msg_success("Inform my user that stuff succeeded")
+                               }
+)
+
+# foo function
+foo_pkg$foo
+
+# Option set in package:
+foo_pkg$.options
+```
 
 ###### Default (implicit) behavior when using `msg` functions in your package
 
