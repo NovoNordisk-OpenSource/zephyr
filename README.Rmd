@@ -91,13 +91,14 @@ We create an environment with an option of `verbosity_level` set (**Note if look
 
 ```{r}
 source("R/test_vignette_helpers.R")
-foo_pkg <- create_env_with_fun(message = "Hello from foo_pkg!",
-                               fun_name = "foo",
-                               fun = function() {
-                                 msg_debug("Inform my user the function is trying to do stuff")
-                                 # Do stuff
-                                 msg_success("Inform my user that stuff succeeded")
-                               }
+foo_pkg <- create_env_with_fun(
+  message = "Hello from foo_pkg!",
+  fun_name = "foo",
+  fun = function() {
+    msg_debug("Inform my user the function is trying to do stuff")
+    # Do stuff
+    msg_success("Inform my user that stuff succeeded")
+  }
 )
 
 # foo function
@@ -127,8 +128,11 @@ However, a feature of the package (specifically the `get_verbosity_level` functi
 
 ```{r}
 # Writes a message
-withr::with_options(list(foo_pkg.verbosity_level = "quiet",
-                         zephyr.verbosity_level = "verbose"), {
+withr::with_options(list(
+  foo_pkg.verbosity_level = "quiet",
+  zephyr.verbosity_level = "verbose"
+),
+{
   foo_pkg$foo()
 })
 ```
@@ -137,16 +141,19 @@ Setting an environmental variable of `R_ZEPHYR_VERBOSITY_LEVEL` will only overri
 
 ```{r}
 # Will not write a message since the Zephyr environment variable overrides the package level
-withr::with_envvar(list(R_ZEPHYR_VERBOSITY_LEVEL = "quiet",
-                        R_FOO_PKG_VERBOSITY_LEVEL = "verbose"), {
-                          foo_pkg$foo()
-                        })
+withr::with_envvar(list(
+  R_ZEPHYR_VERBOSITY_LEVEL = "quiet",
+  R_FOO_PKG_VERBOSITY_LEVEL = "verbose"
+),
+{
+  foo_pkg$foo()
+})
 
 # Will write a message since option overrides the Zephyr environment variable
 withr::with_envvar(list(R_ZEPHYR_VERBOSITY_LEVEL = "quiet"), {
   withr::with_options(list(foo_pkg.verbosity_level = "verbose"), {
-                             foo_pkg$foo()
-                           })
+    foo_pkg$foo()
+  })
 })
 ```
 
@@ -161,10 +168,9 @@ Such a solution would look like creating a function `foo` in a package `foo_pkg`
 foo <- function(my_arg,
                 verbosity_level = zephyr::get_verbosity_level(env = getNamespace("foo_pkg"))) {
   zephyr::msg_debug("Inform my user the function is trying to do stuff",
-              verbosity_level = verbosity_level)
+                    verbosity_level = verbosity_level)
   # Do stuff
-  zephyr::msg_success("Inform my user that stuff succeeded",
-              verbosity_level = verbosity_level)
+  zephyr::msg_success("Inform my user that stuff succeeded", verbosity_level = verbosity_level)
 }
 ```
 
