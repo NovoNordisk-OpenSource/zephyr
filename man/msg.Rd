@@ -12,12 +12,25 @@ msg(
   msg_fun = cli::cli_alert_info,
   ...,
   verbosity_level = NULL,
-  which = -1
+  which = -1,
+  .envir = parent.frame()
 )
 
-msg_debug(message, ..., verbosity_level = NULL, which = -1)
+msg_debug(
+  message,
+  ...,
+  verbosity_level = NULL,
+  which = -1,
+  .envir = parent.frame()
+)
 
-msg_success(message, ..., verbosity_level = NULL, which = -1)
+msg_success(
+  message,
+  ...,
+  verbosity_level = NULL,
+  which = -1,
+  .envir = parent.frame()
+)
 }
 \arguments{
 \item{message}{\code{character} of message to write}
@@ -38,6 +51,8 @@ environment, it will look in the \code{zephyr} namespace.}
 
 \item{which}{\code{integer} passed to \code{\link[=sys.function]{sys.function()}} in case \code{verbosity_level = NULL}.
 Default is -1, meaning it will look in the environment of the function calling \verb{msg(_...)}.}
+
+\item{.envir}{\code{environment} passed to \code{msg_fun}}
 }
 \value{
 None
@@ -71,7 +86,7 @@ filter_data <- function(data, infilter, ...) {
   infilter_e <- rlang::enquo(infilter)
   infilter_lb <- rlang::as_label(infilter_e)
 
-  msg("Filtering {.field data} by {.field {infilter_lb}}",
+  msg("Attempting to filter {.field data} by {.field {infilter_lb}}",
     levels_to_write = c("verbose", "debug"),
     msg_fun = cli::cli_h2)
 

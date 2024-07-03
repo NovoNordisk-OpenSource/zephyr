@@ -27,6 +27,7 @@
 #' environment, it will look in the `zephyr` namespace.
 #' @param which `integer` passed to [sys.function()] in case `verbosity_level = NULL`.
 #' Default is -1, meaning it will look in the environment of the function calling `msg(_...)`.
+#' @param .envir `environment` passed to `msg_fun`
 #'
 #' @details
 #' The `msg` function is a general function, which can be used to write messages
@@ -46,7 +47,7 @@
 #'   infilter_e <- rlang::enquo(infilter)
 #'   infilter_lb <- rlang::as_label(infilter_e)
 #'
-#'   msg("Filtering {.field data} by {.field {infilter_lb}}",
+#'   msg("Attempting to filter {.field data} by {.field {infilter_lb}}",
 #'     levels_to_write = c("verbose", "debug"),
 #'     msg_fun = cli::cli_h2)
 #'
@@ -76,8 +77,10 @@ msg <- function(message,
                 msg_fun = cli::cli_alert_info,
                 ...,
                 verbosity_level = NULL,
-                which = -1) { # TODO add a destination argument to control
-  # whether to write to console, write to a file, etc.
+                which = -1,
+                .envir = parent.frame()) {
+  # TODO add a destination argument to control whether to write to console,
+  # write to a file, etc.
 
   match.arg(levels_to_write,
             choices = c("quiet", "verbose", "debug"),
@@ -99,8 +102,9 @@ msg <- function(message,
     verbosity_level <- get_verbosity_level(env = ns_of_fun)
   }
 
+
   if (verbosity_level %in% levels_to_write) {
-    msg_fun(message, ...)
+    msg_fun(message, ..., .envir = .envir)
   }
 
   invisible()
@@ -111,13 +115,15 @@ msg <- function(message,
 msg_debug <- function(message,
                       ...,
                       verbosity_level = NULL,
-                      which = -1) {
+                      which = -1,
+                      .envir = parent.frame()) {
   msg(message,
       levels_to_write = "debug",
       msg_fun = cli::cli_inform,
       ...,
       verbosity_level = verbosity_level,
-      which = -1 + which)
+      which = -1 + which,
+      .envir = .envir)
 }
 
 #' @rdname msg
@@ -125,11 +131,13 @@ msg_debug <- function(message,
 msg_success <- function(message,
                         ...,
                         verbosity_level = NULL,
-                        which = -1) {
+                        which = -1,
+                        .envir = parent.frame()) {
   msg(message,
       levels_to_write = c("verbose", "debug"),
       msg_fun = cli::cli_alert_success,
       ...,
       verbosity_level = verbosity_level,
-      which = -1 + which)
+      which = -1 + which,
+      .envir = .envir)
 }
