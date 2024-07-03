@@ -34,7 +34,7 @@ These functionalities are intented to be used by developers of R packages. First
 
 There are functions `msg`, `msg_debug` and `msg_success` collectively referred to in the remainder of this README as `msg` functions, and they have a common documentation page that can be accessed `?msg`. These write messages to the console dependent on a `verbosity_level` set. Specifically, below it's visible that the message is only written to the console when the `verbosity_level` is matching a level in `levels_to_write`.
 
-```{r, eval = FALSE}
+```{r}
 msg("testing",
     levels_to_write = c("verbose", "debug"),
     verbosity_level = "verbose")
@@ -60,21 +60,21 @@ In the `zephyr` package, we have set a package level `verbosity_level` option by
 
 Not specifying a `verbosity_level` argument in the `msg` function will fetch the `verbosity_level` option set in the `zephyr` package:
 
-```{r, eval = FALSE}
+```{r}
 # Will not write a message
 withr::with_envvar(list(R_ZEPHYR_VERBOSITY_LEVEL = "quiet"), {
   msg("testing")
 })
 ```
 
-```{r, eval = FALSE}
+```{r}
 # Will write a message
 withr::with_options(list(zephyr.verbosity_level = "debug"), {
   msg_debug("testing")
 })
 ```
 
-```{r, eval = FALSE}
+```{r}
 # Default set option is "verbose", so this Will also write a message
 msg_success("testing")
 ```
@@ -89,7 +89,7 @@ Then, the behavior of the `msg` functions will be controlled through that packag
 
 We create an environment with an option of `verbosity_level` set (**Note if looking into the helper script that the option is set differently than described above for a package - when you define an option in your package, use the above approach**), and a function `foo` that uses the `msg` function inside like so:
 
-```{r, eval = FALSE}
+```{r}
 source("R/test_vignette_helpers.R")
 foo_pkg <- create_env_with_fun(message = "Hello from foo_pkg!",
                                fun_name = "foo",
@@ -111,7 +111,7 @@ foo_pkg$.options
 
 As a default the `msg` functions will fetch the `verbosity_level` option set in `foo_pkg` when calling `foo`:
 
-```{r, eval = FALSE}
+```{r}
 # Does not write a message
 withr::with_envvar(list(R_FOO_PKG_VERBOSITY_LEVEL = "quiet"), {
   foo_pkg$foo()
@@ -125,7 +125,7 @@ withr::with_options(list(foo_pkg.verbosity_level = "debug"), {
 
 However, a feature of the package (specifically the `get_verbosity_level` function) is that you can set the verbosity level for `zephyr` functionalities globally by setting the `zephyr.verbosity_level` option, which will override individual package level options:
 
-```{r, eval = FALSE}
+```{r}
 # Writes a message
 withr::with_options(list(foo_pkg.verbosity_level = "quiet",
                          zephyr.verbosity_level = "verbose"), {
@@ -135,7 +135,7 @@ withr::with_options(list(foo_pkg.verbosity_level = "quiet",
 
 Setting an environmental variable of `R_ZEPHYR_VERBOSITY_LEVEL` will only override the package level option in case the package level option is not set using `foo_pkg_verbosity_level`:
 
-```{r, eval = FALSE}
+```{r}
 # Will not write a message since the Zephyr environment variable overrides the package level
 withr::with_envvar(list(R_ZEPHYR_VERBOSITY_LEVEL = "quiet",
                         R_FOO_PKG_VERBOSITY_LEVEL = "verbose"), {

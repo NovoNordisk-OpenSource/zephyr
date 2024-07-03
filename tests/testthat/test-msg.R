@@ -68,8 +68,11 @@ test_that("verbosity_level is automatically chosen as value of option in calling
 
 
 test_that("verbosity_level can be overwritten by zephyr level option", {
-  withr::with_options(list(zephyr.verbosity_level = "quiet",
-                           foo_pkg.verbosity_level = "verbose"), {
-                             expect_no_message(foo_pkg$foo())
-                           })
+  withr::with_options(list(
+    zephyr.verbosity_level = "quiet",
+    foo_pkg.verbosity_level = "verbose"
+  ),
+  {
+    expect_no_message(foo_pkg$foo())
+  })
 })
