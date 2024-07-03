@@ -135,7 +135,7 @@ withr::with_options(list(foo_pkg.verbosity_level = "quiet",
 
 Setting an environmental variable of `R_ZEPHYR_VERBOSITY_LEVEL` will only override the package level option in case the package level option is not set using `foo_pkg_verbosity_level`:
 
-```{r}
+```{r, eval = FALSE}
 # Will not write a message since the Zephyr environment variable overrides the package level
 withr::with_envvar(list(R_ZEPHYR_VERBOSITY_LEVEL = "quiet",
                         R_FOO_PKG_VERBOSITY_LEVEL = "verbose"), {
@@ -172,5 +172,5 @@ foo <- function(my_arg,
 
 1. Set a `verbosity_level` package level option in your package (see the `R/package_options.R` file in the `zephyr` package for an example as shown [in this earlier section](#sec:set_opt))
 2. Develop your functions to include `zephyr` functionalities when you want to inform your user - allowing them to specify a `verbosity_level` directly as an argument or only through options.
-3. Write in the documentation of your functions that verbosity level can be controlled through options - see more about how to easily write resuable documentation from the `options` package [here](https://dgkf.github.io/options/articles/options.html#documentation)
+3. Write in the documentation of your functions that verbosity level can be controlled through options - see more about how to easily write reusable documentation from the `options` package [here](https://dgkf.github.io/options/articles/options.html#documentation)
 
