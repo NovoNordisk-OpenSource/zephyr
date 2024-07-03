@@ -55,7 +55,6 @@ console when the `verbosity_level` is matching a level in
 msg("testing",
     levels_to_write = c("verbose", "debug"),
     verbosity_level = "verbose")
-#> ℹ testing
 
 msg("testing",
     levels_to_write = c("verbose", "debug"),
@@ -124,13 +123,11 @@ withr::with_envvar(list(R_ZEPHYR_VERBOSITY_LEVEL = "quiet"), {
 withr::with_options(list(zephyr.verbosity_level = "debug"), {
   msg_debug("testing")
 })
-#> testing
 ```
 
 ``` r
 # Default set option is "verbose", so this Will also write a message
 msg_success("testing")
-#> ✔ testing
 ```
 
 #### Usage in R package development
@@ -166,23 +163,9 @@ foo_pkg <- create_env_with_fun(message = "Hello from foo_pkg!",
 
 # foo function
 foo_pkg$foo
-#> function() {
-#>                                  msg_debug("Inform my user the function is trying to do stuff")
-#>                                  # Do stuff
-#>                                  msg_success("Inform my user that stuff succeeded")
-#>                                }
-#> <environment: 0x4dfdc98>
 
 # Option set in package:
 foo_pkg$.options
-#> 
-#> verbosity_level = NULL
-#> 
-#>   Option for testing
-#> 
-#>   option  : foo_pkg.verbosity_level
-#>   envvar  : R_FOO_PKG_VERBOSITY_LEVEL (evaluated if possible, raw string otherwise)
-#>  *default : default
 ```
 
 ###### Default (implicit) behavior when using `msg` functions in your package
@@ -200,8 +183,6 @@ withr::with_envvar(list(R_FOO_PKG_VERBOSITY_LEVEL = "quiet"), {
 withr::with_options(list(foo_pkg.verbosity_level = "debug"), {
   foo_pkg$foo()
 })
-#> Inform my user the function is trying to do stuff
-#> ✔ Inform my user that stuff succeeded
 ```
 
 However, a feature of the package (specifically the
@@ -216,7 +197,6 @@ withr::with_options(list(foo_pkg.verbosity_level = "quiet",
                          zephyr.verbosity_level = "verbose"), {
   foo_pkg$foo()
 })
-#> ✔ Inform my user that stuff succeeded
 ```
 
 Setting an environmental variable of `R_ZEPHYR_VERBOSITY_LEVEL` will
@@ -236,7 +216,6 @@ withr::with_envvar(list(R_ZEPHYR_VERBOSITY_LEVEL = "quiet"), {
                              foo_pkg$foo()
                            })
 })
-#> ✔ Inform my user that stuff succeeded
 ```
 
 ###### Controlling verbosity level through options with more transparency for the user
@@ -278,5 +257,5 @@ foo <- function(my_arg,
     `verbosity_level` directly as an argument or only through options.
 3.  Write in the documentation of your functions that verbosity level
     can be controlled through options - see more about how to easily
-    write resuable documentation from the `options` package
+    write reusable documentation from the `options` package
     [here](https://dgkf.github.io/options/articles/options.html#documentation)
