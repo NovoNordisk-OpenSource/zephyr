@@ -97,7 +97,7 @@ get_verbosity_level <- function(env = parent.frame()) {
 #' @examples
 #' get_envname_options()
 get_envname_options <- function() {
-  options_version_numeric <- gsub("\\.", "", as.character(packageVersion("options"))) |>
+  options_version_numeric <- gsub("\\.", "", as.character(utils::packageVersion("options"))) |>
     as.numeric()
 
   if (options_version_numeric < 20) {
