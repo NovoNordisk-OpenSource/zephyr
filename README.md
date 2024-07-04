@@ -55,6 +55,7 @@ console when the `verbosity_level` is matching a level in
 msg("testing",
     levels_to_write = c("verbose", "debug"),
     verbosity_level = "verbose")
+#> ℹ testing
 
 msg("testing",
     levels_to_write = c("verbose", "debug"),
@@ -123,11 +124,13 @@ withr::with_envvar(list(R_ZEPHYR_VERBOSITY_LEVEL = "quiet"), {
 withr::with_options(list(zephyr.verbosity_level = "debug"), {
   msg_debug("testing")
 })
+#> testing
 ```
 
 ``` r
 # Default set option is "verbose", so this Will also write a message
 msg_success("testing")
+#> ✔ testing
 ```
 
 #### Usage in R package development
@@ -152,20 +155,35 @@ package, use the above approach**), and a function `foo` that uses the
 
 ``` r
 source("R/test_vignette_helpers.R")
-foo_pkg <- create_env_with_fun(message = "Hello from foo_pkg!",
-                               fun_name = "foo",
-                               fun = function() {
-                                 msg_debug("Inform my user the function is trying to do stuff")
-                                 # Do stuff
-                                 msg_success("Inform my user that stuff succeeded")
-                               }
+foo_pkg <- create_env_with_fun(
+  message = "Hello from foo_pkg!",
+  fun_name = "foo",
+  fun = function() {
+    msg_debug("Inform my user the function is trying to do stuff")
+    # Do stuff
+    msg_success("Inform my user that stuff succeeded")
+  }
 )
 
 # foo function
 foo_pkg$foo
+#> function() {
+#>     msg_debug("Inform my user the function is trying to do stuff")
+#>     # Do stuff
+#>     msg_success("Inform my user that stuff succeeded")
+#>   }
+#> <environment: 0x4557430>
 
 # Option set in package:
 foo_pkg$.options
+#> 
+#> verbosity_level = NULL
+#> 
+#>   Option for testing
+#> 
+#>   option  : foo_pkg.verbosity_level
+#>   envvar  : R_FOO_PKG_VERBOSITY_LEVEL (evaluated if possible, raw string otherwise)
+#>  *default : default
 ```
 
 ###### Default (implicit) behavior when using `msg` functions in your package
@@ -183,6 +201,8 @@ withr::with_envvar(list(R_FOO_PKG_VERBOSITY_LEVEL = "quiet"), {
 withr::with_options(list(foo_pkg.verbosity_level = "debug"), {
   foo_pkg$foo()
 })
+#> Inform my user the function is trying to do stuff
+#> ✔ Inform my user that stuff succeeded
 ```
 
 However, a feature of the package (specifically the
@@ -193,10 +213,14 @@ level options:
 
 ``` r
 # Writes a message
-withr::with_options(list(foo_pkg.verbosity_level = "quiet",
-                         zephyr.verbosity_level = "verbose"), {
+withr::with_options(list(
+  foo_pkg.verbosity_level = "quiet",
+  zephyr.verbosity_level = "verbose"
+),
+{
   foo_pkg$foo()
 })
+#> ✔ Inform my user that stuff succeeded
 ```
 
 Setting an environmental variable of `R_ZEPHYR_VERBOSITY_LEVEL` will
@@ -205,17 +229,21 @@ is not set using `foo_pkg_verbosity_level`:
 
 ``` r
 # Will not write a message since the Zephyr environment variable overrides the package level
-withr::with_envvar(list(R_ZEPHYR_VERBOSITY_LEVEL = "quiet",
-                        R_FOO_PKG_VERBOSITY_LEVEL = "verbose"), {
-                          foo_pkg$foo()
-                        })
+withr::with_envvar(list(
+  R_ZEPHYR_VERBOSITY_LEVEL = "quiet",
+  R_FOO_PKG_VERBOSITY_LEVEL = "verbose"
+),
+{
+  foo_pkg$foo()
+})
 
 # Will write a message since option overrides the Zephyr environment variable
 withr::with_envvar(list(R_ZEPHYR_VERBOSITY_LEVEL = "quiet"), {
   withr::with_options(list(foo_pkg.verbosity_level = "verbose"), {
-                             foo_pkg$foo()
-                           })
+    foo_pkg$foo()
+  })
 })
+#> ✔ Inform my user that stuff succeeded
 ```
 
 ###### Controlling verbosity level through options with more transparency for the user
@@ -240,10 +268,9 @@ Such a solution would look like creating a function `foo` in a package
 foo <- function(my_arg,
                 verbosity_level = zephyr::get_verbosity_level(env = getNamespace("foo_pkg"))) {
   zephyr::msg_debug("Inform my user the function is trying to do stuff",
-              verbosity_level = verbosity_level)
+                    verbosity_level = verbosity_level)
   # Do stuff
-  zephyr::msg_success("Inform my user that stuff succeeded",
-              verbosity_level = verbosity_level)
+  zephyr::msg_success("Inform my user that stuff succeeded", verbosity_level = verbosity_level)
 }
 ```
 
@@ -251,7 +278,8 @@ foo <- function(my_arg,
 
 1.  Set a `verbosity_level` package level option in your package (see
     the `R/package_options.R` file in the `zephyr` package for an
-    example as shown [in this earlier section](#sec:set_opt))
+    example as shown [in this earlier
+    section](#setting-a-package-option-using-the-options-package))
 2.  Develop your functions to include `zephyr` functionalities when you
     want to inform your user - allowing them to specify a
     `verbosity_level` directly as an argument or only through options.
