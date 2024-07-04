@@ -9,20 +9,20 @@
 <!-- badges: end -->
 
 The zephyr package provides small functionalities for developers of R
-packages to inform users while allowing them to easily configure the
-amount of information they want to receive through package level
-options.
+packages to inform users about progress and issues, while at the same
+time allowing them to easily configure the amount of information they
+want to receive through package level options.
 
-You’ve probably encountered arguments like `verbose` or `silent` in
+You have probably encountered arguments like `verbose` or `silent` in
 miscellaneous functions. These arguments are used to control whether to
 print information to the console, where the developer of the function
 has usually done a logical check inside their function, and if `TRUE`,
 they print information to the console. For the developer, doing these
 logical checks explicitly each time information should be printed (or
-not) can create a lot of boilerplate code. For users, they need to set
-the argument in the function call each time they want to change the
-default behaviour, and they often only have the option of whether to get
-information or not.
+not) can create a lot of redundant code. For users, they need to set the
+argument in the function call each time they want to change the default
+behaviour, and often the users are left with the dichotomy of either
+getting every piece of information or none.
 
 The zephyr package provides tools for making this easier for both
 developers and end users. This is done by providing functionalities for
@@ -37,19 +37,20 @@ variables with the prefix `zephyr.`.
 ## Zephyr message functionalities
 
 These functionalities are intented to be used by developers of R
-packages. First, we explain the basic principle of the functions and
-then show how to use these in the context of R package development. Go
-down to this section to see how to use it in your package.
+packages. Below the basic principle of the functions are explained and
+it is showed how to use the functions in the context of R package
+development.
 
 ### Basic features
 
-There are functions `msg`, `msg_debug` and `msg_success` collectively
-referred to in the remainder of this README as `msg` functions, and they
-have a common documentation page that can be accessed `?msg`. These
-write messages to the console dependent on a `verbosity_level` set.
-Specifically, below it’s visible that the message is only written to the
-console when the `verbosity_level` is matching a level in
-`levels_to_write`.
+The backbone functions of `zephyr` are `msg`, `msg_debug` and
+`msg_success` which will collectively be referred to as `msg` functions
+in the remainder of this README. They have a common documentation page
+that can be accessed by `?msg`. The purpose of these functions is to
+write messages to the console dependent on a `verbosity_level` that can
+be specified through options. Specifically, as outlined below the
+message is only written to the console when the `verbosity_level` is
+matching a level in `levels_to_write`.
 
 ``` r
 msg("testing",
@@ -63,27 +64,28 @@ msg("testing",
 ```
 
 Note you are able to control what function to use when writing messages
-to the console through the `msg_fun` argument, and there are wrapper
-functions `msg_debug` and `msg_success` available (see the documentation
-in using `?msg`).
+to the console through the the argument `msg_fun` (default being
+`msg_fun = cli::cli_alert_info`), and there are wrapper functions
+`msg_debug` and `msg_success` available (see the documentation in using
+`?msg`) which as default have `msg_fun = cli::cli_inform` and
+`msg_fun = cli::cli_alert_success`, respectively.
 
 ### Controlling the verbosity level through options
 
-In the above, you can see that you are able to specify the verbosity
-level as an argument to the function. However, this behavior can be
-controlled through package level options. By default,
-`verbosity_level = NULL`, which means it will fetch a `verbosity_level`
-option set in the `zephyr` package when the function is used ‘directly’,
-and if the function is used inside another function, it will fetch the
-`verbosity_level` option set in the package of the function that called
-the `msg` function.
+The verbosity level can be specified as an argument withing the
+function. However, this behavior can be controlled through package level
+options. By default, `verbosity_level = NULL`, which means it will fetch
+a `verbosity_level` option set in the `zephyr` package when the function
+is used ‘directly’, and if the function is used inside another function,
+it will fetch the `verbosity_level` option set in the package of the
+function that called the `msg` function.
 
 #### Setting a package option using the `options` package
 
 Note that much more information about the `options` package is available
-in the package’s [pkgdown](https://dgkf.github.io/options/), but here we
-give the minimal introduction needed to understand the usage in context
-of the zephyr package.
+in the package’s [pkgdown](https://dgkf.github.io/options/), and here is
+only provided a the minimal introduction to understand the usage in
+context of the zephyr package.
 
 In the `zephyr` package, we have set a package level `verbosity_level`
 option by including the following code in a file below /R.
@@ -109,8 +111,9 @@ options::define_option(
 #>  *default : "verbose"
 ```
 
-Not specifying a `verbosity_level` argument in the `msg` function will
-fetch the `verbosity_level` option set in the `zephyr` package:
+When the `verbosity_level` argument is not specified (i.e. left as
+`verbosity_level = NULL`), the `msg` function will fetch the
+`verbosity_level` option set in the `zephyr` package:
 
 ``` r
 # Will not write a message
@@ -128,30 +131,29 @@ withr::with_options(list(zephyr.verbosity_level = "debug"), {
 ```
 
 ``` r
-# Default set option is "verbose", so this Will also write a message
+# Default set option is "verbose", so this will also write a message
 msg_success("testing")
 #> ✔ testing
 ```
 
 #### Usage in R package development
 
-In the above, we describe how to set a `verbosity_level` option in a
-package, and this same procedure can be performed in a developer’s R
-package to set a package level option.
+The `verbosity_level` option can also be specified in a developer’s R
+package.
 
-Then, the behavior of the `msg` functions will be controlled through
-that package level option that users can then use to easily control the
-verbosity level in the entire package. This is done by the fact that as
-a default, the `msg` functions will fetch the `verbosity_level` option
-set in the package of the function that called the `msg` function.
+When doing so, the behavior of the `msg` functions will be controlled
+through that package level option, and users can then easily control the
+verbosity level in the entire package. By default the `msg` functions
+will fetch the `verbosity_level` option set in the package of the
+function wherein the `msg` function is called.
 
 ##### Simulating creation of a package
 
-We create an environment with an option of `verbosity_level` set (**Note
-if looking into the helper script that the option is set differently
-than described above for a package - when you define an option in your
-package, use the above approach**), and a function `foo` that uses the
-`msg` function inside like so:
+We create an environment with an option where the `verbosity_level` have
+been specified (**Note: if looking into the helper script that the
+option is set differently than described above for a package - when you
+define an option in your package, use the above approach**), and a
+function `foo` that uses the `msg` function:
 
 ``` r
 source("R/test_vignette_helpers.R")
@@ -172,7 +174,7 @@ foo_pkg$foo
 #>     # Do stuff
 #>     msg_success("Inform my user that stuff succeeded")
 #>   }
-#> <environment: 0x4557430>
+#> <environment: 0x4e97430>
 
 # Option set in package:
 foo_pkg$.options
@@ -261,8 +263,8 @@ to set the default value in your function (or the
 function in case it’s not wanted to be able to override options “on a
 global zephyr level”).
 
-Such a solution would look like creating a function `foo` in a package
-`foo_pkg` like so:
+When creating a function `foo` in a package `foo_pkg` such a solution
+would look like this:
 
 ``` r
 foo <- function(my_arg,
