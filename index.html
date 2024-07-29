@@ -5,51 +5,43 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="Tools for helping developers of R packages inform their users. Package enables writing messages based on package level options.">
 <title>Tools for Informing Users Based on Package Options • zephyr</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js" integrity="sha512-7O5pXpc0oCRrxk8RUfDYFgn0nO1t+jLuIOQdOMRp4APB7uZ4vSjspzp5y6YDtDs4VzUSTbWzBFZ/LKJhnyFOKw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Tools for Informing Users Based on Package Options">
+<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
+<link href="deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Tools for Informing Users Based on Package Options">
+<meta name="description" content="Tools for helping developers of R packages inform their users. Package enables writing messages based on package level options.">
 <meta property="og:description" content="Tools for helping developers of R packages inform their users. Package enables writing messages based on package level options.">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
-    
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light" data-bs-theme="light"><div class="container">
-    
+
+    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="index.html">zephyr</a>
 
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1</small>
 
-    
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item">
-  <a class="nav-link" href="reference/index.html">Reference</a>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="news/index.html">Changelog</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
+<li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul>
-<form class="form-inline my-2 my-lg-0" role="search">
-        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="search.json" id="search-input" placeholder="Search for" autocomplete="off">
-</form>
-
-      <ul class="navbar-nav"></ul>
+<ul class="navbar-nav">
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
+</form></li>
+      </ul>
 </div>
 
-    
+
   </div>
 </nav><div class="container template-home">
 <div class="row">
@@ -58,8 +50,188 @@
 </h1></div>
 <!-- badges: start -->
 
-<p>Here’s a good template for README: 1) A paragraph that describes the high-level purpose of the package. 2) An example that shows how to use the package to solve a simple problem. 3) Installation instructions, giving code that can be copied and pasted into R. 4) An overview that describes the main components of the package. For more complex packages, this will point to vignettes for more details. This is also a good place to describe how your package fits into the ecosystem of its target domain.</p>
-<p>This package has tools for developers of other R packages, writing messages based on options set in the developer’s package. The package assumes that options are set using the <code>options</code> package.</p>
+<p>The zephyr package provides small functionalities for developers of R packages to inform users about progress and issues, while at the same time allowing them to easily configure the amount of information they want to receive through package level options.</p>
+<p>You have probably encountered arguments like <code>verbose</code> or <code>silent</code> in miscellaneous functions. These arguments are used to control whether to print information to the console, where the developer of the function has usually done a logical check inside their function, and if <code>TRUE</code>, they print information to the console. For the developer, doing these logical checks explicitly each time information should be printed (or not) can create a lot of redundant code. For users, they need to set the argument in the function call each time they want to change the default behaviour, and often the users are left with the dichotomy of either getting every piece of information or none.</p>
+<p>The zephyr package provides tools for making this easier for both developers and end users. This is done by providing functionalities for writing messages that automatically performs the logical check based on the verbosity level set in the package options. The verbosity level can be set at the package level, and the user can easily configure the verbosity level by setting options of environmental variables either on a package level with prefix <code>packagename.</code>, or globally alter the behavior of functions from zephyr by setting options of environmental variables with the prefix <code>zephyr.</code>.</p>
+<div class="section level2">
+<h2 id="zephyr-message-functionalities">Zephyr message functionalities<a class="anchor" aria-label="anchor" href="#zephyr-message-functionalities"></a>
+</h2>
+<p>These functionalities are intented to be used by developers of R packages. Below the basic principle of the functions are explained and it is showed how to use the functions in the context of R package development.</p>
+<div class="section level3">
+<h3 id="basic-features">Basic features<a class="anchor" aria-label="anchor" href="#basic-features"></a>
+</h3>
+<p>The backbone functions of <code>zephyr</code> are <code>msg</code>, <code>msg_debug</code> and <code>msg_success</code> which will collectively be referred to as <code>msg</code> functions in the remainder of this README. They have a common documentation page that can be accessed by <code><a href="reference/msg.html">?msg</a></code>. The purpose of these functions is to write messages to the console dependent on a <code>verbosity_level</code> that can be specified through options. Specifically, as outlined below the message is only written to the console when the <code>verbosity_level</code> is matching a level in <code>levels_to_write</code>.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/msg.html">msg</a></span><span class="op">(</span><span class="st">"testing"</span>,</span>
+<span>    levels_to_write <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"verbose"</span>, <span class="st">"debug"</span><span class="op">)</span>,</span>
+<span>    verbosity_level <span class="op">=</span> <span class="st">"verbose"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ℹ testing</span></span>
+<span></span>
+<span><span class="fu"><a href="reference/msg.html">msg</a></span><span class="op">(</span><span class="st">"testing"</span>,</span>
+<span>    levels_to_write <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"verbose"</span>, <span class="st">"debug"</span><span class="op">)</span>,</span>
+<span>    verbosity_level <span class="op">=</span> <span class="st">"quiet"</span><span class="op">)</span></span></code></pre></div>
+<p>Note you are able to control what function to use when writing messages to the console through the the argument <code>msg_fun</code> (default being <code>msg_fun = cli::cli_alert_info</code>), and there are wrapper functions <code>msg_debug</code> and <code>msg_success</code> available (see the documentation in using <code><a href="reference/msg.html">?msg</a></code>) which as default have <code>msg_fun = cli::cli_inform</code> and <code>msg_fun = cli::cli_alert_success</code>, respectively.</p>
+</div>
+<div class="section level3">
+<h3 id="controlling-the-verbosity-level-through-options">Controlling the verbosity level through options<a class="anchor" aria-label="anchor" href="#controlling-the-verbosity-level-through-options"></a>
+</h3>
+<p>The verbosity level can be specified as an argument withing the function. However, this behavior can be controlled through package level options. By default, <code>verbosity_level = NULL</code>, which means it will fetch a <code>verbosity_level</code> option set in the <code>zephyr</code> package when the function is used ‘directly’, and if the function is used inside another function, it will fetch the <code>verbosity_level</code> option set in the package of the function that called the <code>msg</code> function.</p>
+<div class="section level4">
+<h4 id="setting-a-package-option-using-the-options-package">Setting a package option using the <code>options</code> package<a class="anchor" aria-label="anchor" href="#setting-a-package-option-using-the-options-package"></a>
+</h4>
+<p>Note that much more information about the <code>options</code> package is available in the package’s <a href="https://dgkf.github.io/options/" class="external-link">pkgdown</a>, and here is only provided a the minimal introduction to understand the usage in context of the zephyr package.</p>
+<p>In the <code>zephyr</code> package, we have set a package level <code>verbosity_level</code> option by including the following code in a file below /R.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">options</span><span class="fu">::</span><span class="fu"><a href="https://dgkf.github.io/options/reference/defining_options.html" class="external-link">define_option</a></span><span class="op">(</span></span>
+<span>  option <span class="op">=</span> <span class="st">"verbosity_level"</span>,</span>
+<span>  default <span class="op">=</span> <span class="st">"verbose"</span>,</span>
+<span>  desc <span class="op">=</span> <span class="st">"Controls verbosity level in this package (overwritable using option</span></span>
+<span><span class="st">  `zephyr.verbosity_level` across all packages using `zephyr` functions).</span></span>
+<span><span class="st">  Options are 'debug', 'verbose' and 'quiet'"</span>,</span>
+<span>  envir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ns-reflect.html" class="external-link">getNamespace</a></span><span class="op">(</span><span class="st">"zephyr"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; verbosity_level = "verbose"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   Controls verbosity level in this package (overwritable using option</span></span>
+<span><span class="co">#&gt;   `zephyr.verbosity_level` across all packages using `zephyr`</span></span>
+<span><span class="co">#&gt;   functions).  Options are 'debug', 'verbose' and 'quiet'</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   option  : zephyr.verbosity_level</span></span>
+<span><span class="co">#&gt;   envvar  : R_ZEPHYR_VERBOSITY_LEVEL (evaluated if possible, raw string otherwise)</span></span>
+<span><span class="co">#&gt;  *default : "verbose"</span></span></code></pre></div>
+<p>When the <code>verbosity_level</code> argument is not specified (i.e. left as <code>verbosity_level = NULL</code>), the <code>msg</code> function will fetch the <code>verbosity_level</code> option set in the <code>zephyr</code> package:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Will not write a message</span></span>
+<span><span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_envvar.html" class="external-link">with_envvar</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>R_ZEPHYR_VERBOSITY_LEVEL <span class="op">=</span> <span class="st">"quiet"</span><span class="op">)</span>, <span class="op">{</span></span>
+<span>  <span class="fu"><a href="reference/msg.html">msg</a></span><span class="op">(</span><span class="st">"testing"</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Will write a message</span></span>
+<span><span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_options.html" class="external-link">with_options</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>zephyr.verbosity_level <span class="op">=</span> <span class="st">"debug"</span><span class="op">)</span>, <span class="op">{</span></span>
+<span>  <span class="fu"><a href="reference/msg.html">msg_debug</a></span><span class="op">(</span><span class="st">"testing"</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span><span class="co">#&gt; testing</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Default set option is "verbose", so this will also write a message</span></span>
+<span><span class="fu"><a href="reference/msg.html">msg_success</a></span><span class="op">(</span><span class="st">"testing"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ✔ testing</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="usage-in-r-package-development">Usage in R package development<a class="anchor" aria-label="anchor" href="#usage-in-r-package-development"></a>
+</h4>
+<p>The <code>verbosity_level</code> option can also be specified in a developer’s R package.</p>
+<p>When doing so, the behavior of the <code>msg</code> functions will be controlled through that package level option, and users can then easily control the verbosity level in the entire package. By default the <code>msg</code> functions will fetch the <code>verbosity_level</code> option set in the package of the function wherein the <code>msg</code> function is called.</p>
+<div class="section level5">
+<h5 id="simulating-creation-of-a-package">Simulating creation of a package<a class="anchor" aria-label="anchor" href="#simulating-creation-of-a-package"></a>
+</h5>
+<p>We create an environment with an option where the <code>verbosity_level</code> have been specified (<strong>Note: if looking into the helper script that the option is set differently than described above for a package - when you define an option in your package, use the above approach</strong>), and a function <code>foo</code> that uses the <code>msg</code> function:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="st">"R/test_vignette_helpers.R"</span><span class="op">)</span></span>
+<span><span class="va">foo_pkg</span> <span class="op">&lt;-</span> <span class="fu">create_env_with_fun</span><span class="op">(</span></span>
+<span>  message <span class="op">=</span> <span class="st">"Hello from foo_pkg!"</span>,</span>
+<span>  fun_name <span class="op">=</span> <span class="st">"foo"</span>,</span>
+<span>  fun <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu"><a href="reference/msg.html">msg_debug</a></span><span class="op">(</span><span class="st">"Inform my user the function is trying to do stuff"</span><span class="op">)</span></span>
+<span>    <span class="co"># Do stuff</span></span>
+<span>    <span class="fu"><a href="reference/msg.html">msg_success</a></span><span class="op">(</span><span class="st">"Inform my user that stuff succeeded"</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># foo function</span></span>
+<span><span class="va">foo_pkg</span><span class="op">$</span><span class="va">foo</span></span>
+<span><span class="co">#&gt; function() {</span></span>
+<span><span class="co">#&gt;     msg_debug("Inform my user the function is trying to do stuff")</span></span>
+<span><span class="co">#&gt;     # Do stuff</span></span>
+<span><span class="co">#&gt;     msg_success("Inform my user that stuff succeeded")</span></span>
+<span><span class="co">#&gt;   }</span></span>
+<span><span class="co">#&gt; &lt;environment: 0x4e97430&gt;</span></span>
+<span></span>
+<span><span class="co"># Option set in package:</span></span>
+<span><span class="va">foo_pkg</span><span class="op">$</span><span class="va">.options</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; verbosity_level = NULL</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   Option for testing</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   option  : foo_pkg.verbosity_level</span></span>
+<span><span class="co">#&gt;   envvar  : R_FOO_PKG_VERBOSITY_LEVEL (evaluated if possible, raw string otherwise)</span></span>
+<span><span class="co">#&gt;  *default : default</span></span></code></pre></div>
+<div class="section level6">
+<h6 id="default-implicit-behavior-when-using-msg-functions-in-your-package">Default (implicit) behavior when using <code>msg</code> functions in your package<a class="anchor" aria-label="anchor" href="#default-implicit-behavior-when-using-msg-functions-in-your-package"></a>
+</h6>
+<p>As a default the <code>msg</code> functions will fetch the <code>verbosity_level</code> option set in <code>foo_pkg</code> when calling <code>foo</code>:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Does not write a message</span></span>
+<span><span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_envvar.html" class="external-link">with_envvar</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>R_FOO_PKG_VERBOSITY_LEVEL <span class="op">=</span> <span class="st">"quiet"</span><span class="op">)</span>, <span class="op">{</span></span>
+<span>  <span class="va">foo_pkg</span><span class="op">$</span><span class="fu">foo</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Writes a message</span></span>
+<span><span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_options.html" class="external-link">with_options</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>foo_pkg.verbosity_level <span class="op">=</span> <span class="st">"debug"</span><span class="op">)</span>, <span class="op">{</span></span>
+<span>  <span class="va">foo_pkg</span><span class="op">$</span><span class="fu">foo</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Inform my user the function is trying to do stuff</span></span>
+<span><span class="co">#&gt; ✔ Inform my user that stuff succeeded</span></span></code></pre></div>
+<p>However, a feature of the package (specifically the <code>get_verbosity_level</code> function) is that you can set the verbosity level for <code>zephyr</code> functionalities globally by setting the <code>zephyr.verbosity_level</code> option, which will override individual package level options:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Writes a message</span></span>
+<span><span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_options.html" class="external-link">with_options</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  foo_pkg.verbosity_level <span class="op">=</span> <span class="st">"quiet"</span>,</span>
+<span>  zephyr.verbosity_level <span class="op">=</span> <span class="st">"verbose"</span></span>
+<span><span class="op">)</span>,</span>
+<span><span class="op">{</span></span>
+<span>  <span class="va">foo_pkg</span><span class="op">$</span><span class="fu">foo</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ✔ Inform my user that stuff succeeded</span></span></code></pre></div>
+<p>Setting an environmental variable of <code>R_ZEPHYR_VERBOSITY_LEVEL</code> will only override the package level option in case the package level option is not set using <code>foo_pkg_verbosity_level</code>:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Will not write a message since the Zephyr environment variable overrides the package level</span></span>
+<span><span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_envvar.html" class="external-link">with_envvar</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  R_ZEPHYR_VERBOSITY_LEVEL <span class="op">=</span> <span class="st">"quiet"</span>,</span>
+<span>  R_FOO_PKG_VERBOSITY_LEVEL <span class="op">=</span> <span class="st">"verbose"</span></span>
+<span><span class="op">)</span>,</span>
+<span><span class="op">{</span></span>
+<span>  <span class="va">foo_pkg</span><span class="op">$</span><span class="fu">foo</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Will write a message since option overrides the Zephyr environment variable</span></span>
+<span><span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_envvar.html" class="external-link">with_envvar</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>R_ZEPHYR_VERBOSITY_LEVEL <span class="op">=</span> <span class="st">"quiet"</span><span class="op">)</span>, <span class="op">{</span></span>
+<span>  <span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_options.html" class="external-link">with_options</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>foo_pkg.verbosity_level <span class="op">=</span> <span class="st">"verbose"</span><span class="op">)</span>, <span class="op">{</span></span>
+<span>    <span class="va">foo_pkg</span><span class="op">$</span><span class="fu">foo</span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="op">}</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ✔ Inform my user that stuff succeeded</span></span></code></pre></div>
+</div>
+<div class="section level6">
+<h6 id="controlling-verbosity-level-through-options-with-more-transparency-for-the-user">Controlling verbosity level through options with more transparency for the user<a class="anchor" aria-label="anchor" href="#controlling-verbosity-level-through-options-with-more-transparency-for-the-user"></a>
+</h6>
+<p>The default behavior described can be used to control verbosity level through your package level options without having to specify anything. In this case, write in the documentation of your functions that verbosity level can be controlled through options.</p>
+<p>In case a more transparent solution is wanted, a package level option can be set, and then the <code>zephyr::get_verbosity_level(env = getNamespace("foo_pkg"))</code> can be used to set the default value in your function (or the <code>options::opt("verbosity_level", env = getNamespace("foo_pkg"))</code> function in case it’s not wanted to be able to override options “on a global zephyr level”).</p>
+<p>When creating a function <code>foo</code> in a package <code>foo_pkg</code> such a solution would look like this:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">foo</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">my_arg</span>,</span>
+<span>                <span class="va">verbosity_level</span> <span class="op">=</span> <span class="fu">zephyr</span><span class="fu">::</span><span class="fu"><a href="reference/get_verbosity_level.html">get_verbosity_level</a></span><span class="op">(</span>env <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ns-reflect.html" class="external-link">getNamespace</a></span><span class="op">(</span><span class="st">"foo_pkg"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu">zephyr</span><span class="fu">::</span><span class="fu"><a href="reference/msg.html">msg_debug</a></span><span class="op">(</span><span class="st">"Inform my user the function is trying to do stuff"</span>,</span>
+<span>                    verbosity_level <span class="op">=</span> <span class="va">verbosity_level</span><span class="op">)</span></span>
+<span>  <span class="co"># Do stuff</span></span>
+<span>  <span class="fu">zephyr</span><span class="fu">::</span><span class="fu"><a href="reference/msg.html">msg_success</a></span><span class="op">(</span><span class="st">"Inform my user that stuff succeeded"</span>, verbosity_level <span class="op">=</span> <span class="va">verbosity_level</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section level3">
+<h3 id="summary-of-how-to-use-zephyr-in-your-package">Summary of how to use <code>zephyr</code> in your package<a class="anchor" aria-label="anchor" href="#summary-of-how-to-use-zephyr-in-your-package"></a>
+</h3>
+<ol style="list-style-type: decimal">
+<li>Set a <code>verbosity_level</code> package level option in your package (see the <code>R/package_options.R</code> file in the <code>zephyr</code> package for an example as shown <a href="#setting-a-package-option-using-the-options-package">in this earlier section</a>)</li>
+<li>Develop your functions to include <code>zephyr</code> functionalities when you want to inform your user - allowing them to specify a <code>verbosity_level</code> directly as an argument or only through options.</li>
+<li>Write in the documentation of your functions that verbosity level can be controlled through options - see more about how to easily write reusable documentation from the <code>options</code> package <a href="https://dgkf.github.io/options/articles/options.html#documentation" class="external-link">here</a>
+</li>
+</ol>
+</div>
+</div>
 </div>
   </main><aside class="col-md-3"><div class="license">
 <h2 data-toc-skip>License</h2>
@@ -107,15 +279,15 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
 </div>
 
     </footer>
 </div>
 
-  
 
-  
+
+
 
   </body>
 </html>
