@@ -11,17 +11,24 @@ msg(
   levels_to_write = c("verbose", "debug"),
   msg_fun = cli::cli_alert_info,
   ...,
-  opt_name = "verbosity_level",
+  verbosity_level = NULL,
   which = -1,
   .envir = parent.frame()
 )
 
-msg_debug(message, ..., opt_name = "verbosity_level", .envir = parent.frame())
+msg_debug(
+  message,
+  ...,
+  verbosity_level = NULL,
+  which = -1,
+  .envir = parent.frame()
+)
 
 msg_success(
   message,
   ...,
-  opt_name = "verbosity_level",
+  verbosity_level = NULL,
+  which = -1,
   .envir = parent.frame()
 )
 }
@@ -36,13 +43,19 @@ to display the message. Valid values are \code{quiet}, \code{verbose} and \code{
 
 \item{...}{Additional arguments passed to \code{msg_fun}}
 
-\item{opt_name}{\code{character} name of the option set by the \link{options} package.
-Passed to \code{\link[=get_opt]{get_opt()}}}
+\item{verbosity_level}{The verbosity level to use. If \code{NULL}, the function
+will use the \code{which} argument to determine the environment in which to find
+and option called \code{verbosity_level}. By default, it will look in the environment
+of the function calling \verb{msg(_...)}. If no option is set in this calling
+environment, it will look in the \code{zephyr} namespace.}
 
-\item{which}{\code{integer} passed to \code{\link[=sys.function]{sys.function()}}. Default is -1, meaning
-\code{sys.function(-1)} will return the function that called \code{msg}}
+\item{which}{\code{integer} passed to \code{\link[=sys.function]{sys.function()}} in case \code{verbosity_level = NULL}.
+Default is -1, meaning it will look in the environment of the function calling \verb{msg(_...)}.}
 
 \item{.envir}{\code{environment} passed to \code{msg_fun}}
+}
+\value{
+None
 }
 \description{
 The \code{msg} function is a general function for writing messages to the console
@@ -73,7 +86,7 @@ filter_data <- function(data, infilter, ...) {
   infilter_e <- rlang::enquo(infilter)
   infilter_lb <- rlang::as_label(infilter_e)
 
-  msg("Filtering {.field data} by {.field {infilter_lb}}",
+  msg("Attempting to filter {.field data} by {.field {infilter_lb}}",
     levels_to_write = c("verbose", "debug"),
     msg_fun = cli::cli_h2)
 

@@ -20,10 +20,13 @@
 #' @param msg_fun `function` taking `message` as first argument. Usually a
 #' `cli_...` function
 #' @param ... Additional arguments passed to `msg_fun`
-#' @param opt_name `character` name of the option set by the [options] package.
-#' Passed to [get_opt()]
-#' @param which `integer` passed to [sys.function()]. Default is -1, meaning
-#' `sys.function(-1)` will return the function that called `msg`
+#' @param verbosity_level The verbosity level to use. If `NULL`, the function
+#' will use the `which` argument to determine the environment in which to find
+#' and option called `verbosity_level`. By default, it will look in the environment
+#' of the function calling `msg(_...)`. If no option is set in this calling
+#' environment, it will look in the `zephyr` namespace.
+#' @param which `integer` passed to [sys.function()] in case `verbosity_level = NULL`.
+#' Default is -1, meaning it will look in the environment of the function calling `msg(_...)`.
 #' @param .envir `environment` passed to `msg_fun`
 #'
 #' @details
@@ -35,6 +38,8 @@
 #' `msg_success` function is a wrapper around `msg` with
 #' `levels_to_write = c("verbose", "debug")` and `msg_fun = cli::cli_alert_success`.
 #'
+#' @return None
+#'
 #' @examples
 #' filter_data <- function(data, infilter, ...) {
 #'
@@ -42,7 +47,7 @@
 #'   infilter_e <- rlang::enquo(infilter)
 #'   infilter_lb <- rlang::as_label(infilter_e)
 #'
-#'   msg("Filtering {.field data} by {.field {infilter_lb}}",
+#'   msg("Attempting to filter {.field data} by {.field {infilter_lb}}",
 #'     levels_to_write = c("verbose", "debug"),
 #'     msg_fun = cli::cli_h2)
 #'
@@ -71,33 +76,35 @@ msg <- function(message,
                 levels_to_write = c("verbose", "debug"),
                 msg_fun = cli::cli_alert_info,
                 ...,
-                opt_name = "verbosity_level",
+                verbosity_level = NULL,
                 which = -1,
-                .envir = parent.frame()) { # TODO add a destination argument to control
-  # whether to write to console, write to a file, etc.
+                .envir = parent.frame()) {
+  # TODO add a destination argument to control whether to write to console,
+  # write to a file, etc.
 
   match.arg(levels_to_write,
             choices = c("quiet", "verbose", "debug"),
             several.ok = TRUE)
 
-  # Is msg called within another function call?
-  called_within <- length(sys.calls()) > 1
+  if (is.null(verbosity_level)) {
+    # Is msg called within another function call?
+    called_within <- length(sys.calls()) > 1
 
-  # If msg is called within another function definition, get the options defined within
-  # the namespace of that function. Then use msg_fun based on that option
-  if (called_within) {
-    # Get the namespace of the function that called msg
-    ns_of_prev_fun <- environment(sys.function(which = which))
-    # Get value of option
-    verbosity_level <- get_opt(opt_name = opt_name,
-                               env = ns_of_prev_fun)
-
-    if (verbosity_level %in% levels_to_write) {
-      msg_fun(message, ..., .envir = .envir)
+    # If msg is called within another function definition, get the environment
+    # of that function
+    if (called_within) {
+      ns_of_fun <- environment(sys.function(which = which))
+    } else {
+      ns_of_fun <- getNamespace("zephyr")
     }
-  } else {
-    # If msg is called by itelf, use msg_fun
-    msg_fun(message, ...)
+
+    # Get value of option
+    verbosity_level <- get_verbosity_level(env = ns_of_fun)
+  }
+
+
+  if (verbosity_level %in% levels_to_write) {
+    msg_fun(message, ..., .envir = .envir)
   }
 
   invisible()
@@ -107,14 +114,15 @@ msg <- function(message,
 #' @export
 msg_debug <- function(message,
                       ...,
-                      opt_name = "verbosity_level",
+                      verbosity_level = NULL,
+                      which = -1,
                       .envir = parent.frame()) {
   msg(message,
       levels_to_write = "debug",
       msg_fun = cli::cli_inform,
       ...,
-      opt_name = opt_name,
-      which = -2,
+      verbosity_level = verbosity_level,
+      which = -1 + which,
       .envir = .envir)
 }
 
@@ -122,13 +130,14 @@ msg_debug <- function(message,
 #' @export
 msg_success <- function(message,
                         ...,
-                        opt_name = "verbosity_level",
+                        verbosity_level = NULL,
+                        which = -1,
                         .envir = parent.frame()) {
   msg(message,
       levels_to_write = c("verbose", "debug"),
       msg_fun = cli::cli_alert_success,
       ...,
-      opt_name = opt_name,
-      which = -2,
+      verbosity_level = verbosity_level,
+      which = -1 + which,
       .envir = .envir)
 }
