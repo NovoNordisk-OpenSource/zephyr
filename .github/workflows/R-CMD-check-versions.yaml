@@ -47,7 +47,7 @@ jobs:
       - name: Install dependencies
         run: >
           options(
-            repos = c(CRAN = "https://packagemanager.posit.co/cran/${{ matrix.config.date }}")
+            repos = c(CRAN = "https://packagemanager.posit.co/cran/'${{ matrix.config.date }}'")
             )
 
 
