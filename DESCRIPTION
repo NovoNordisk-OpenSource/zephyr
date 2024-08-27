@@ -1,6 +1,6 @@
 Package: zephyr
 Title: Tools for Informing Users Based on Package Options
-Version: 0.0.1
+Version: 0.0.2
 Authors@R: c(
     person("Aksel", "Thomsen", , "oath@novonordisk.com", role = c("aut", "cre")),
     person("Mathias Lerbech", "Jeppesen", , "nmlj@novonordisk.com", role = "aut"),
@@ -29,4 +29,3 @@ Imports:
     options,
     rlang,
     utils
-
