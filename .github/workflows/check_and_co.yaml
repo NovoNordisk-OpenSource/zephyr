@@ -7,7 +7,7 @@ on:
     branches:
       - main
       - master
-name: All actions test
+name: All actions
 jobs:
   check-current-version:
     name: Check current version
