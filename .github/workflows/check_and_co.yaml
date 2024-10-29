@@ -13,21 +13,16 @@ jobs:
     name: Check current version
     uses: >-
       NovoNordisk-OpenSource/r.workflows/.github/workflows/check_current_version.yaml@main
-    secrets: inherit
   check-nn-version:
     name: Check NN version
     uses: >-
       NovoNordisk-OpenSource/r.workflows/.github/workflows/check_nn_versions.yaml@main
-    secrets: inherit
   pkgdown:
     name: Pkgdown site
     uses: NovoNordisk-OpenSource/r.workflows/.github/workflows/pkgdown.yaml@main
-    secrets: inherit
   coverage:
     name: Coverage report
     uses: NovoNordisk-OpenSource/r.workflows/.github/workflows/coverage.yaml@main
-    secrets: inherit
   megalinter:
     name: Megalinter
     uses: NovoNordisk-OpenSource/r.workflows/.github/workflows/megalinter.yaml@main
-    secrets: inherit

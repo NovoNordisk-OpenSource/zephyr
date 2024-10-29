@@ -1,11 +1,11 @@
 Package: zephyr
 Title: Tools for Informing Users Based on Package Options
-Version: 0.0.2
+Version: 0.0.3
 Authors@R: c(
     person("Aksel", "Thomsen", , "oath@novonordisk.com", role = c("aut", "cre")),
     person("Mathias Lerbech", "Jeppesen", , "nmlj@novonordisk.com", role = "aut"),
     person("Cervan", "Girard", , "cgid@novonordisk.com", role = "aut"),
-    person("Kristian, Troejelsgaard", "ktqn@novonordisk.com", role = "aut"),
+    person("Kristian", "Troejelsgaard", ,"ktqn@novonordisk.com", role = "aut"),
     person("Lovemore", "Gakava", , "lvgk@novonordisk.com", role = "aut"),
     person("Steffen Falgreen", "Larsen", , "sffl@novonordisk.com", role = "aut"),
     person("Vladimir", "Obucina", , "vlob@novonordisk.com", role = c("aut")),
@@ -16,14 +16,14 @@ Description: Tools for helping developers of R packages inform their users.
 License: Apache License (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 Suggests: 
     testthat (>= 3.0.0),
     withr,
     checkmate,
     dplyr
 Config/testthat/edition: 3
-URL: https://novonordisk-opensource.github.io/zephyr/
+URL: https://novonordisk-opensource.github.io/zephyr/, https://github.com/NovoNordisk-OpenSource/zephyr
 Imports: 
     cli,
     options,
