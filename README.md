@@ -1,11 +1,11 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# zephyr
+# zephyr <a href="https://novonordisk-opensource.github.io/zephyr/"><img src="man/figures/logo.png" align="right" height="138" alt="zephyr website" /></a>
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/NN-OpenSource/zephyr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/NN-OpenSource/zephyr/actions/workflows/R-CMD-check.yaml)
+[![Checks](https://github.com/NovoNordisk-OpenSource/zephyr/actions/workflows/check_and_co.yaml/badge.svg)](https://github.com/NovoNordisk-OpenSource/zephyr/actions/workflows/check_and_co.yaml)
 <!-- badges: end -->
 
 The zephyr package provides small functionalities for developers of R
@@ -169,12 +169,12 @@ foo_pkg <- create_env_with_fun(
 
 # foo function
 foo_pkg$foo
-#> function() {
+#> function () 
+#> {
 #>     msg_debug("Inform my user the function is trying to do stuff")
-#>     # Do stuff
 #>     msg_success("Inform my user that stuff succeeded")
-#>   }
-#> <environment: 0x4e97430>
+#> }
+#> <environment: 0x2f972098>
 
 # Option set in package:
 foo_pkg$.options

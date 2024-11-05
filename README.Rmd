@@ -14,10 +14,10 @@ knitr::opts_chunk$set(
 library(zephyr)
 ```
 
-# zephyr
+# zephyr <a href="https://novonordisk-opensource.github.io/zephyr/"><img src="man/figures/logo.png" align="right" height="138" alt="zephyr website" /></a>
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/NN-OpenSource/zephyr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/NN-OpenSource/zephyr/actions/workflows/R-CMD-check.yaml)
+[![Checks](https://github.com/NovoNordisk-OpenSource/zephyr/actions/workflows/check_and_co.yaml/badge.svg)](https://github.com/NovoNordisk-OpenSource/zephyr/actions/workflows/check_and_co.yaml)
 <!-- badges: end -->
 
 The zephyr package provides small functionalities for developers of R packages to inform users about progress and issues, while at the same time allowing them to easily configure the amount of information they want to receive through package level options.

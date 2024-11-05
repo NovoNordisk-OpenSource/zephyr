@@ -6,6 +6,8 @@
 \alias{zephyr-package}
 \title{zephyr: Tools for Informing Users Based on Package Options}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 Tools for helping developers of R packages inform their users. Package enables writing messages based on package level options.
 }
 \seealso{
