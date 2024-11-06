@@ -6,6 +6,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Tools for Informing Users Based on Package Options • zephyr</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="apple-touch-icon-76x76.png">
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
@@ -13,6 +19,7 @@
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Tools for Informing Users Based on Package Options">
 <meta name="description" content="Tools for helping developers of R packages inform their users. Package enables writing messages based on package level options.">
 <meta property="og:description" content="Tools for helping developers of R packages inform their users. Package enables writing messages based on package level options.">
+<meta property="og:image" content="https://novonordisk-opensource.github.io/zephyr/logo.png">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -22,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="index.html">zephyr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -47,8 +54,11 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="zephyr">zephyr<a class="anchor" aria-label="anchor" href="#zephyr"></a>
-</h1></div>
+<div class="page-header">
+<img src="logo.png" class="logo" alt=""><h1 id="zephyr-">zephyr 
+<a class="anchor" aria-label="anchor" href="#zephyr-"></a>
+</h1>
+</div>
 <!-- badges: start -->
 
 <p>The zephyr package provides small functionalities for developers of R packages to inform users about progress and issues, while at the same time allowing them to easily configure the amount of information they want to receive through package level options.</p>
@@ -141,12 +151,12 @@
 <span></span>
 <span><span class="co"># foo function</span></span>
 <span><span class="va">foo_pkg</span><span class="op">$</span><span class="va">foo</span></span>
-<span><span class="co">#&gt; function() {</span></span>
+<span><span class="co">#&gt; function () </span></span>
+<span><span class="co">#&gt; {</span></span>
 <span><span class="co">#&gt;     msg_debug("Inform my user the function is trying to do stuff")</span></span>
-<span><span class="co">#&gt;     # Do stuff</span></span>
 <span><span class="co">#&gt;     msg_success("Inform my user that stuff succeeded")</span></span>
-<span><span class="co">#&gt;   }</span></span>
-<span><span class="co">#&gt; &lt;environment: 0x4e97430&gt;</span></span>
+<span><span class="co">#&gt; }</span></span>
+<span><span class="co">#&gt; &lt;environment: 0x2f972098&gt;</span></span>
 <span></span>
 <span><span class="co"># Option set in package:</span></span>
 <span><span class="va">foo_pkg</span><span class="op">$</span><span class="va">.options</span></span>
@@ -274,7 +284,7 @@
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/NN-OpenSource/zephyr/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/NN-OpenSource/zephyr/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://github.com/NovoNordisk-OpenSource/zephyr/actions/workflows/check_and_co.yaml" class="external-link"><img src="https://github.com/NovoNordisk-OpenSource/zephyr/actions/workflows/check_and_co.yaml/badge.svg" alt="Checks"></a></li>
 </ul>
 </div>
 
