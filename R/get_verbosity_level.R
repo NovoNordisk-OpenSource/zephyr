@@ -36,13 +36,19 @@
 #'
 #' withr::with_options(
 #'   list(zephyr.verbosity_level = "verbose",
-#'        newpacakge.verbosity_level = "verbose"),
+#'        newpackage.verbosity_level = "verbose"),
 #'   filter_data(data = cars, infilter = speed > 12)
 #' )
 #'
 #' withr::with_options(
 #'   list(zephyr.verbosity_level = "quiet",
-#'        newpacakge.verbosity_level = "verbose"),
+#'        newpackage.verbosity_level = "verbose"),
+#'   filter_data(data = cars, infilter = speed > 12)
+#' )
+#'
+#' withr::with_options(
+#'   list(zephyr.verbosity_level = "debug",
+#'        newpackage.verbosity_level = "verbose"),
 #'   filter_data(data = cars, infilter = speed > 12)
 #' )
 get_verbosity_level <- function(env = parent.frame()) {

@@ -2,12 +2,12 @@
 % Please edit documentation in R/get_verbosity_level.R
 \name{get_envname_options}
 \alias{get_envname_options}
-\title{Get the value of the \code{opt_source} for an environment variable based on \code{options} package version}
+\title{Get the value of the \code{opt_source} for an environment variable based on \code{options} package version.}
 \usage{
 get_envname_options()
 }
 \value{
-\code{character} with the value of the \code{opt_source} for an environment variable
+\code{character} with the value of the \code{opt_source} for an environment variable.
 }
 \description{
 See breaking change in version 0.2.0 in the changelog here:
