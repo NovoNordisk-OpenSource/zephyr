@@ -2,7 +2,7 @@
 % Please edit documentation in R/zephyr-options.R
 \name{option_spec_pkg}
 \alias{option_spec_pkg}
-\title{Create an option specification.}
+\title{Create an option specification}
 \usage{
 option_spec_pkg(
   name,
@@ -25,25 +25,29 @@ option_spec_pkg(
 
 \item{desc}{A description of the option.}
 
-\item{option_name}{The name of the option in the options list.}
+\item{option_name}{The name of the R option (defaults to \code{name}).}
 
-\item{envvar_name}{The name of the environment variable.}
+\item{envvar_name}{The name of the environment variable (defaults to \verb{R_[uppercase name]}).}
 
-\item{option_fn}{A function to apply to the option value.}
+\item{option_fn}{A function to process the option value.}
 
-\item{envvar_fn}{A function to apply to the environment variable value.}
+\item{envvar_fn}{A function to process the environment variable value.}
 
-\item{quoted}{Whether the default value is quoted.}
+\item{quoted}{Whether the option value should be quoted.}
 
 \item{eager}{Whether to evaluate the default value eagerly.}
 
-\item{envir}{The environment to evaluate the default value in.}
+\item{envir}{The environment in which to evaluate the option.}
 
 \item{print_spec}{Whether to print the option specification.}
 }
 \value{
-An option specification object (invisibly).
+An invisible option specification object.
 }
 \description{
-This function creates an option specification.
+This function creates an option specification with various parameters.
+}
+\examples{
+option_spec_pkg("my_option", default = 42, desc = "An example option")
+
 }

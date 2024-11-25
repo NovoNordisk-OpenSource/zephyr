@@ -62,12 +62,12 @@
 #'  }
 #'
 #' withr::with_options(
-#' list(zephyr.verbosity_level = "verbose"),
+#' list(verbosity_level = "verbose"),
 #'      filter_data(data = cars, infilter = speed > 12)
 #' )
 #'
 #' withr::with_options(
-#'   list(zephyr.verbosity_level = "debug"),
+#'   list(verbosity_level = "debug"),
 #'        filter_data(data = cars, infilter = speed > 12)
 #' )
 #'

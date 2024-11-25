@@ -2,20 +2,25 @@
 % Please edit documentation in R/zephyr-options.R
 \name{opt_pkg}
 \alias{opt_pkg}
-\title{Get the value of an option.}
+\title{Get the value of an option}
 \usage{
 opt_pkg(option_name, default = NULL, envir = parent.frame())
 }
 \arguments{
-\item{option_name}{The name of the option.}
+\item{option_name}{The name of the option to retrieve.}
 
 \item{default}{The default value to return if the option is not found.}
 
-\item{envir}{The environment to search for the option.}
+\item{envir}{The environment in which to look for the option.}
 }
 \value{
 The value of the option.
 }
 \description{
-This function retrieves the value of an option.
+This function retrieves the value of an option, considering its various possible sources.
+}
+\examples{
+define_option_pkg("my_option", default = 42)
+opt_pkg("my_option")
+
 }

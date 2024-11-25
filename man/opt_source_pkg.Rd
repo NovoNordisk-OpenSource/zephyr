@@ -2,18 +2,23 @@
 % Please edit documentation in R/zephyr-options.R
 \name{opt_source_pkg}
 \alias{opt_source_pkg}
-\title{Determine the source of an option value.}
+\title{Determine the source of an option value}
 \usage{
 opt_source_pkg(x, envir = parent.frame())
 }
 \arguments{
-\item{x}{An option specification or the name of an option.}
+\item{x}{The name of the option or an option specification object.}
 
-\item{envir}{The environment to search for the option.}
+\item{envir}{The environment in which to look for the option.}
 }
 \value{
-The source of the option value ("option", "envvar", "default", or NA).
+A character string indicating the source of the option value.
 }
 \description{
-This function determines the source of an option value.
+This function determines the source of an option value (option, environment variable, or default).
+}
+\examples{
+define_option_pkg("my_option", default = 42)
+opt_source_pkg("my_option")
+
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/zephyr-options.R
 \name{define_option_pkg}
 \alias{define_option_pkg}
-\title{Define an option.}
+\title{Define an option}
 \usage{
 define_option_pkg(
   option,
@@ -18,29 +18,33 @@ define_option_pkg(
 )
 }
 \arguments{
-\item{option}{The name of the option.}
+\item{option}{The name of the option to define.}
 
 \item{default}{The default value of the option.}
 
 \item{desc}{A description of the option.}
 
-\item{option_name}{The name of the option in the options list.}
+\item{option_name}{The name of the R option (defaults to \code{name}).}
 
-\item{envvar_name}{The name of the environment variable.}
+\item{envvar_name}{The name of the environment variable (defaults to \verb{R_[uppercase name]}).}
 
-\item{option_fn}{A function to apply to the option value.}
+\item{option_fn}{A function to process the option value.}
 
-\item{envvar_fn}{A function to apply to the environment variable value.}
+\item{envvar_fn}{A function to process the environment variable value.}
 
-\item{quoted}{Whether the default value is quoted.}
+\item{quoted}{Whether the option value should be quoted.}
 
 \item{eager}{Whether to evaluate the default value eagerly.}
 
-\item{envir}{The environment to evaluate the default value in.}
+\item{envir}{The environment in which to evaluate the option.}
 }
 \value{
-An option specification object (invisibly).
+An invisible option specification object.
 }
 \description{
-This function defines an option.
+This function defines an option and stores its specification in the environment.
+}
+\examples{
+define_option_pkg("my_option", default = 42, desc = "An example option")
+
 }

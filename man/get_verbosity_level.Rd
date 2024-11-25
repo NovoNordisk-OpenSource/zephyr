@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_verbosity_level.R
 \name{get_verbosity_level}
 \alias{get_verbosity_level}
-\title{Get \code{verbosity_level} option, allowing a global option to overwrite individual package options.}
+\title{Get \code{verbosity_level} option, prioritizing different sources.}
 \usage{
 get_verbosity_level(env = parent.frame())
 }
@@ -13,44 +13,28 @@ get_verbosity_level(env = parent.frame())
 Value of the option.
 }
 \description{
-This function retrieves the value of the \code{verbosity_level} option, with the option
-for a global setting to override package-specific settings.
+This function retrieves the value of the \code{verbosity_level} option, prioritizing
+different sources according to the following rules:
+}
+\details{
+\enumerate{
+\item If the option is not defined for the specified environment, use the option
+set on the "zephyr" level (using the default if nothing is done).
+\item If the option is set on the "zephyr" level, use that one.
+\item If the option is set on the "env" level, use that one.
+\item If the option is not set as an option on the package level, and the "zephyr"
+option is set using an environment variable, use that one.
+\item If the "zephyr" level option is not set, use the option set on the package
+level, whether default or environment variable.
+}
 }
 \examples{
-# Setting a "global option" overwrites the behavior, i.e., the example below will
-# never write anything to the console no matter the option set in the
-# package where the filter_data function is located (as an example this package
-# is here called "newpackage").
+# Define the option in the "zephyr" namespace
 
-filter_data <- function(data, infilter, ...) {
+# Get the verbosity level in the current environment
+get_verbosity_level()
 
-  # Defusing the filter arguments
-  infilter_e <- rlang::enquo(infilter)
-  infilter_lb <- rlang::as_label(infilter_e)
-
-  msg("Filtering {.field data} by {.field {infilter_lb}}",
-      levels_to_write = c("verbose", "debug"),
-      msg_fun = cli::cli_h2)
-
-  # Adding a debug message that only will appear if verbosity level is set to
-  # "debug"
-  msg_debug("Trying to filter data")
-
-  data |>
-    dplyr::filter({{infilter}})
-
-  msg_success("Data filtered by {.field {infilter_lb}}")
-}
-
-withr::with_options(
-  list(zephyr.verbosity_level = "verbose",
-       newpacakge.verbosity_level = "verbose"),
-  filter_data(data = cars, infilter = speed > 12)
-)
-
-withr::with_options(
-  list(zephyr.verbosity_level = "quiet",
-       newpacakge.verbosity_level = "verbose"),
-  filter_data(data = cars, infilter = speed > 12)
-)
+# Get the verbosity level in a specific environment
+env <- new.env()
+get_verbosity_level(env)
 }

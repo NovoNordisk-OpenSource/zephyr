@@ -2,20 +2,25 @@
 % Please edit documentation in R/zephyr-options.R
 \name{get_option_spec_pkg}
 \alias{get_option_spec_pkg}
-\title{Get an option specification.}
+\title{Get the option specification}
 \usage{
-get_option_spec_pkg(option_name, envir = parent.frame(), print_spec = TRUE)
+get_option_spec_pkg(x, envir = parent.frame(), print_spec = TRUE)
 }
 \arguments{
-\item{option_name}{The name of the option.}
+\item{x}{The name of the option.}
 
-\item{envir}{The environment to search for the option.}
+\item{envir}{The environment in which to look for the option.}
 
 \item{print_spec}{Whether to print the option specification.}
 }
 \value{
-An option specification object.
+The option specification object, or NULL if not found.
 }
 \description{
-This function retrieves an option specification.
+This function retrieves the option specification for a given option name.
+}
+\examples{
+define_option_pkg("my_option", default = 42)
+get_option_spec_pkg("my_option")
+
 }
