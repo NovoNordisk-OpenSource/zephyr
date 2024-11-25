@@ -1,57 +1,55 @@
-#' Get `verbosity_level` option using the `options` package, allowing a global option
+#' Get `verbosity_level` option, allowing a global option to overwrite individual package options.
 #'
-#' @description
-#' Get option using the `options` package, where the
-#' function allows a global option to overwrite individual package options.
+#' This function retrieves the value of the `verbosity_level` option, with the option
+#' for a global setting to override package-specific settings.
 #'
-#' @param env Environment to get the option from (set with the `options` package)
+#' @param env Environment to get the option from.
 #'
-#' @return Value of the option
+#' @return Value of the option.
 #' @export
 #'
 #' @examples
-#' # Setting a "global option" overwrites the behavior, i.e. example below will
+#' # Setting a "global option" overwrites the behavior, i.e., the example below will
 #' # never write anything to the console no matter the option set in the
 #' # package where the filter_data function is located (as an example this package
-#' # is here called "newpackage")
+#' # is here called "newpackage").
 #'
 #' filter_data <- function(data, infilter, ...) {
 #'
-#'   #Defusing the filter arguments
+#'   # Defusing the filter arguments
 #'   infilter_e <- rlang::enquo(infilter)
 #'   infilter_lb <- rlang::as_label(infilter_e)
 #'
 #'   msg("Filtering {.field data} by {.field {infilter_lb}}",
-#'     levels_to_write = c("verbose", "debug"),
-#'     msg_fun = cli::cli_h2)
+#'       levels_to_write = c("verbose", "debug"),
+#'       msg_fun = cli::cli_h2)
 #'
-#'   #Adding a debug message that only will appear if verbosity level is set to
-#'   "debug"
+#'   # Adding a debug message that only will appear if verbosity level is set to
+#'   # "debug"
 #'   msg_debug("Trying to filter data")
 #'
 #'   data |>
 #'     dplyr::filter({{infilter}})
 #'
 #'   msg_success("Data filtered by {.field {infilter_lb}}")
-#'  }
+#' }
 #'
 #' withr::with_options(
-#' list(zephyr.verbosity_level = "verbose",
-#'      newpacakge.verbosity_level = "verbose"),
-#'      filter_data(data = cars, infilter = speed > 12)
+#'   list(zephyr.verbosity_level = "verbose",
+#'        newpacakge.verbosity_level = "verbose"),
+#'   filter_data(data = cars, infilter = speed > 12)
 #' )
 #'
 #' withr::with_options(
 #'   list(zephyr.verbosity_level = "quiet",
 #'        newpacakge.verbosity_level = "verbose"),
-#'        filter_data(data = cars, infilter = speed > 12)
+#'   filter_data(data = cars, infilter = speed > 12)
 #' )
-#'
 get_verbosity_level <- function(env = parent.frame()) {
 
-  zephyr_verbosity_level_source <- options::opt_source("verbosity_level",
-                                                       env = getNamespace("zephyr"))
-  zephyr_verbosity_level <- options::opt("verbosity_level", env = getNamespace("zephyr"))
+  zephyr_verbosity_level_source <- opt_source_pkg("verbosity_level",
+    env = getNamespace("zephyr"))
+  zephyr_verbosity_level <- opt_pkg("verbosity_level", env = getNamespace("zephyr"))
 
   # If option is not defined for the specified environment, we use the option
   # set on zephyr level (using default is nothing is done)
@@ -59,9 +57,9 @@ get_verbosity_level <- function(env = parent.frame()) {
     return(zephyr_verbosity_level)
   }
 
-  pkg_verbosity_level_source <- options::opt_source("verbosity_level",
-                                                    env = env)
-  pkg_verbosity_level <- options::opt("verbosity_level", env = env)
+  pkg_verbosity_level_source <- opt_source_pkg("verbosity_level",
+    env = env)
+  pkg_verbosity_level <- opt_pkg("verbosity_level", env = env)
 
   # If option is set on "zephyr level" use that one
   if (zephyr_verbosity_level_source == "option") {
@@ -84,13 +82,13 @@ get_verbosity_level <- function(env = parent.frame()) {
   return(pkg_verbosity_level)
 }
 
-#' Get the value of the `opt_source` for an environment variable based on `options` package version
+#' Get the value of the `opt_source` for an environment variable based on `options` package version.
 #'
 #' See breaking change in version 0.2.0 in the changelog here:
 #' https://dgkf.github.io/options/news/index.html. Function gives the value that is
 #' returned by [opt_source()]. Is used inside the [get_verbosity_level()] function.
 #'
-#' @return `character` with the value of the `opt_source` for an environment variable
+#' @return `character` with the value of the `opt_source` for an environment variable.
 #'
 #' @export
 #'
