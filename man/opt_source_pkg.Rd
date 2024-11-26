@@ -4,10 +4,10 @@
 \alias{opt_source_pkg}
 \title{Determine the source of an option value}
 \usage{
-opt_source_pkg(x, envir = parent.frame())
+opt_source_pkg(spec, envir = parent.frame())
 }
 \arguments{
-\item{x}{The name of the option or an option specification object.}
+\item{spec}{An option specification object.}
 
 \item{envir}{The environment in which to look for the option.}
 }
@@ -19,6 +19,7 @@ This function determines the source of an option value (option, environment vari
 }
 \examples{
 define_option_pkg("my_option", default = 42)
-opt_source_pkg("my_option")
+spec <- get_option_spec_pkg("my_option")
+opt_source_pkg(spec)
 
 }

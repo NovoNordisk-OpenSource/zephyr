@@ -14,7 +14,8 @@ define_option_pkg(
   envvar_fn = NULL,
   quoted = FALSE,
   eager = FALSE,
-  envir = parent.frame()
+  envir = parent.frame(),
+  print_spec = TRUE
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ define_option_pkg(
 \item{eager}{Whether to evaluate the default value eagerly.}
 
 \item{envir}{The environment in which to evaluate the option.}
+
+\item{print_spec}{Whether to print the option specification.}
 }
 \value{
 An invisible option specification object.

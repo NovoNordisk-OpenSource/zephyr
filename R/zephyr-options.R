@@ -75,18 +75,7 @@ option_spec_pkg <- function(name, default = NULL, desc = NULL, option_name = NUL
 #' @export
 define_option_pkg <- function(option, default = NULL, desc = NULL, option_name = NULL,
   envvar_name = NULL, option_fn = NULL, envvar_fn = NULL,
-  quoted = FALSE, eager = FALSE, envir = parent.frame()) {
-  if (is.null(option_name)) {
-    option_name <- option
-  }
-  if (is.null(envvar_name)) {
-    envvar_name <- toupper(paste0("R_", option))
-  }
-
-  if (eager) {
-    default <- eval(default, envir = envir)
-  }
-
+  quoted = FALSE, eager = FALSE, envir = parent.frame(), print_spec = TRUE) {
   spec <- option_spec_pkg(
     name = option,
     default = default,
@@ -98,34 +87,14 @@ define_option_pkg <- function(option, default = NULL, desc = NULL, option_name =
     quoted = quoted,
     eager = eager,
     envir = envir,
-    print_spec = FALSE
+    print_spec = print_spec
   )
-
-  output <- paste0(
-    "\n",
-    option, " = \"", default, "\"\n\n",
-    "  ", desc, "\n\n",
-    "  option  : ", option_name, "\n",
-    "  envvar  : ", envvar_name, " (evaluated if possible, raw string otherwise)\n",
-    " *default : \"", default, "\"\n"
-  )
-  cat(output)
 
   if (!exists(".options", envir = envir, inherits = FALSE)) {
-    tryCatch({
-      envir$.options <- new.env(parent = emptyenv())
-    }, error = function(e) {
-      .options_temp <- new.env(parent = emptyenv())
-      assign(".options", .options_temp, envir = envir)
-    })
+    envir$.options <- new.env(parent = emptyenv())
   }
 
-  tryCatch({
-    envir$.options[[option]] <- spec
-  }, error = function(e) {
-    options_env <- get(".options", envir = envir)
-    assign(option, spec, envir = options_env)
-  })
+  envir$.options[[option]] <- spec
 
   return(invisible(spec))
 }
@@ -134,34 +103,31 @@ define_option_pkg <- function(option, default = NULL, desc = NULL, option_name =
 #'
 #' This function determines the source of an option value (option, environment variable, or default).
 #'
-#' @param x The name of the option or an option specification object.
+#' @param spec An option specification object.
 #' @param envir The environment in which to look for the option.
 #'
 #' @return A character string indicating the source of the option value.
 #'
 #' @examples
 #' define_option_pkg("my_option", default = 42)
-#' opt_source_pkg("my_option")
+#' spec <- get_option_spec_pkg("my_option")
+#' opt_source_pkg(spec)
 #'
 #' @export
-opt_source_pkg <- function(x, envir = parent.frame()) {
-  if (!inherits(x, "option_spec_pkg")) {
-    x <- get_option_spec_pkg(x, envir = envir, print_spec = FALSE)
-  }
-
-  if (is.null(x)) {
-    return(NA_character_)
-  }
-
-  if (x$option_name %in% names(options())) {
+opt_source_pkg <- function(spec, envir = parent.frame()) {
+  if (!is.null(spec$option_name) && !is.null(getOption(spec$option_name))) {
     return("option")
-  } else if (!is.na(Sys.getenv(x$envvar_name, unset = NA))) {
-    return("envvar")
-  } else if (!is.null(x$expr)) {
-    return("default")
-  } else {
-    return(NA_character_)
   }
+
+  if (!is.null(spec$envvar_name) && nzchar(Sys.getenv(spec$envvar_name))) {
+    return("envvar")
+  }
+
+  if (!is.null(spec$expr)) {
+    return("default")
+  }
+
+  return(NULL)
 }
 
 #' Get the value of an option
@@ -189,10 +155,17 @@ opt_pkg <- function(option_name, default = NULL, envir = parent.frame()) {
   source <- opt_source_pkg(spec, envir = envir)
 
   value <- switch(source,
-    envvar = spec$envvar_fn(Sys.getenv(spec$envvar_name, unset = NA), spec$envvar_name),
-    option = getOption(spec$option_name),
-    default = eval(spec$expr, envir = spec$envir),
-    stop(sprintf("Option '%s' not found.", option_name))
+    envvar = {
+      env_value <- Sys.getenv(spec$envvar_name, unset = NA)
+      if (!is.null(spec$envvar_fn)) spec$envvar_fn(env_value, spec$envvar_name) else env_value
+    },
+    option = {
+      getOption(spec$option_name)
+    },
+    default = {
+      eval(spec$expr, envir = spec$envir)
+    },
+    default
   )
 
   if (!is.null(spec$option_fn)) {
@@ -217,7 +190,7 @@ opt_pkg <- function(option_name, default = NULL, envir = parent.frame()) {
 #' get_option_spec_pkg("my_option")
 #'
 #' @export
-get_option_spec_pkg <- function(x, envir = parent.frame(), print_spec = TRUE) {
+get_option_spec_pkg <- function(x, envir = parent.frame(), print_spec = FALSE) {
   if (!exists(".options", envir = envir, inherits = FALSE)) {
     return(NULL)
   }
@@ -236,4 +209,3 @@ get_option_spec_pkg <- function(x, envir = parent.frame(), print_spec = TRUE) {
 
   return(spec)
 }
-

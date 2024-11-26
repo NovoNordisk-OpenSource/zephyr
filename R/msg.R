@@ -71,20 +71,23 @@
 #'        filter_data(data = cars, infilter = speed > 12)
 #' )
 #'
+#' withr::with_options(
+#'   list(verbosity_level = "quiet"),
+#'        filter_data(data = cars, infilter = speed > 12)
+#' )
+#'
 #' @export
 msg <- function(message,
-                levels_to_write = c("verbose", "debug"),
-                msg_fun = cli::cli_alert_info,
-                ...,
-                verbosity_level = NULL,
-                which = -1,
-                .envir = parent.frame()) {
-  # TODO add a destination argument to control whether to write to console,
-  # write to a file, etc.
+  levels_to_write = c("verbose", "debug"),
+  msg_fun = cli::cli_alert_info,
+  ...,
+  verbosity_level = NULL,
+  which = -1,
+  .envir = parent.frame()) {
 
   match.arg(levels_to_write,
-            choices = c("quiet", "verbose", "debug"),
-            several.ok = TRUE)
+    choices = c("quiet", "verbose", "debug"),
+    several.ok = TRUE)
 
   if (is.null(verbosity_level)) {
     # Is msg called within another function call?
@@ -93,15 +96,19 @@ msg <- function(message,
     # If msg is called within another function definition, get the environment
     # of that function
     if (called_within) {
-      ns_of_fun <- environment(sys.function(which = which))
+      ns_of_fun <- tryCatch({
+        environment(sys.function(which = which))
+      }, error = function(e) {
+        # If there's an error, default to the parent frame
+        parent.frame()
+      })
     } else {
-      ns_of_fun <- getNamespace("zephyr")
+      ns_of_fun <- parent.frame()
     }
 
     # Get value of option
     verbosity_level <- get_verbosity_level(env = ns_of_fun)
   }
-
 
   if (verbosity_level %in% levels_to_write) {
     msg_fun(message, ..., .envir = .envir)
@@ -113,31 +120,31 @@ msg <- function(message,
 #' @rdname msg
 #' @export
 msg_debug <- function(message,
-                      ...,
-                      verbosity_level = NULL,
-                      which = -1,
-                      .envir = parent.frame()) {
+  ...,
+  verbosity_level = NULL,
+  which = -1,
+  .envir = parent.frame()) {
   msg(message,
-      levels_to_write = "debug",
-      msg_fun = cli::cli_inform,
-      ...,
-      verbosity_level = verbosity_level,
-      which = -1 + which,
-      .envir = .envir)
+    levels_to_write = "debug",
+    msg_fun = cli::cli_inform,
+    ...,
+    verbosity_level = verbosity_level,
+    which = -1 + which,
+    .envir = .envir)
 }
 
 #' @rdname msg
 #' @export
 msg_success <- function(message,
-                        ...,
-                        verbosity_level = NULL,
-                        which = -1,
-                        .envir = parent.frame()) {
+  ...,
+  verbosity_level = NULL,
+  which = -1,
+  .envir = parent.frame()) {
   msg(message,
-      levels_to_write = c("verbose", "debug"),
-      msg_fun = cli::cli_alert_success,
-      ...,
-      verbosity_level = verbosity_level,
-      which = -1 + which,
-      .envir = .envir)
+    levels_to_write = c("verbose", "debug"),
+    msg_fun = cli::cli_alert_success,
+    ...,
+    verbosity_level = verbosity_level,
+    which = -1 + which,
+    .envir = .envir)
 }

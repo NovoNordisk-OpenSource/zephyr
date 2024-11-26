@@ -110,4 +110,9 @@ withr::with_options(
        filter_data(data = cars, infilter = speed > 12)
 )
 
+withr::with_options(
+  list(verbosity_level = "quiet"),
+       filter_data(data = cars, infilter = speed > 12)
+)
+
 }

@@ -11,7 +11,8 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
-library(zephyr)
+# library(zephyr)
+devtools::load_all(".")
 ```
 
 # zephyr <a href="https://novonordisk-opensource.github.io/zephyr/"><img src="man/figures/logo.png" align="right" height="138" alt="zephyr website" /></a>
@@ -54,8 +55,9 @@ The verbosity level can be specified as an argument withing the function. Howeve
 
 Note that much more information about the `options` package is available in the package's [pkgdown](https://dgkf.github.io/options/), and here is only provided a the minimal introduction to understand the usage in context of the zephyr package.
 
-In the `zephyr` package, we have set a package level `verbosity_level` option by including the following code in a file below /R.
-```{r, code = readLines("R/package_options.R")}
+In the `zephyr` package, we have set a package level `verbosity_level`.
+```{r}
+opt_pkg("verbosity_level", envir = getNamespace("zephyr"))
 ```
 
 When the `verbosity_level` argument is not specified (i.e. left as `verbosity_level = NULL`), the `msg` function will fetch the `verbosity_level` option set in the `zephyr` package:
@@ -90,9 +92,35 @@ When doing so, the behavior of the `msg` functions will be controlled through th
 We create an environment with an option where the `verbosity_level` have been specified (**Note: if looking into the helper script that the option is set differently than described above for a package - when you define an option in your package, use the above approach**), and a function `foo` that uses the `msg` function:
 
 ```{r}
-source("R/test_vignette_helpers.R")
+# source("R/test_vignette_helpers.R")
+create_env_with_fun <- function(fun_name = "foo",
+  message = "test",
+  add_option = TRUE,
+  default = "verbose",
+  fun = function(msg_fun = msg, ...) {
+    Sys.sleep(0.5)
+    msg_fun(message, ...)
+  }) {
+  e <- rlang::env()
+  environment(fun) <- e
+  assign(fun_name, fun, envir = e)
+
+  if (add_option) {
+    # Use define_option_pkg from zephyr
+    define_option_pkg("verbosity_level",
+      default = default,
+      desc = "Option for testing",
+      option_name = paste0(fun_name, "_pkg.verbosity_level"),
+      envvar_name = paste0("R_", toupper(fun_name), "_PKG_VERBOSITY_LEVEL"),
+      envir = e)
+  }
+
+  return(e)
+}
+
 foo_pkg <- create_env_with_fun(
   message = "Hello from foo_pkg!",
+  default = "debug",
   fun_name = "foo",
   fun = function() {
     msg_debug("Inform my user the function is trying to do stuff")
@@ -101,11 +129,11 @@ foo_pkg <- create_env_with_fun(
   }
 )
 
-# foo function
-foo_pkg$foo
+# Access the function
+foo_func <- foo_pkg$foo
 
-# Option set in package:
-foo_pkg$.options
+# Call the function
+foo_func()
 ```
 
 ###### Default (implicit) behavior when using `msg` functions in your package

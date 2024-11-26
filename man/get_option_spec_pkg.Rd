@@ -4,7 +4,7 @@
 \alias{get_option_spec_pkg}
 \title{Get the option specification}
 \usage{
-get_option_spec_pkg(x, envir = parent.frame(), print_spec = TRUE)
+get_option_spec_pkg(x, envir = parent.frame(), print_spec = FALSE)
 }
 \arguments{
 \item{x}{The name of the option.}

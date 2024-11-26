@@ -2,39 +2,43 @@
 % Please edit documentation in R/get_verbosity_level.R
 \name{get_verbosity_level}
 \alias{get_verbosity_level}
-\title{Get \code{verbosity_level} option, prioritizing different sources.}
+\title{Get \code{verbosity_level} option using the \code{options} package, allowing a global option}
 \usage{
 get_verbosity_level(env = parent.frame())
 }
 \arguments{
-\item{env}{Environment to get the option from.}
+\item{env}{Environment to get the option from (set with the \code{options} package)}
 }
 \value{
-Value of the option.
+Value of the option
 }
 \description{
-This function retrieves the value of the \code{verbosity_level} option, prioritizing
-different sources according to the following rules:
-}
-\details{
-\enumerate{
-\item If the option is not defined for the specified environment, use the option
-set on the "zephyr" level (using the default if nothing is done).
-\item If the option is set on the "zephyr" level, use that one.
-\item If the option is set on the "env" level, use that one.
-\item If the option is not set as an option on the package level, and the "zephyr"
-option is set using an environment variable, use that one.
-\item If the "zephyr" level option is not set, use the option set on the package
-level, whether default or environment variable.
-}
+Get option using the \code{options} package, where the
+function allows a global option to overwrite individual package options.
 }
 \examples{
-# Define the option in the "zephyr" namespace
+# Set a package-level verbosity option
+define_option_pkg("verbosity_level", default = "verbose",
+                  desc = "Set the verbosity level for messages")
 
-# Get the verbosity level in the current environment
+# Get the verbosity level (should return "verbose")
 get_verbosity_level()
 
-# Get the verbosity level in a specific environment
-env <- new.env()
-get_verbosity_level(env)
+# Set a global option
+options(zephyr.verbosity_level = "debug")
+
+# Get the verbosity level (should now return "debug")
+get_verbosity_level()
+
+# Set an environment variable
+Sys.setenv(R_ZEPHYR_VERBOSITY_LEVEL = "quiet")
+
+# Get the verbosity level (should still return "debug" due to option priority)
+get_verbosity_level()
+
+# Remove the global option
+options(zephyr.verbosity_level = NULL)
+
+# Get the verbosity level (should now return "quiet" from the environment variable)
+get_verbosity_level()
 }

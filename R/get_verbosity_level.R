@@ -1,62 +1,81 @@
-#' Get `verbosity_level` option, prioritizing different sources.
+
+#' Get `verbosity_level` option using the `options` package, allowing a global option
 #'
-#' This function retrieves the value of the `verbosity_level` option, prioritizing
-#' different sources according to the following rules:
+#' @description
+#' Get option using the `options` package, where the
+#' function allows a global option to overwrite individual package options.
 #'
-#' 1. If the option is not defined for the specified environment, use the option
-#'    set on the "zephyr" level (using the default if nothing is done).
-#' 2. If the option is set on the "zephyr" level, use that one.
-#' 3. If the option is set on the "env" level, use that one.
-#' 4. If the option is not set as an option on the package level, and the "zephyr"
-#'    option is set using an environment variable, use that one.
-#' 5. If the "zephyr" level option is not set, use the option set on the package
-#'    level, whether default or environment variable.
+#' @param env Environment to get the option from (set with the `options` package)
 #'
-#' @param env Environment to get the option from.
-#'
-#' @return Value of the option.
+#' @return Value of the option
 #' @export
 #'
 #' @examples
-#' # Define the option in the "zephyr" namespace
+#' # Set a package-level verbosity option
+#' define_option_pkg("verbosity_level", default = "verbose",
+#'                   desc = "Set the verbosity level for messages")
 #'
-#' # Get the verbosity level in the current environment
+#' # Get the verbosity level (should return "verbose")
 #' get_verbosity_level()
 #'
-#' # Get the verbosity level in a specific environment
-#' env <- new.env()
-#' get_verbosity_level(env)
-get_verbosity_level <- function(env = parent.frame()) {
-
-  # Get the "zephyr" level option and its source
-  zephyr_verbosity_level_source <- opt_source_pkg("verbosity_level", env = getNamespace("zephyr"))
-  zephyr_verbosity_level <- opt_pkg("verbosity_level", env = getNamespace("zephyr"))
-
-  # 1. If option is not defined for the specified environment, use the "zephyr" level option
-  if (is.null(attr(env$.options, "spec"))) {
-    return(zephyr_verbosity_level)
+#' # Set a global option
+#' options(zephyr.verbosity_level = "debug")
+#'
+#' # Get the verbosity level (should now return "debug")
+#' get_verbosity_level()
+#'
+#' # Set an environment variable
+#' Sys.setenv(R_ZEPHYR_VERBOSITY_LEVEL = "quiet")
+#'
+#' # Get the verbosity level (should still return "debug" due to option priority)
+#' get_verbosity_level()
+#'
+#' # Remove the global option
+#' options(zephyr.verbosity_level = NULL)
+#'
+#' # Get the verbosity level (should now return "quiet" from the environment variable)
+#' get_verbosity_level()
+get_verbosity_level <-  function(env = parent.frame()) {
+  # Check for a global option first
+  global_option <- getOption("zephyr.verbosity_level")
+  if (!is.null(global_option)) {
+    return(global_option)
   }
 
-  # Get the package level option and its source
-  pkg_verbosity_level_source <- opt_source_pkg("verbosity_level", env = env)
-  pkg_verbosity_level <- opt_pkg("verbosity_level", env = env)
+  # Check for an environment-specific option
+  tryCatch({
+    env_specific_value <- opt_pkg("verbosity_level", envir = env)
+    if (!is.null(env_specific_value)) {
+      return(env_specific_value)
+    }
+  }, error = function(e) {
+    # If there's an error, we'll just move on to the next check
+  })
 
-  # 2. If option is set on "zephyr level" use that one
-  if (zephyr_verbosity_level_source == "option") {
-    return(zephyr_verbosity_level)
+  # Check for a package-level option
+  tryCatch({
+    pkg_spec <- get_option_spec_pkg("verbosity_level", envir = env, print_spec = FALSE)
+    if (!is.null(pkg_spec)) {
+      pkg_value <- opt_pkg("verbosity_level", envir = env)
+      if (!is.null(pkg_value)) {
+        return(pkg_value)
+      }
+    }
+  }, error = function(e) {
+    # If there's an error, we'll just move on to the next check
+  })
+
+  # Check for an environment variable
+  pkg_env_var <- Sys.getenv("R_PKG_ENV_VERBOSITY_LEVEL")
+  if (nzchar(pkg_env_var)) {
+    return(pkg_env_var)
   }
 
-  # 3. If option is set on "env level" use that one
-  if (pkg_verbosity_level_source == "option") {
-    return(pkg_verbosity_level)
+  env_var <- Sys.getenv("R_ZEPHYR_VERBOSITY_LEVEL")
+  if (nzchar(env_var)) {
+    return(env_var)
   }
 
-  # 4. If option is not set as an option on package level, and "zephyr" option is set
-  # using environment variable, use that one
-  if (zephyr_verbosity_level_source == get_envname_options()) {
-    return(zephyr_verbosity_level)
-  }
-
-  # 5. If "zephyr" level option is not set, use the option set on package level
-  return(pkg_verbosity_level)
+  # If no option is set, return the default value
+  return("verbose")
 }
