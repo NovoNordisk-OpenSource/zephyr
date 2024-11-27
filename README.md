@@ -247,7 +247,6 @@ withr::with_envvar(list(
 {
   foo_pkg$foo()
 })
-#> ✔ Inform my user that stuff succeeded
 
 # Will write a message since option overrides the Zephyr environment variable
 withr::with_envvar(list(R_ZEPHYR_VERBOSITY_LEVEL = "quiet"), {
@@ -255,7 +254,6 @@ withr::with_envvar(list(R_ZEPHYR_VERBOSITY_LEVEL = "quiet"), {
     foo_pkg$foo()
   })
 })
-#> ✔ Inform my user that stuff succeeded
 ```
 
 ###### Controlling verbosity level through options with more transparency for the user

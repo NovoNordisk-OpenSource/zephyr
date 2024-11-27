@@ -4,11 +4,12 @@
 \alias{msg}
 \alias{msg_debug}
 \alias{msg_success}
+\alias{msg_minimal}
 \title{Write messages based on verbosity level}
 \usage{
 msg(
   message,
-  levels_to_write = c("verbose", "debug"),
+  levels_to_write = c("minimal", "verbose", "debug"),
   msg_fun = cli::cli_alert_info,
   ...,
   verbosity_level = NULL,
@@ -31,12 +32,20 @@ msg_success(
   which = -1,
   .envir = parent.frame()
 )
+
+msg_minimal(
+  message,
+  ...,
+  verbosity_level = NULL,
+  which = -1,
+  .envir = parent.frame()
+)
 }
 \arguments{
 \item{message}{\code{character} of message to write}
 
 \item{levels_to_write}{\code{character} vector of levels of verbosity for which
-to display the message. Valid values are \code{quiet}, \code{verbose} and \code{debug}}
+to display the message. Valid values are \code{quiet}, \code{minimal}, \code{verbose}, and \code{debug}}
 
 \item{msg_fun}{\code{function} taking \code{message} as first argument. Usually a
 \code{cli_...} function}
@@ -45,7 +54,7 @@ to display the message. Valid values are \code{quiet}, \code{verbose} and \code{
 
 \item{verbosity_level}{The verbosity level to use. If \code{NULL}, the function
 will use the \code{which} argument to determine the environment in which to find
-and option called \code{verbosity_level}. By default, it will look in the environment
+an option called \code{verbosity_level}. By default, it will look in the environment
 of the function calling \verb{msg(_...)}. If no option is set in this calling
 environment, it will look in the \code{zephyr} namespace.}
 
@@ -64,25 +73,29 @@ called \code{verbosity_level} set in the package defining a function calling \co
 is used. If a global option with prefix \code{zephyr.} is set, it will overwrite
 the package level option.
 
-Valid values are \code{quiet}, \code{verbose} and \code{debug}.
-\code{verbose} is used in \code{levels_to_write} vector argument when the developer
-wants to inform the user about something. \code{debug} is ised when the developer
-wants to give the user extra information that can help with debugging. See
-example for possible use case.
+Valid values are \code{quiet}, \code{minimal}, \code{verbose}, and \code{debug}.
+\itemize{
+\item \code{quiet}: No messages are displayed
+\item \code{minimal}: Only essential messages are displayed
+\item \code{verbose}: Informative messages are displayed (default)
+\item \code{debug}: Detailed messages for debugging are displayed
+}
 }
 \details{
 The \code{msg} function is a general function, which can be used to write messages
 based on options.
 
 The \code{msg_debug} function is a wrapper around \code{msg} with
-\code{levels_to_write = "debug"} and \code{msg_fun = cli::cli_inform}, while the
-\code{msg_success} function is a wrapper around \code{msg} with
-\code{levels_to_write = c("verbose", "debug")} and \code{msg_fun = cli::cli_alert_success}.
+\code{levels_to_write = "debug"} and \code{msg_fun = cli::cli_inform}.
+
+The \code{msg_success} function is a wrapper around \code{msg} with
+\code{levels_to_write = c("minimal", "verbose", "debug")} and \code{msg_fun = cli::cli_alert_success}.
+
+The \code{msg_minimal} function is a wrapper around \code{msg} with
+\code{levels_to_write = c("minimal", "verbose", "debug")} and \code{msg_fun = cli::cli_alert_info}.
 }
 \examples{
-filter_data <- function(data, infilter, ...) {
-
-  #Defusing the filter arguments
+filter_data <-  function(data, infilter, ...) {
   infilter_e <- rlang::enquo(infilter)
   infilter_lb <- rlang::as_label(infilter_e)
 
@@ -90,29 +103,28 @@ filter_data <- function(data, infilter, ...) {
     levels_to_write = c("verbose", "debug"),
     msg_fun = cli::cli_h2)
 
-  #Adding a debug message that only will appear if verbosity level is set to
-  "debug"
   msg_debug("Trying to filter data")
 
-  data |>
+  result <- data |>
     dplyr::filter({{infilter}})
 
   msg_success("Data filtered by {.field {infilter_lb}}")
- }
+  msg_minimal("Filtered {nrow(result)} rows")
 
-withr::with_options(
-list(verbosity_level = "verbose"),
-     filter_data(data = cars, infilter = speed > 12)
-)
+  head(result)
+}
 
-withr::with_options(
-  list(verbosity_level = "debug"),
-       filter_data(data = cars, infilter = speed > 12)
-)
+# Test with different verbosity levels
+withr::with_options(list(verbosity_level = "quiet"),
+  filter_data(data = cars, infilter = speed > 12))
 
-withr::with_options(
-  list(verbosity_level = "quiet"),
-       filter_data(data = cars, infilter = speed > 12)
-)
+withr::with_options(list(verbosity_level = "minimal"),
+  filter_data(data = cars, infilter = speed > 12))
+
+withr::with_options(list(verbosity_level = "verbose"),
+  filter_data(data = cars, infilter = speed > 12))
+
+withr::with_options(list(verbosity_level = "debug"),
+  filter_data(data = cars, infilter = speed > 12))
 
 }

@@ -1,28 +1,27 @@
 #' Write messages based on verbosity level
 #'
 #' @description
-#'
 #' The `msg` function is a general function for writing messages to the console
 #' based on options set using the [options] package. As a default, an option
 #' called `verbosity_level` set in the package defining a function calling `msg`
 #' is used. If a global option with prefix `zephyr.` is set, it will overwrite
 #' the package level option.
 #'
-#' Valid values are `quiet`, `verbose` and `debug`.
-#' `verbose` is used in `levels_to_write` vector argument when the developer
-#' wants to inform the user about something. `debug` is ised when the developer
-#' wants to give the user extra information that can help with debugging. See
-#' example for possible use case.
+#' Valid values are `quiet`, `minimal`, `verbose`, and `debug`.
+#' - `quiet`: No messages are displayed
+#' - `minimal`: Only essential messages are displayed
+#' - `verbose`: Informative messages are displayed (default)
+#' - `debug`: Detailed messages for debugging are displayed
 #'
 #' @param message `character` of message to write
 #' @param levels_to_write `character` vector of levels of verbosity for which
-#' to display the message. Valid values are `quiet`, `verbose` and `debug`
+#' to display the message. Valid values are `quiet`, `minimal`, `verbose`, and `debug`
 #' @param msg_fun `function` taking `message` as first argument. Usually a
 #' `cli_...` function
 #' @param ... Additional arguments passed to `msg_fun`
 #' @param verbosity_level The verbosity level to use. If `NULL`, the function
 #' will use the `which` argument to determine the environment in which to find
-#' and option called `verbosity_level`. By default, it will look in the environment
+#' an option called `verbosity_level`. By default, it will look in the environment
 #' of the function calling `msg(_...)`. If no option is set in this calling
 #' environment, it will look in the `zephyr` namespace.
 #' @param which `integer` passed to [sys.function()] in case `verbosity_level = NULL`.
@@ -34,16 +33,18 @@
 #' based on options.
 #'
 #' The `msg_debug` function is a wrapper around `msg` with
-#' `levels_to_write = "debug"` and `msg_fun = cli::cli_inform`, while the
-#' `msg_success` function is a wrapper around `msg` with
-#' `levels_to_write = c("verbose", "debug")` and `msg_fun = cli::cli_alert_success`.
+#' `levels_to_write = "debug"` and `msg_fun = cli::cli_inform`.
+#'
+#' The `msg_success` function is a wrapper around `msg` with
+#' `levels_to_write = c("minimal", "verbose", "debug")` and `msg_fun = cli::cli_alert_success`.
+#'
+#' The `msg_minimal` function is a wrapper around `msg` with
+#' `levels_to_write = c("minimal", "verbose", "debug")` and `msg_fun = cli::cli_alert_info`.
 #'
 #' @return None
 #'
 #' @examples
-#' filter_data <- function(data, infilter, ...) {
-#'
-#'   #Defusing the filter arguments
+#' filter_data <-  function(data, infilter, ...) {
 #'   infilter_e <- rlang::enquo(infilter)
 #'   infilter_lb <- rlang::as_label(infilter_e)
 #'
@@ -51,34 +52,33 @@
 #'     levels_to_write = c("verbose", "debug"),
 #'     msg_fun = cli::cli_h2)
 #'
-#'   #Adding a debug message that only will appear if verbosity level is set to
-#'   "debug"
 #'   msg_debug("Trying to filter data")
 #'
-#'   data |>
+#'   result <- data |>
 #'     dplyr::filter({{infilter}})
 #'
 #'   msg_success("Data filtered by {.field {infilter_lb}}")
-#'  }
+#'   msg_minimal("Filtered {nrow(result)} rows")
 #'
-#' withr::with_options(
-#' list(verbosity_level = "verbose"),
-#'      filter_data(data = cars, infilter = speed > 12)
-#' )
+#'   head(result)
+#' }
 #'
-#' withr::with_options(
-#'   list(verbosity_level = "debug"),
-#'        filter_data(data = cars, infilter = speed > 12)
-#' )
+#' # Test with different verbosity levels
+#' withr::with_options(list(verbosity_level = "quiet"),
+#'   filter_data(data = cars, infilter = speed > 12))
 #'
-#' withr::with_options(
-#'   list(verbosity_level = "quiet"),
-#'        filter_data(data = cars, infilter = speed > 12)
-#' )
+#' withr::with_options(list(verbosity_level = "minimal"),
+#'   filter_data(data = cars, infilter = speed > 12))
+#'
+#' withr::with_options(list(verbosity_level = "verbose"),
+#'   filter_data(data = cars, infilter = speed > 12))
+#'
+#' withr::with_options(list(verbosity_level = "debug"),
+#'   filter_data(data = cars, infilter = speed > 12))
 #'
 #' @export
-msg <- function(message,
-  levels_to_write = c("verbose", "debug"),
+msg <-  function(message,
+  levels_to_write = c("minimal", "verbose", "debug"),
   msg_fun = cli::cli_alert_info,
   ...,
   verbosity_level = NULL,
@@ -86,27 +86,22 @@ msg <- function(message,
   .envir = parent.frame()) {
 
   match.arg(levels_to_write,
-    choices = c("quiet", "verbose", "debug"),
+    choices = c("quiet", "minimal", "verbose", "debug"),
     several.ok = TRUE)
 
   if (is.null(verbosity_level)) {
-    # Is msg called within another function call?
     called_within <- length(sys.calls()) > 1
 
-    # If msg is called within another function definition, get the environment
-    # of that function
     if (called_within) {
       ns_of_fun <- tryCatch({
         environment(sys.function(which = which))
       }, error = function(e) {
-        # If there's an error, default to the parent frame
         parent.frame()
       })
     } else {
       ns_of_fun <- parent.frame()
     }
 
-    # Get value of option
     verbosity_level <- get_verbosity_level(env = ns_of_fun)
   }
 
@@ -141,8 +136,24 @@ msg_success <- function(message,
   which = -1,
   .envir = parent.frame()) {
   msg(message,
-    levels_to_write = c("verbose", "debug"),
+    levels_to_write = c("minimal", "verbose", "debug"),
     msg_fun = cli::cli_alert_success,
+    ...,
+    verbosity_level = verbosity_level,
+    which = -1 + which,
+    .envir = .envir)
+}
+
+#' @rdname msg
+#' @export
+msg_minimal <- function(message,
+  ...,
+  verbosity_level = NULL,
+  which = -1,
+  .envir = parent.frame()) {
+  msg(message,
+    levels_to_write = c("minimal", "verbose", "debug"),
+    msg_fun = cli::cli_alert_info,
     ...,
     verbosity_level = verbosity_level,
     which = -1 + which,

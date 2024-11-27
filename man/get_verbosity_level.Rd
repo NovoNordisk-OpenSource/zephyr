@@ -2,41 +2,97 @@
 % Please edit documentation in R/get_verbosity_level.R
 \name{get_verbosity_level}
 \alias{get_verbosity_level}
-\title{Get \code{verbosity_level} option using the \code{options} package, allowing a global option}
+\title{Get \code{verbosity_level} option with priority hierarchy}
 \usage{
 get_verbosity_level(env = parent.frame())
 }
 \arguments{
-\item{env}{Environment to get the option from (set with the \code{options} package)}
+\item{env}{Environment to search for the package-specific option (default: parent.frame())}
 }
 \value{
-Value of the option
+Character string representing the verbosity level: "quiet", "minimal", "verbose", or "debug"
 }
 \description{
-Get option using the \code{options} package, where the
-function allows a global option to overwrite individual package options.
+This function retrieves the \code{verbosity_level} option using a priority hierarchy.
+}
+\details{
+The verbosity level is determined by checking the following sources in order:
+\enumerate{
+\item \strong{Package-specific global option}
+\itemize{
+\item Set with: \verb{options(zephyr.verbosity_level = <level>)}
+}
+\item \strong{General global option}
+\itemize{
+\item Set with: \verb{options(verbosity_level = <level>)}
+}
+\item \strong{Package-specific options}
+a. Internal package option
+\itemize{
+\item Set with: \verb{define_option_pkg("verbosity_level", <level>)}
+b. Package-specific environment variable
+\item Set with: \verb{Sys.setenv(R_<PKG>_VERBOSITY_LEVEL = <level>)}
+}
+\item \strong{ZEPHYR environment variable}
+\itemize{
+\item Set with: \verb{Sys.setenv(R_ZEPHYR_VERBOSITY_LEVEL = <level>)}
+}
+\item \strong{Default value}
+\itemize{
+\item If no other option is set, defaults to "verbose"
+}
+}
+
+The function checks these options in the order listed and uses the first valid verbosity level it finds.
+
+Verbosity levels, from least to most verbose:
+\itemize{
+\item "quiet": No messages
+\item "minimal": Only essential messages
+\item "verbose": Informative messages (default)
+\item "debug": Detailed messages for debugging
+}
+
+This function is primarily used by the \code{msg} function family to determine
+whether to display messages based on the current verbosity level.
 }
 \examples{
-# Using zephyr package-level verbosity option
+# Default behavior
+get_verbosity_level()  # Returns "verbose"
 
-# Get the verbosity level (should return "verbose")
-get_verbosity_level()
-
-# Set a global option
+# Set a package-specific global option
 options(zephyr.verbosity_level = "debug")
+get_verbosity_level()  # Returns "debug"
 
-# Get the verbosity level (should now return "debug")
-get_verbosity_level()
+# Set a general global option
+options(verbosity_level = "minimal")
+get_verbosity_level()  # Still returns "debug" (package-specific option has priority)
 
-# Set an environment variable
-Sys.setenv(R_ZEPHYR_VERBOSITY_LEVEL = "quiet")
-
-# Get the verbosity level (should still return "debug" due to option priority)
-get_verbosity_level()
-
-# Remove the global option
+# Remove the package-specific global option
 options(zephyr.verbosity_level = NULL)
+get_verbosity_level()  # Now returns "minimal"
 
-# Get the verbosity level (should now return "quiet" from the environment variable)
-get_verbosity_level()
+# Set a package-specific option (assuming it's defined in the package)
+define_option_pkg("verbosity_level", default = "quiet")
+options(verbosity_level = NULL)  # Remove the general global option
+get_verbosity_level()  # Returns "quiet"
+
+# Set the ZEPHYR environment variable
+Sys.setenv(R_ZEPHYR_VERBOSITY_LEVEL = "verbose")
+get_verbosity_level()  # Still returns "quiet" (package option has priority)
+
+# Remove all options and environment variable
+options(zephyr.verbosity_level = NULL)
+options(verbosity_level = NULL)
+rm(list = ls(envir = .options))  # Remove package-specific options
+Sys.unsetenv("R_ZEPHYR_VERBOSITY_LEVEL")
+get_verbosity_level()  # Returns "verbose" (default)
+
+# Usage with msg functions
+msg("This is a verbose message", levels_to_write = "verbose")
+msg("This is a minimal message", levels_to_write = "minimal")
+msg_debug("This is a debug message")
+msg_success("This is a success message")
+msg_minimal("This is a minimal message")
+
 }

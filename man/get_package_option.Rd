@@ -30,7 +30,7 @@ To get the value, use \code{opt_pkg(result, envir = pkg_env)} on the returned re
 }
 \examples{
 \dontrun{
-# Assuming 'my_package' is loaded and has an option 'verbose'
+# Assuming 'my_package' is loaded and has an option 'verbosity_level'
 pkg_env <- asNamespace("my_package")
 option_name <- get_package_option("verbosity_level", pkg_env)
 if (!is.null(option_name)) {
