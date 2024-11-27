@@ -2,6 +2,7 @@
 
 export(define_option_pkg)
 export(get_option_spec_pkg)
+export(get_package_option)
 export(get_verbosity_level)
 export(msg)
 export(msg_debug)

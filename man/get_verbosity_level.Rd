@@ -17,9 +17,7 @@ Get option using the \code{options} package, where the
 function allows a global option to overwrite individual package options.
 }
 \examples{
-# Set a package-level verbosity option
-define_option_pkg("verbosity_level", default = "verbose",
-                  desc = "Set the verbosity level for messages")
+# Using zephyr package-level verbosity option
 
 # Get the verbosity level (should return "verbose")
 get_verbosity_level()

@@ -151,23 +151,24 @@ create_env_with_fun <- function(fun_name = "foo",
   e <- rlang::env()
   environment(fun) <- e
   assign(fun_name, fun, envir = e)
-
+  
   if (add_option) {
     # Use define_option_pkg from zephyr
-    define_option_pkg("verbosity_level",
+    full_option_name <- paste0(fun_name, "_pkg.verbosity_level")
+    define_option_pkg(full_option_name,  # Use the full name here
       default = default,
       desc = "Option for testing",
-      option_name = paste0(fun_name, "_pkg.verbosity_level"),
+      option_name = full_option_name,
       envvar_name = paste0("R_", toupper(fun_name), "_PKG_VERBOSITY_LEVEL"),
       envir = e)
   }
-
+  
   return(e)
 }
 
 foo_pkg <- create_env_with_fun(
   message = "Hello from foo_pkg!",
-  default = "debug",
+  default = "verbose",
   fun_name = "foo",
   fun = function() {
     msg_debug("Inform my user the function is trying to do stuff")
@@ -175,20 +176,24 @@ foo_pkg <- create_env_with_fun(
     msg_success("Inform my user that stuff succeeded")
   }
 )
-#> verbosity_level =
+#> foo_pkg.verbosity_level =
 #> 
 #>   Option for testing
 #> 
 #>   option  : foo_pkg.verbosity_level
 #>   envvar  : R_FOO_PKG_VERBOSITY_LEVEL (evaluated if possible, raw string otherwise)
-#>  *default : "debug"
+#>  *default : "verbose"
 
 # Access the function
 foo_func <- foo_pkg$foo
 
+# Check set option
+
+ls(foo_pkg$.options)
+#> [1] "foo_pkg.verbosity_level"
+
 # Call the function
 foo_func()
-#> Inform my user the function is trying to do stuff
 #> ✔ Inform my user that stuff succeeded
 ```
 

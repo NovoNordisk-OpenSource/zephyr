@@ -1,4 +1,3 @@
-
 #' Get `verbosity_level` option using the `options` package, allowing a global option
 #'
 #' @description
@@ -11,9 +10,7 @@
 #' @export
 #'
 #' @examples
-#' # Set a package-level verbosity option
-#' define_option_pkg("verbosity_level", default = "verbose",
-#'                   desc = "Set the verbosity level for messages")
+#' # Using zephyr package-level verbosity option
 #'
 #' # Get the verbosity level (should return "verbose")
 #' get_verbosity_level()
@@ -44,7 +41,7 @@ get_verbosity_level <-  function(env = parent.frame()) {
 
   # Check for an environment-specific option
   tryCatch({
-    env_specific_value <- opt_pkg("verbosity_level", envir = env)
+    env_specific_value <-  getOption("verbosity_level")
     if (!is.null(env_specific_value)) {
       return(env_specific_value)
     }
@@ -52,25 +49,18 @@ get_verbosity_level <-  function(env = parent.frame()) {
     # If there's an error, we'll just move on to the next check
   })
 
-  # Check for a package-level option
+
   tryCatch({
-    pkg_spec <- get_option_spec_pkg("verbosity_level", envir = env, print_spec = FALSE)
-    if (!is.null(pkg_spec)) {
-      pkg_value <- opt_pkg("verbosity_level", envir = env)
-      if (!is.null(pkg_value)) {
-        return(pkg_value)
-      }
+    option_name <- get_package_option(option_name = "verbosity_level", pkg_env = env)
+    env_specific_value <- opt_pkg(option_name, envir = env)
+    if (!is.null(env_specific_value)) {
+      return(env_specific_value)
     }
   }, error = function(e) {
     # If there's an error, we'll just move on to the next check
   })
 
-  # Check for an environment variable
-  pkg_env_var <- Sys.getenv("R_PKG_ENV_VERBOSITY_LEVEL")
-  if (nzchar(pkg_env_var)) {
-    return(pkg_env_var)
-  }
-
+  # Check for a Zephyr environment variable
   env_var <- Sys.getenv("R_ZEPHYR_VERBOSITY_LEVEL")
   if (nzchar(env_var)) {
     return(env_var)
