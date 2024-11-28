@@ -205,7 +205,7 @@ foo_pkg <- create_env_with_fun(
 #>     # Do stuff
 #>     msg_success("Inform my user that stuff succeeded")
 #>   }
-#> <environment: 0x1158ce40>
+#> <environment: 0x35993ce8>
 
 # Check set option
 opts_pkg(foo_pkg)
@@ -314,5 +314,4 @@ foo <- function(my_arg,
     want to inform your user - allowing them to specify a
     `verbosity_level` directly as an argument or only through options.
 3.  Write in the documentation of your functions that verbosity level
-    can be controlled through options - see more about how to easily
-    write reusable documentation from the `options` package
+    can be controlled through options
