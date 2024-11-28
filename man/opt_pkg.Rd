@@ -4,14 +4,19 @@
 \alias{opt_pkg}
 \title{Get the value of an option}
 \usage{
-opt_pkg(option_name, default = NULL, envir = parent.frame())
+opt_pkg(option_name, default = NULL, envir = NULL)
 }
 \arguments{
 \item{option_name}{The name of the option to retrieve.}
 
 \item{default}{The default value to return if the option is not found.}
 
-\item{envir}{The environment in which to look for the option.}
+\item{envir}{The environment in which to look for the option. Can be:
+\itemize{
+\item An environment
+\item A string specifying a package name
+\item NULL (default), which uses the caller's environment
+}}
 }
 \value{
 The value of the option.
@@ -22,5 +27,6 @@ This function retrieves the value of an option, considering its various possible
 \examples{
 define_option_pkg("my_option", default = 42)
 opt_pkg("my_option")
+opt_pkg("verbosity_level", envir = "zephyr")
 
 }

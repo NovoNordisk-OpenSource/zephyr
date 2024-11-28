@@ -136,16 +136,32 @@ opt_source_pkg <- function(spec, envir = parent.frame()) {
 #'
 #' @param option_name The name of the option to retrieve.
 #' @param default The default value to return if the option is not found.
-#' @param envir The environment in which to look for the option.
+#' @param envir The environment in which to look for the option. Can be:
+#'   - An environment
+#'   - A string specifying a package name
+#'   - NULL (default), which uses the caller's environment
 #'
 #' @return The value of the option.
 #'
 #' @examples
 #' define_option_pkg("my_option", default = 42)
 #' opt_pkg("my_option")
+#' opt_pkg("verbosity_level", envir = "zephyr")
 #'
 #' @export
-opt_pkg <- function(option_name, default = NULL, envir = parent.frame()) {
+opt_pkg <- function(option_name, default = NULL, envir = NULL) {
+  # Determine the environment to use
+  if (is.null(envir)) {
+    envir <- parent.frame()
+  } else if (is.character(envir)) {
+    if (!requireNamespace(envir, quietly = TRUE)) {
+      stop(paste("Package", envir, "is not available."))
+    }
+    envir <- asNamespace(envir)
+  } else if (!is.environment(envir)) {
+    stop("'envir' must be NULL, a string (package name), or an environment.")
+  }
+
   spec <- get_option_spec_pkg(option_name, envir = envir, print_spec = FALSE)
 
   if (is.null(spec)) {
@@ -208,4 +224,77 @@ get_option_spec_pkg <- function(x, envir = parent.frame(), print_spec = FALSE) {
   }
 
   return(spec)
+}
+
+#' Get Package Options
+#'
+#' This function retrieves options set for a package or environment. It can return
+#' just the names of the options, the option values, or full option details.
+#'
+#' @param envir The environment to search for options. Can be NULL (default, uses
+#'   the calling environment), a string (package name), or an environment object.
+#' @param names_only Logical. If TRUE, returns only the names of the options.
+#'   Default is FALSE.
+#' @param full Logical. If TRUE, returns the full option specifications including
+#'   all details. Default is FALSE.
+#'
+#' @return Depending on the parameters:
+#'   - If `names_only = TRUE`: A character vector of option names.
+#'   - If `full = TRUE`: A list of full option specifications.
+#'   - Otherwise: A list of option values (default behavior).
+#'
+#' @examples
+#' \dontrun{
+#' # Assuming 'mypackage' has some options set
+#' # Get option names
+#' opts_pkg("mypackage", names_only = TRUE)
+#'
+#' # Get option values (default behavior)
+#' opts_pkg("mypackage")
+#'
+#' # Get full option details
+#' opts_pkg("mypackage", full = TRUE)
+#' }
+#'
+#' @export
+opts_pkg <- function(envir = NULL, names_only = FALSE, full = FALSE) {
+  # Determine the environment to use
+  if (is.null(envir)) {
+    envir <- parent.frame()
+  } else if (is.character(envir)) {
+    if (!requireNamespace(envir, quietly = TRUE)) {
+      stop(paste("Package", envir, "is not available."))
+    }
+    envir <- asNamespace(envir)
+  } else if (!is.environment(envir)) {
+    stop("'envir' must be NULL, a string (package name), or an environment.")
+  }
+
+  # Check if the .options environment exists in the specified environment
+  if (!exists(".options", envir = envir, inherits = FALSE)) {
+    return(if (names_only) character(0) else list())  # Return empty vector or list
+  }
+
+  # Get the .options environment
+  opt_env <- get(".options", envir = envir, inherits = FALSE)
+
+  # List all objects in the .options environment
+  option_names <- ls(opt_env, all.names = TRUE)
+
+  if (names_only) {
+    return(option_names)
+  }
+
+  # Create a list of all options and their values
+  options_list <- lapply(option_names, function(name) {
+    opt <- get(name, envir = opt_env)
+    if (full) {
+      opt
+    } else {
+      opt$expr
+    }
+  })
+  names(options_list) <- option_names
+
+  return(options_list)
 }
