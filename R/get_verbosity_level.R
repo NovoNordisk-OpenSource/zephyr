@@ -196,86 +196,94 @@ get_package_option <- function(option_name, pkg_env) {
   return(NULL)
 }
 
-#' Get Package Name and Verbosity Level from Global Options
+#' Get Package Name and Verbosity Level
 #'
-#' This function retrieves the current package name and searches the global environment
-#' for an option that specifies the verbosity level for this package.
+#' This function determines the calling package name and checks for a corresponding
+#' verbosity level option. It works in package environments, devtools environments,
+#' and the global environment.
 #'
 #' @return A list with two elements:
-#'   \item{package_name}{A character string containing the name of the current package.}
-#'   \item{verbosity_level}{A character string indicating the verbosity level,
-#'     or NULL if not specified or if invalid. Possible values are "quiet", "minimal", "verbose", and "debug".}
-#'
-#' @details
-#' The function determines the current package name, then looks for a global option
-#' named "[package_name].verbosity_level". If found, it returns the package name and verbosity level.
-#' The verbosity level is NULL if not specified or if invalid.
+#'   \item{package_name}{A character string with the detected package name, or NULL if in global environment}
+#'   \item{verbosity_level}{A character string with the verbosity level, or NULL if not set}
 #'
 #' @examples
-#' # Assuming this function is called from within the "zephyr" package:
-#' # Set a global option for the current package with verbose verbosity level
-#' options(zephyr.verbosity_level = "verbose")
-#' get_package_name_and_verbosity()  # Returns list(package_name = "zephyr", verbosity_level = "verbose")
+#' result <-  get_package_name_and_verbosity()
+#' print(result)
 #'
 #' @export
 get_package_name_and_verbosity <- function() {
-  # Initialize result
   result <- list(package_name = NULL, verbosity_level = NULL)
-
-  # Valid verbosity levels
   valid_levels <- c("quiet", "minimal", "verbose", "debug")
 
-  # Get the current package name
-  current_package <- sub("^package:", "", environmentName(parent.env(globalenv())))
+  # Function to get the calling package name
+  get_calling_pkg_name <- function() {
+    # Get the call stack
+    calls <- sys.calls()
 
-  if (current_package == "R_GlobalEnv") {
-    stop("This function must be called from within a package environment.")
+    # Iterate through the call stack to find the calling package
+    for (i in seq_along(calls)) {
+      # Get the environment of the call
+      env <- parent.frame(n = i)
+
+      # Check if this environment is a namespace
+      if (isNamespace(env)) {
+        pkg_name <- getNamespaceName(env)
+        if (pkg_name != "zephyr") {
+          return(pkg_name)
+        }
+      }
+
+      # Check for devtools environment
+      if (identical(env, .GlobalEnv) && "devtools_shims" %in% search()) {
+        # We're likely in a devtools context
+        # Look for the package environment in the search path
+        search_path <- search()
+        pkg_env <- grep("^package:", search_path, value = TRUE)
+        if (length(pkg_env) > 0) {
+          return(sub("^package:", "", pkg_env[1]))
+        }
+      }
+    }
+
+    # If we couldn't find a non-zephyr namespace, return NULL
+    return(NULL)
   }
 
-  result$package_name <- current_package
+  # Get the calling package name
+  result$package_name <- get_calling_pkg_name()
 
-  # Construct the option name
-  option_name <- paste0(current_package, ".verbosity_level")
+  if (is.null(result$package_name)) {
+    message("Function called from global environment or unable to determine package name.")
+  } else {
+    # Check for verbosity level option
+    option_name <- paste0(result$package_name, ".verbosity_level")
+    verbosity_value <- getOption(option_name)
 
-  # Get the verbosity level
-  verbosity_value <- getOption(option_name)
-
-  # Check if the verbosity level is valid
-  if (!is.null(verbosity_value)) {
-    if (verbosity_value %in% valid_levels) {
-      result$verbosity_level <- verbosity_value
-    } else {
-      warning("Invalid verbosity level. Setting to NULL.")
-      result$verbosity_level <- NULL
+    if (!is.null(verbosity_value)) {
+      if (verbosity_value %in% valid_levels) {
+        result$verbosity_level <- verbosity_value
+      } else {
+        warning("Invalid verbosity level in option. Setting to NULL.")
+      }
     }
   }
 
   return(result)
 }
 
-#' Get Package Name, Environment Variable Name, and Verbosity Level
+#' Get Package Name and Environment Variable Verbosity Level
 #'
-#' This function retrieves the current package name, constructs the environment variable name,
-#' and checks the environment variable R_[PACKAGE]_VERBOSITY_LEVEL for the verbosity level of this package.
+#' This function determines the calling package name and checks for a corresponding
+#' environment variable that sets the verbosity level.
 #'
 #' @return A list with three elements:
-#'   \item{package_name}{A character string containing the name of the current package.}
-#'   \item{env_var_name}{A character string containing the name of the environment variable checked.}
-#'   \item{verbosity_level}{A character string indicating the verbosity level,
-#'     or NULL if not specified or if invalid. Possible values are "quiet", "minimal", "verbose", and "debug".}
-#'
-#' @details
-#' The function determines the current package name, constructs the environment variable name,
-#' then looks for an environment variable named R_[PACKAGE]_VERBOSITY_LEVEL.
-#' If found and valid, it returns the package name, environment variable name, and verbosity level.
-#' The verbosity level is NULL if not specified or if invalid.
+#'   \item{package_name}{A character string with the detected package name, or NULL if in global environment}
+#'   \item{env_var_name}{A character string with the name of the environment variable}
+#'   \item{verbosity_level}{A character string with the verbosity level, or NULL if not set or invalid}
 #'
 #' @examples
-#' # Assuming this function is called from within the "zephyr" package:
-#' # Set an environment variable for the current package with verbose verbosity level
-#' Sys.setenv(R_ZEPHYR_VERBOSITY_LEVEL = "verbose")
-#' get_package_name_and_env_verbosity()
-#' # Returns list(package_name = "zephyr", env_var_name = "R_ZEPHYR_VERBOSITY_LEVEL", verbosity_level = "verbose")
+#' result <-  get_package_name_and_env_verbosity()
+#' print(result)
 #'
 #' @export
 get_package_name_and_env_verbosity <- function() {
@@ -285,17 +293,50 @@ get_package_name_and_env_verbosity <- function() {
   # Valid verbosity levels
   valid_levels <- c("quiet", "minimal", "verbose", "debug")
 
-  # Get the current package name
-  current_package <- sub("^package:", "", environmentName(parent.env(globalenv())))
+  # Function to get the calling package name
+  get_calling_pkg_name <- function() {
+    # Get the call stack
+    calls <- sys.calls()
 
-  if (current_package == "R_GlobalEnv") {
-    stop("This function must be called from within a package environment.")
+    # Iterate through the call stack to find the calling package
+    for (i in seq_along(calls)) {
+      # Get the environment of the call
+      env <- parent.frame(n = i)
+
+      # Check if this environment is a namespace
+      if (isNamespace(env)) {
+        pkg_name <- getNamespaceName(env)
+        if (pkg_name != "zephyr") {
+          return(pkg_name)
+        }
+      }
+
+      # Check for devtools environment
+      if (identical(env, .GlobalEnv) && "devtools_shims" %in% search()) {
+        # We're likely in a devtools context
+        # Look for the package environment in the search path
+        search_path <- search()
+        pkg_env <- grep("^package:", search_path, value = TRUE)
+        if (length(pkg_env) > 0) {
+          return(sub("^package:", "", pkg_env[1]))
+        }
+      }
+    }
+
+    # If we couldn't find a non-zephyr namespace, return NULL
+    return(NULL)
   }
 
-  result$package_name <- current_package
+  # Get the current package name
+  result$package_name <-  get_calling_pkg_name()
+
+  if (is.null(result$package_name)) {
+    message("Function called from global environment or unable to determine package name.")
+    return(result)
+  }
 
   # Construct the environment variable name
-  result$env_var_name <- paste0("R_", toupper(current_package), "_VERBOSITY_LEVEL")
+  result$env_var_name <- paste0("R_", toupper(result$package_name), "_VERBOSITY_LEVEL")
 
   # Get the verbosity level from the environment variable
   verbosity_value <- Sys.getenv(result$env_var_name, unset = NA)

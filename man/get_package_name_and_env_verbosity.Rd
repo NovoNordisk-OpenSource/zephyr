@@ -2,32 +2,22 @@
 % Please edit documentation in R/get_verbosity_level.R
 \name{get_package_name_and_env_verbosity}
 \alias{get_package_name_and_env_verbosity}
-\title{Get Package Name, Environment Variable Name, and Verbosity Level}
+\title{Get Package Name and Environment Variable Verbosity Level}
 \usage{
 get_package_name_and_env_verbosity()
 }
 \value{
 A list with three elements:
-\item{package_name}{A character string containing the name of the current package.}
-\item{env_var_name}{A character string containing the name of the environment variable checked.}
-\item{verbosity_level}{A character string indicating the verbosity level,
-or NULL if not specified or if invalid. Possible values are "quiet", "minimal", "verbose", and "debug".}
+\item{package_name}{A character string with the detected package name, or NULL if in global environment}
+\item{env_var_name}{A character string with the name of the environment variable}
+\item{verbosity_level}{A character string with the verbosity level, or NULL if not set or invalid}
 }
 \description{
-This function retrieves the current package name, constructs the environment variable name,
-and checks the environment variable R_\link{PACKAGE}_VERBOSITY_LEVEL for the verbosity level of this package.
-}
-\details{
-The function determines the current package name, constructs the environment variable name,
-then looks for an environment variable named R_\link{PACKAGE}_VERBOSITY_LEVEL.
-If found and valid, it returns the package name, environment variable name, and verbosity level.
-The verbosity level is NULL if not specified or if invalid.
+This function determines the calling package name and checks for a corresponding
+environment variable that sets the verbosity level.
 }
 \examples{
-# Assuming this function is called from within the "zephyr" package:
-# Set an environment variable for the current package with verbose verbosity level
-Sys.setenv(R_ZEPHYR_VERBOSITY_LEVEL = "verbose")
-get_package_name_and_env_verbosity()
-# Returns list(package_name = "zephyr", env_var_name = "R_ZEPHYR_VERBOSITY_LEVEL", verbosity_level = "verbose")
+result <-  get_package_name_and_env_verbosity()
+print(result)
 
 }

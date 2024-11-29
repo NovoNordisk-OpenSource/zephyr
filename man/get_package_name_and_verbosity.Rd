@@ -2,29 +2,22 @@
 % Please edit documentation in R/get_verbosity_level.R
 \name{get_package_name_and_verbosity}
 \alias{get_package_name_and_verbosity}
-\title{Get Package Name and Verbosity Level from Global Options}
+\title{Get Package Name and Verbosity Level}
 \usage{
 get_package_name_and_verbosity()
 }
 \value{
 A list with two elements:
-\item{package_name}{A character string containing the name of the current package.}
-\item{verbosity_level}{A character string indicating the verbosity level,
-or NULL if not specified or if invalid. Possible values are "quiet", "minimal", "verbose", and "debug".}
+\item{package_name}{A character string with the detected package name, or NULL if in global environment}
+\item{verbosity_level}{A character string with the verbosity level, or NULL if not set}
 }
 \description{
-This function retrieves the current package name and searches the global environment
-for an option that specifies the verbosity level for this package.
-}
-\details{
-The function determines the current package name, then looks for a global option
-named "\link{package_name}.verbosity_level". If found, it returns the package name and verbosity level.
-The verbosity level is NULL if not specified or if invalid.
+This function determines the calling package name and checks for a corresponding
+verbosity level option. It works in package environments, devtools environments,
+and the global environment.
 }
 \examples{
-# Assuming this function is called from within the "zephyr" package:
-# Set a global option for the current package with verbose verbosity level
-options(zephyr.verbosity_level = "verbose")
-get_package_name_and_verbosity()  # Returns list(package_name = "zephyr", verbosity_level = "verbose")
+result <-  get_package_name_and_verbosity()
+print(result)
 
 }
