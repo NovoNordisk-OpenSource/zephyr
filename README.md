@@ -129,20 +129,19 @@ function wherein the `msg` function is called.
 When using zephyr options the verbosity level is determined by checking
 the following sources in order:
 
-1.  **Package-specific global option**
-    - Set with: `options(zephyr.verbosity_level = <level>)`
-2.  **General global option**
-    - Set with: `options(verbosity_level = <level>)`
-    - Potentially affects multiple packages
-3.  **Package-specific options**
-    1.  Internal package option
-        - Set with: `define_option_pkg("verbosity_level", <level>)`
-    2.  Package-specific environment variable
-        - Set with: `Sys.setenv(R_<PKG>_VERBOSITY_LEVEL = <level>)`
-4.  **ZEPHYR environment variable**
-    - Set with: `Sys.setenv(R_ZEPHYR_VERBOSITY_LEVEL = <level>)`
-5.  **Default value**
-    - If no other option is set, defaults to “verbose”
+- Global package-specific option: `options("[package].verbosity_level")`
+
+- Package-specific environment variable:
+  `Sys.getenv("R_[PACKAGE]_VERBOSITY_LEVEL")`
+
+- Global Zephyr package option: `options("zephyr.verbosity_level")`
+
+- Zephyr environment variable: `Sys.getenv("R_ZEPHYR_VERBOSITY_LEVEL")`
+
+- Package-specific option set with
+  `define_option_pkg("verbosity_level")`
+
+- Default value: “verbose”
 
 ##### Simulating creation of a package
 
@@ -205,7 +204,7 @@ foo_pkg <- create_env_with_fun(
 #>     # Do stuff
 #>     msg_success("Inform my user that stuff succeeded")
 #>   }
-#> <environment: 0x35993ce8>
+#> <environment: 0x12225ef0>
 
 # Check set option
 opts_pkg(foo_pkg)
@@ -267,7 +266,6 @@ withr::with_envvar(list(
 {
   foo_pkg$foo()
 })
-#> ✔ Inform my user that stuff succeeded
 
 # Will write a message since option overrides the Zephyr environment variable
 withr::with_envvar(list(R_ZEPHYR_VERBOSITY_LEVEL = "quiet"), {
@@ -275,7 +273,6 @@ withr::with_envvar(list(R_ZEPHYR_VERBOSITY_LEVEL = "quiet"), {
     foo_pkg$foo()
   })
 })
-#> ✔ Inform my user that stuff succeeded
 ```
 
 ###### Controlling verbosity level through options with more transparency for the user

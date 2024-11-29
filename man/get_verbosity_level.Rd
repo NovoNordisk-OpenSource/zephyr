@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_verbosity_level.R
 \name{get_verbosity_level}
 \alias{get_verbosity_level}
-\title{Get \code{verbosity_level} option with priority hierarchy}
+\title{Get verbosity level with priority hierarchy}
 \usage{
 get_verbosity_level(env = parent.frame())
 }
@@ -14,36 +14,19 @@ Character string representing the verbosity level: "quiet", "minimal", "verbose"
 }
 \description{
 This function retrieves the \code{verbosity_level} option using a priority hierarchy.
+It checks various sources for the verbosity level setting and returns the first
+valid value it finds.
 }
 \details{
-The verbosity level is determined by checking the following sources in order:
+The function checks the following sources in order of priority:
 \enumerate{
-\item \strong{Package-specific global option}
-\itemize{
-\item Set with: \verb{options(zephyr.verbosity_level = <level>)}
+\item Global package-specific option: \code{options("[package].verbosity_level")}
+\item Package-specific environment variable: \code{Sys.getenv("R_[PACKAGE]_VERBOSITY_LEVEL")}
+\item Global Zephyr package option: \code{options("zephyr.verbosity_level")}
+\item Zephyr environment variable: \code{Sys.getenv("R_ZEPHYR_VERBOSITY_LEVEL")}
+\item Package-specific option set with \code{define_option_pkg("verbosity_level")}
+\item Default value: "verbose"
 }
-\item \strong{General global option}
-\itemize{
-\item Set with: \verb{options(verbosity_level = <level>)}
-}
-\item \strong{Package-specific options}
-a. Internal package option
-\itemize{
-\item Set with: \verb{define_option_pkg("verbosity_level", <level>)}
-b. Package-specific environment variable
-\item Set with: \verb{Sys.setenv(R_<PKG>_VERBOSITY_LEVEL = <level>)}
-}
-\item \strong{ZEPHYR environment variable}
-\itemize{
-\item Set with: \verb{Sys.setenv(R_ZEPHYR_VERBOSITY_LEVEL = <level>)}
-}
-\item \strong{Default value}
-\itemize{
-\item If no other option is set, defaults to "verbose"
-}
-}
-
-The function checks these options in the order listed and uses the first valid verbosity level it finds.
 
 Verbosity levels, from least to most verbose:
 \itemize{
@@ -61,38 +44,38 @@ whether to display messages based on the current verbosity level.
 get_verbosity_level()  # Returns "verbose"
 
 # Set a package-specific global option
-options(zephyr.verbosity_level = "debug")
+options(mypackage.verbosity_level = "debug")
 get_verbosity_level()  # Returns "debug"
 
-# Set a general global option
-options(verbosity_level = "minimal")
-get_verbosity_level()  # Still returns "debug" (package-specific option has priority)
+# Set a package-specific environment variable
+Sys.setenv(R_MYPACKAGE_VERBOSITY_LEVEL = "minimal")
+get_verbosity_level()  # Returns "debug" (option has priority over env var)
 
-# Remove the package-specific global option
-options(zephyr.verbosity_level = NULL)
-get_verbosity_level()  # Now returns "minimal"
-
-# Set a package-specific option (assuming it's defined in the package)
-define_option_pkg("verbosity_level", default = "quiet")
-options(verbosity_level = NULL)  # Remove the general global option
+# Set Zephyr global option
+options(zephyr.verbosity_level = "quiet")
+options(mypackage.verbosity_level = NULL)
+Sys.unsetenv("R_MYPACKAGE_VERBOSITY_LEVEL")
 get_verbosity_level()  # Returns "quiet"
 
-# Set the ZEPHYR environment variable
-Sys.setenv(R_ZEPHYR_VERBOSITY_LEVEL = "verbose")
-get_verbosity_level()  # Still returns "quiet" (package option has priority)
-
-# Remove all options and environment variable
+# Set Zephyr environment variable
+Sys.setenv(R_ZEPHYR_VERBOSITY_LEVEL = "minimal")
 options(zephyr.verbosity_level = NULL)
-options(verbosity_level = NULL)
-rm(list = ls(envir = .options))  # Remove package-specific options
+get_verbosity_level()  # Returns "minimal"
+
+# Set package-specific option
+define_option_pkg("verbosity_level", default = "debug", envir = parent.frame())
 Sys.unsetenv("R_ZEPHYR_VERBOSITY_LEVEL")
+get_verbosity_level()  # Returns "debug"
+
+# Reset to default
+options(mypackage.verbosity_level = NULL)
+Sys.unsetenv("R_MYPACKAGE_VERBOSITY_LEVEL")
+options(zephyr.verbosity_level = NULL)
+Sys.unsetenv("R_ZEPHYR_VERBOSITY_LEVEL")
+rm(list = ls(envir = .options))  # Remove package-specific options
 get_verbosity_level()  # Returns "verbose" (default)
 
-# Usage with msg functions
-msg("This is a verbose message", levels_to_write = "verbose")
-msg("This is a minimal message", levels_to_write = "minimal")
-msg_debug("This is a debug message")
-msg_success("This is a success message")
-msg_minimal("This is a minimal message")
-
+}
+\seealso{
+\code{\link{msg}}, \code{\link{msg_debug}}, \code{\link{msg_success}}, \code{\link{msg_minimal}}
 }
