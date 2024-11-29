@@ -15,10 +15,12 @@ knitr::opts_chunk$set(
 devtools::load_all(".")
 ```
 
-# zephyr <a href="https://novonordisk-opensource.github.io/zephyr/"><img src="man/figures/logo.png" align="right" height="138" alt="zephyr website" /></a>
+# zephyr <a href="https://novonordisk-opensource.github.io/zephyr/"><img src="man/figures/logo.png" alt="zephyr website" align="right" height="138"/></a>
 
 <!-- badges: start -->
+
 [![Checks](https://github.com/NovoNordisk-OpenSource/zephyr/actions/workflows/check_and_co.yaml/badge.svg)](https://github.com/NovoNordisk-OpenSource/zephyr/actions/workflows/check_and_co.yaml)
+
 <!-- badges: end -->
 
 The zephyr package provides small functionalities for developers of R packages to inform users about progress and issues, while at the same time allowing them to easily configure the amount of information they want to receive through package level options.
@@ -45,7 +47,7 @@ msg("testing",
     verbosity_level = "quiet")
 ```
 
-Note you are able to control what function to use when writing messages to the console through the the argument `msg_fun` (default being `msg_fun = cli::cli_alert_info`), and there are wrapper functions `msg_debug` and `msg_success` available (see the documentation in using `?msg`) which as default have `msg_fun = cli::cli_inform` and  `msg_fun = cli::cli_alert_success`, respectively. 
+Note you are able to control what function to use when writing messages to the console through the the argument `msg_fun` (default being `msg_fun = cli::cli_alert_info`), and there are wrapper functions `msg_debug` and `msg_success` available (see the documentation in using `?msg`) which as default have `msg_fun = cli::cli_inform` and `msg_fun = cli::cli_alert_success`, respectively.
 
 ### Controlling the verbosity level through zephyr package options
 
@@ -54,6 +56,7 @@ The verbosity level can be specified as an argument withing the function. Howeve
 #### Setting a package option
 
 The default package level `verbosity_level` is set to "verbose". You can view it by running the following code:
+
 ```{r}
 opt_pkg("verbosity_level", envir = "zephyr")
 ```
@@ -79,7 +82,6 @@ withr::with_options(list(zephyr.verbosity_level = "debug"), {
 msg_success("testing")
 ```
 
-
 #### Usage in R package development
 
 The `verbosity_level` option can also be specified in a developer's R package.
@@ -87,19 +89,18 @@ The `verbosity_level` option can also be specified in a developer's R package.
 When doing so, the behavior of the `msg` functions will be controlled through that package level option, and users can then easily control the verbosity level in the entire package. By default the `msg` functions will fetch the `verbosity_level` option set in the package of the function wherein the `msg` function is called.
 
 When using zephyr options the verbosity level is determined by checking the following sources in order:
- 
-- Global package-specific option: `options("[package].verbosity_level")`
 
-- Package-specific environment variable: `Sys.getenv("R_[PACKAGE]_VERBOSITY_LEVEL")`
+1.  Global package-specific option: `options("[package].verbosity_level")`
 
-- Global Zephyr package option: `options("zephyr.verbosity_level")`
+2.  Package-specific environment variable: `Sys.getenv("R_[PACKAGE]_VERBOSITY_LEVEL")`
 
-- Zephyr environment variable: `Sys.getenv("R_ZEPHYR_VERBOSITY_LEVEL")`
+3.  Global Zephyr package option: `options("zephyr.verbosity_level")`
 
-- Package-specific option set with `define_option_pkg("verbosity_level")`
+4.  Zephyr environment variable: `Sys.getenv("R_ZEPHYR_VERBOSITY_LEVEL")`
 
-- Default value: "verbose"
-   
+5.  Package-specific option set with `define_option_pkg("verbosity_level")`
+
+6.  Default value: "verbose"
 
 ##### Simulating creation of a package
 
@@ -213,6 +214,7 @@ The default behavior described can be used to control verbosity level through yo
 In case a more transparent solution is wanted, a package level option can be set, and then the `zephyr::get_verbosity_level(env = "foo_pkg")` can be used to get the default value in your function (or the `opt_pkg("foo_pkg.verbosity_level", envir = foo_pkg)` function in case it's not wanted to be able to override options "on a global zephyr level").
 
 When creating a function `foo` in a package `foo_pkg` such a solution would look like this:
+
 ```{r, eval = FALSE}
 foo <- function(my_arg,
                 verbosity_level = zephyr::get_verbosity_level(env = "foo_pkg")) {
@@ -225,6 +227,6 @@ foo <- function(my_arg,
 
 ### Summary of how to use `zephyr` in your package
 
-1. Set a `verbosity_level` package level option in your package (see the `R/zephyr-options.R` file in the `zephyr` package for an example of how to set a package level option).
-2. Develop your functions to include `zephyr` functionalities when you want to inform your user - allowing them to specify a `verbosity_level` directly as an argument or only through options.
-3. Write in the documentation of your functions that verbosity level can be controlled through options
+1.  Set a `verbosity_level` package level option in your package (see the `R/zephyr-options.R` file in the `zephyr` package for an example of how to set a package level option).
+2.  Develop your functions to include `zephyr` functionalities when you want to inform your user - allowing them to specify a `verbosity_level` directly as an argument or only through options.
+3.  Write in the documentation of your functions that verbosity level can be controlled through options

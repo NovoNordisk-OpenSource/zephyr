@@ -99,6 +99,54 @@ define_option_pkg <- function(option, default = NULL, desc = NULL, option_name =
   return(invisible(spec))
 }
 
+#' Remove a package-specific option
+#'
+#' @description
+#' This function removes a package-specific option that was previously set using
+#' the `define_option_pkg` function.
+#'
+#' @param option A character string specifying the name of the option to remove.
+#' @param envir The environment where the `.options` environment is located.
+#'   Default is `parent.frame()`.
+#'
+#' @return Invisible NULL. The function is called for its side effect of removing the option.
+#'
+#' @details
+#' The function removes the specified option from the `.options` environment
+#' within the given environment. If the `.options` environment or the specified
+#' option doesn't exist, the function will do nothing.
+#'
+#' @examples
+#' # Assuming we have previously set an option:
+#' # define_option_pkg("my_option", default = "value")
+#'
+#' # To remove the option:
+#' remove_option_pkg("my_option")
+#'
+#' @export
+remove_option_pkg <- function(option, envir = parent.frame()) {
+  # Find the environment containing .options
+  while (!is.null(envir) && !exists(".options", envir = envir, inherits = FALSE)) {
+    envir <- parent.env(envir)
+  }
+
+  if (is.null(envir)) {
+    message("No .options environment found in the calling stack.")
+    return(invisible(NULL))
+  }
+
+  options_env <- get(".options", envir = envir)
+
+  if (exists(option, envir = options_env, inherits = FALSE)) {
+    rm(list = option, envir = options_env)
+    message(sprintf("Option '%s' has been removed.", option))
+  } else {
+    message(sprintf("Option '%s' does not exist.", option))
+  }
+
+  invisible(NULL)
+}
+
 #' Determine the source of an option value
 #'
 #' This function determines the source of an option value (option, environment variable, or default).
@@ -298,3 +346,4 @@ opts_pkg <- function(envir = NULL, names_only = FALSE, full = FALSE) {
 
   return(options_list)
 }
+

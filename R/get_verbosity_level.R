@@ -78,7 +78,7 @@ get_verbosity_level <- function(env = parent.frame()) {
 
   # 2. **package environment variables**
   #    Sys.getenv("R_WHIRL_VERBOSITY_LEVEL")
-  if (!is.null(get_package_name_and_verbosity()$verbosity_level)) {
+  if (!is.null(get_package_name_and_env_verbosity()$verbosity_level)) {
     return(get_package_name_and_env_verbosity()$verbosity_level)
   }
 
