@@ -250,21 +250,25 @@ get_package_name_and_verbosity <- function() {
   }
 
   # Get the calling package name
-  result$package_name <- get_calling_pkg_name()
+  result$package_name <-  get_calling_pkg_name()
 
   if (is.null(result$package_name)) {
     message("Function called from global environment or unable to determine package name.")
   } else {
-    # Check for verbosity level option
+    # Check for package-specific verbosity level option
     option_name <- paste0(result$package_name, ".verbosity_level")
     verbosity_value <- getOption(option_name)
 
-    if (!is.null(verbosity_value)) {
-      if (verbosity_value %in% valid_levels) {
-        result$verbosity_level <- verbosity_value
-      } else {
-        warning("Invalid verbosity level in option. Setting to NULL.")
-      }
+    if (!is.null(verbosity_value) && verbosity_value %in% valid_levels) {
+      result$verbosity_level <- verbosity_value
+    }
+  }
+
+  # If no package-specific verbosity level is set, check for general verbosity_level option
+  if (is.null(result$verbosity_level)) {
+    general_verbosity <- getOption("verbosity_level")
+    if (!is.null(general_verbosity) && general_verbosity %in% valid_levels) {
+      result$verbosity_level <- general_verbosity
     }
   }
 

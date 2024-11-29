@@ -95,21 +95,23 @@ The \code{msg_minimal} function is a wrapper around \code{msg} with
 \code{levels_to_write = c("minimal", "verbose", "debug")} and \code{msg_fun = cli::cli_alert_info}.
 }
 \examples{
-filter_data <-  function(data, infilter, ...) {
+filter_data <- function(data, infilter, ...) {
   infilter_e <- rlang::enquo(infilter)
   infilter_lb <- rlang::as_label(infilter_e)
 
-  msg("Attempting to filter {.field data} by {.field {infilter_lb}}",
+  msg(
+    "Attempting to filter {.field data} by {.field {infilter_lb}}",
     levels_to_write = c("verbose", "debug"),
-    msg_fun = cli::cli_h2)
+    msg_fun = cli::cli_h2
+  )
 
-  msg_debug("Trying to filter data")
+  msg_debug("debug: Trying to filter data")
 
   result <- data |>
     dplyr::filter({{infilter}})
 
-  msg_success("Data filtered by {.field {infilter_lb}}")
-  msg_minimal("Filtered {nrow(result)} rows")
+  msg_success("success: Data filtered by {.field {infilter_lb}}")
+  msg_minimal("minimal: Filtered {nrow(result)} rows")
 
   head(result)
 }
