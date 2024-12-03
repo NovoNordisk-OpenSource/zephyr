@@ -7,3 +7,4 @@
 #' @importFrom utils getFromNamespace
 ## usethis namespace: end
 NULL
+

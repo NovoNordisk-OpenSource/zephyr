@@ -2,7 +2,7 @@
 % Please edit documentation in R/zephyr-options.R
 \name{as_params_pkg}
 \alias{as_params_pkg}
-\title{Generate a list of parameters for package options}
+\title{Generate a character vector of parameters for package options}
 \usage{
 as_params_pkg(envir = NULL, include = NULL, exclude = NULL)
 }
@@ -16,31 +16,31 @@ all options are included.}
 \item{exclude}{A character vector of option names to exclude. Default is NULL.}
 }
 \value{
-A list of parameter descriptions, where each element is a character
-vector describing an option.
+A character vector of parameter descriptions, where each element is a string
+describing an option.
 }
 \description{
-This function generates a list of parameters for options defined using
-the custom options functions. The resulting list can be used in documentation
+This function generates a character vector of parameters for options defined using
+the custom options functions. The resulting vector can be used in documentation
 or for other purposes.
 }
 \examples{
 \dontrun{
 # Assuming some options are defined in the current environment
 params <- as_params_pkg()
-str(params)
+cat(params, sep = "\n")
 
 # For a specific package
 params <- as_params_pkg("mypackage")
-str(params)
+cat(params, sep = "\n")
 
 # Include only specific options
 params <- as_params_pkg(include = c("option1", "option2"))
-str(params)
+cat(params, sep = "\n")
 
 # Exclude specific options
 params <- as_params_pkg(exclude = c("option3", "option4"))
-str(params)
+cat(params, sep = "\n")
 }
 
 }

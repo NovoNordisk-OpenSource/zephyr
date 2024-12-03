@@ -345,20 +345,24 @@ opts_pkg <- function(envir = NULL, names_only = FALSE, full = FALSE) {
 #' Generate Roxygen documentation for package options
 #'
 #' This function generates Roxygen documentation for all package options
-#' defined in the global environment. It creates documentation for a
+#' defined in the package environment. It creates documentation for a
 #' `set_pkg_options()` function, which allows users to set these options.
+#'
+#' @param pkg The name of the package as a string.
 #'
 #' @return A character vector containing Roxygen documentation for the
 #'   `set_pkg_options()` function, including descriptions of all available options.
 #'
 #' @examples
-#' # Assuming you have defined some options in your package
-#' cat(as_roxygen_docs_pkg(), sep = "\n")
+#' \dontrun{
+#' # Generate documentation for the package options
+#' cat(as_roxygen_docs_pkg("zephyr"), sep = "\n")
+#' }
 #'
 #' @export
-as_roxygen_docs_pkg <- function() {
-  # Use the global environment to find the options
-  options <- opts_pkg(envir = .GlobalEnv, full = TRUE)
+as_roxygen_docs_pkg <- function(pkg) {
+  # Get all options with full details
+  options <- opts_pkg(pkg, full = TRUE)
 
   # Generate Roxygen docs for each option
   roxygen_docs <- lapply(names(options), function(name) {
@@ -375,9 +379,9 @@ as_roxygen_docs_pkg <- function() {
 
   # Combine all documentation parts
   result <- c(
-    "#' Set package options",
+    "#' Set package options for zephyr",
     "#'",
-    "#' This function allows you to set various options for the package.",
+    "#' This function allows you to set various options for the zephyr package.",
     "#' These options can control the behavior of different package functions.",
     "#'",
     "#' @param ... Option names and values to set.",
@@ -387,24 +391,21 @@ as_roxygen_docs_pkg <- function() {
     "#'",
     "#' @examples",
     "#' # Set a single option",
-    "#' set_pkg_options(my_option = TRUE)",
+    paste0("#' set_", pkg, "_options(my_option = TRUE)"),
     "#'",
     "#' # Set multiple options",
-    "#' set_pkg_options(my_option = TRUE, test_option = 'new value')",
+    paste0("#' set_", pkg, "_options(my_option = TRUE, another_option = 'value')"),
     "#'",
-    "#' @export",
-    "set_pkg_options <- function(...) {",
-    "  set_options_pkg(...)",
-    "}"
+    "#' @export"
   )
 
   result
 }
 
-#' Generate a list of parameters for package options
+#' Generate a character vector of parameters for package options
 #'
-#' This function generates a list of parameters for options defined using
-#' the custom options functions. The resulting list can be used in documentation
+#' This function generates a character vector of parameters for options defined using
+#' the custom options functions. The resulting vector can be used in documentation
 #' or for other purposes.
 #'
 #' @param envir The environment containing the options. Can be NULL (default,
@@ -413,26 +414,26 @@ as_roxygen_docs_pkg <- function() {
 #'   all options are included.
 #' @param exclude A character vector of option names to exclude. Default is NULL.
 #'
-#' @return A list of parameter descriptions, where each element is a character
-#'   vector describing an option.
+#' @return A character vector of parameter descriptions, where each element is a string
+#'   describing an option.
 #'
 #' @examples
 #' \dontrun{
 #' # Assuming some options are defined in the current environment
 #' params <- as_params_pkg()
-#' str(params)
+#' cat(params, sep = "\n")
 #'
 #' # For a specific package
 #' params <- as_params_pkg("mypackage")
-#' str(params)
+#' cat(params, sep = "\n")
 #'
 #' # Include only specific options
 #' params <- as_params_pkg(include = c("option1", "option2"))
-#' str(params)
+#' cat(params, sep = "\n")
 #'
 #' # Exclude specific options
 #' params <- as_params_pkg(exclude = c("option3", "option4"))
-#' str(params)
+#' cat(params, sep = "\n")
 #' }
 #'
 #' @export
@@ -460,25 +461,23 @@ as_params_pkg <- function(envir = NULL, include = NULL, exclude = NULL) {
     options <- options[!names(options) %in% exclude]
   }
 
-  # Generate the parameter list
-  params <- lapply(names(options), function(name) {
+  # Generate the parameter descriptions
+  params <- vapply(names(options), function(name) {
     opt <- options[[name]]
 
     # Create the parameter description
     desc <- c(
-      opt$desc,
-      paste0("Default: ", deparse(opt$expr)),
-      paste0("Option: ", opt$option_name),
-      paste0("Environment variable: ", opt$envvar_name)
+      paste0("@param ", name, " ", opt$desc),
+      paste0("  Default: ", deparse(opt$expr)),
+      paste0("  Option: ", opt$option_name),
+      paste0("  Environment variable: ", opt$envvar_name)
     )
 
     # Combine the description into a single string
-    paste(desc, collapse = " ")
-  })
+    paste(desc, collapse = "\n")
+  }, FUN.VALUE = character(1))
 
-  # Name the list elements with the option names
-  names(params) <- names(options)
-
+  # Return the character vector
   return(params)
 }
 

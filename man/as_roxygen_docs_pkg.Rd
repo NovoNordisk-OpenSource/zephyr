@@ -4,7 +4,10 @@
 \alias{as_roxygen_docs_pkg}
 \title{Generate Roxygen documentation for package options}
 \usage{
-as_roxygen_docs_pkg()
+as_roxygen_docs_pkg(pkg)
+}
+\arguments{
+\item{pkg}{The name of the package as a string.}
 }
 \value{
 A character vector containing Roxygen documentation for the
@@ -12,11 +15,13 @@ A character vector containing Roxygen documentation for the
 }
 \description{
 This function generates Roxygen documentation for all package options
-defined in the global environment. It creates documentation for a
+defined in the package environment. It creates documentation for a
 \code{set_pkg_options()} function, which allows users to set these options.
 }
 \examples{
-# Assuming you have defined some options in your package
-cat(as_roxygen_docs_pkg(), sep = "\n")
+\dontrun{
+# Generate documentation for the package options
+cat(as_roxygen_docs_pkg("zephyr"), sep = "\n")
+}
 
 }
