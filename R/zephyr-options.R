@@ -562,14 +562,14 @@ envvar_is_true_pkg <- function(envir = NULL) {
 #' Split an environment variable or option string into a vector
 #'
 #' This function retrieves the value of an environment variable or option,
-#' splits it into a vector using a specified separator, and optionally trims whitespace.
+#' splits it into a vector using a specified delimiter, and optionally trims whitespace.
 #' It first checks for an environment variable of the form R_OPTION_NAME,
 #' then falls back to the value set in the specified environment.
 #'
 #' @param x The name of the option or environment variable to check
 #' @param envir The environment in which to look for the option. Can be NULL (default, uses .GlobalEnv),
 #'   a string (package name), or an environment.
-#' @param sep The separator to use for splitting the string. Default is ",".
+#' @param delim The delimiter to use for splitting the string. Default is ",".
 #' @param trim Logical, whether to trim whitespace from the resulting vector elements. Default is TRUE.
 #'
 #' @return A character vector of the split string, or NULL if the variable is not set or empty.
@@ -582,10 +582,10 @@ envvar_is_true_pkg <- function(envir = NULL) {
 #' envvar_str_split_pkg("MY_ENV_LIST")  # Returns c("a", "b", "c")
 #'
 #' Sys.setenv(MY_ENV_LIST = "x|y|z")
-#' envvar_str_split_pkg("MY_ENV_LIST", sep = "|")  # Returns c("x", "y", "z")
+#' envvar_str_split_pkg("MY_ENV_LIST", delim = "|")  # Returns c("x", "y", "z")
 #'
 #' @export
-envvar_str_split_pkg <- function(x, envir = NULL, sep = ",", trim = TRUE) {
+envvar_str_split_pkg <- function(x, envir = NULL, delim = ",", trim = TRUE) {
   if (is.null(envir)) {
     envir <- .GlobalEnv
   } else if (is.character(envir)) {
@@ -621,7 +621,7 @@ envvar_str_split_pkg <- function(x, envir = NULL, sep = ",", trim = TRUE) {
     return(NULL)
   }
 
-  result <- strsplit(value, split = sep, fixed = TRUE)[[1]]
+  result <- strsplit(value, split = delim, fixed = TRUE)[[1]]
 
   if (trim) {
     result <- trimws(result)
