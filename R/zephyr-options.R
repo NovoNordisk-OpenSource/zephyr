@@ -342,48 +342,97 @@ opts_pkg <- function(envir = NULL, names_only = FALSE, full = FALSE) {
   return(options_list)
 }
 
-#' Generate Roxygen documentation for package options
+#' Generate Roxygen Documentation for Package Options
 #'
-#' This function generates Roxygen documentation for all package options
-#' defined in the package environment. It creates documentation for a
-#' `set_[pkg]_options()` function, which allows users to set these options.
+#' This function creates Roxygen2 documentation for all options of a specified package.
+#' It formats the options' descriptions, default values, and environment variables
+#' in a structured manner suitable for inclusion in package documentation.
 #'
-#' @param pkg The name of the package as a string.
+#' @param pkg A character string specifying the name of the package.
 #'
-#' @return A character string containing Roxygen documentation for the
-#'   `set_[pkg]_options()` function, including descriptions of all available options.
+#' @return A character vector containing Roxygen2 documentation for the package options.
+#'
+#' @details
+#' The function performs the following steps:
+#' 1. Retrieves all options for the specified package.
+#' 2. Formats each option's description, default value, and associated environment variable.
+#' 3. Wraps long text to improve readability in the documentation.
+#' 4. Structures the documentation using Roxygen2 and LaTeX formatting commands.
+#'
+#' The resulting documentation includes:
+#' - A description of each option
+#' - The default value (formatted as code)
+#' - The option name for use in `options()`
+#' - The associated environment variable name and its behavior
+#'
+#' @note This function is intended for internal use in package development
+#' and documentation generation processes.
 #'
 #' @examples
 #' \dontrun{
-#' # Generate documentation for the package options
-#' cat(as_roxygen_docs_pkg("mypackage"))
+#' # Generate documentation for a package named "mypackage"
+#' docs <- as_roxygen_docs_pkg("mypackage")
+#'
+#' # Print the generated documentation
+#' cat(paste(docs, collapse = "\n"))
 #' }
+#'
+#' @seealso \code{\link[options]{options}}, \code{\link[base]{Sys.getenv}}
 #'
 #' @export
 as_roxygen_docs_pkg <- function(pkg) {
   # Get all options with full details
   options <- opts_pkg(pkg, full = TRUE)
 
-  # Generate parameter descriptions
-  params <- as_params_pkg(pkg)
+  # Function to wrap text
+  wrap_text <- function(text, width = 80) {
+    wrapped <- strwrap(text, width = width, exdent = 2)
+    paste(wrapped, collapse = "\n")
+  }
 
-  # Combine all documentation parts
-  result <- paste0(
-    "Set package options for ", pkg, "\n\n",
-    "This function allows you to set various options for the ", pkg, " package.\n",
-    "These options can control the behavior of different package functions.\n\n",
-    "@param ... Option names and values to set.\n\n",
-    paste(params, collapse = "\n\n"), "\n\n",
-    "@return Invisibly returns the old values of the options that were changed.\n\n",
-    "@examples\n",
-    "# Set a single option\n",
-    "set_", pkg, "_options(my_option = TRUE)\n\n",
-    "# Set multiple options\n",
-    "set_", pkg, "_options(my_option = TRUE, another_option = 'value')\n\n",
-    "@export"
+  # Function to format default values as code with wrapping
+  format_default <- function(expr) {
+    if (is.null(expr)) return("NULL")
+
+    # Use deparse with a large width to avoid unintended line breaks
+    default_str <- paste(deparse(expr, width.cutoff = 500), collapse = " ")
+
+    # Wrap the text
+    wrapped_str <- wrap_text(default_str, width = 76)  # 76 to account for indentation
+
+    # Wrap in \preformatted{} for code formatting
+    paste0("\\preformatted{\n", wrapped_str, "\n}")
+  }
+
+  # Create the options section
+  options_section <- c(
+    "@section Options:",
+    "\\describe{"
   )
 
-  result
+  # Add each option to the options section
+  for (param in names(options)) {
+    opt <- options[[param]]
+    options_section <- c(options_section,
+      paste0("  \\item{\\code{", param, "}}{"),
+      paste0("    ", wrap_text(opt$desc)),
+      "    \\itemize{",
+      paste0("      \\item Default: ", format_default(opt$expr)),
+      paste0("      \\item Option: \\code{", pkg, ".", param, "}"),
+      paste0("      \\item Environment variable: \\code{", opt$envvar_name, "} (",
+        wrap_text(if(is.logical(opt$expr)) "TRUE if one of 'TRUE', '1', FALSE otherwise"
+          else if(is.character(opt$expr)) "evaluated if possible, raw string otherwise"
+          else if(is.numeric(opt$expr)) "evaluated if possible, raw string otherwise"
+          else "as character vector, split on ';' delimiter", width = 60), ")"),
+      "    }",
+      "  }"
+    )
+  }
+
+  options_section <- c(options_section, "}")
+
+  # Return as a character vector
+  return(options_section)
 }
 
 #' Generate a character vector of parameters for package options

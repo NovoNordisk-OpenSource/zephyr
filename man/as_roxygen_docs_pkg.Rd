@@ -2,26 +2,52 @@
 % Please edit documentation in R/zephyr-options.R
 \name{as_roxygen_docs_pkg}
 \alias{as_roxygen_docs_pkg}
-\title{Generate Roxygen documentation for package options}
+\title{Generate Roxygen Documentation for Package Options}
 \usage{
 as_roxygen_docs_pkg(pkg)
 }
 \arguments{
-\item{pkg}{The name of the package as a string.}
+\item{pkg}{A character string specifying the name of the package.}
 }
 \value{
-A character string containing Roxygen documentation for the
-\verb{set_[pkg]_options()} function, including descriptions of all available options.
+A character vector containing Roxygen2 documentation for the package options.
 }
 \description{
-This function generates Roxygen documentation for all package options
-defined in the package environment. It creates documentation for a
-\verb{set_[pkg]_options()} function, which allows users to set these options.
+This function creates Roxygen2 documentation for all options of a specified package.
+It formats the options' descriptions, default values, and environment variables
+in a structured manner suitable for inclusion in package documentation.
+}
+\details{
+The function performs the following steps:
+\enumerate{
+\item Retrieves all options for the specified package.
+\item Formats each option's description, default value, and associated environment variable.
+\item Wraps long text to improve readability in the documentation.
+\item Structures the documentation using Roxygen2 and LaTeX formatting commands.
+}
+
+The resulting documentation includes:
+\itemize{
+\item A description of each option
+\item The default value (formatted as code)
+\item The option name for use in \code{options()}
+\item The associated environment variable name and its behavior
+}
+}
+\note{
+This function is intended for internal use in package development
+and documentation generation processes.
 }
 \examples{
 \dontrun{
-# Generate documentation for the package options
-cat(as_roxygen_docs_pkg("mypackage"))
+# Generate documentation for a package named "mypackage"
+docs <- as_roxygen_docs_pkg("mypackage")
+
+# Print the generated documentation
+cat(paste(docs, collapse = "\n"))
 }
 
+}
+\seealso{
+\code{\link[options]{options}}, \code{\link[base]{Sys.getenv}}
 }
