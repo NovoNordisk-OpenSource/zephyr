@@ -489,29 +489,31 @@ as_params_pkg <- function(envir = NULL, include = NULL, exclude = NULL) {
 
 #' Check if an environment variable or option is set to a truthy value
 #'
-#' This function checks if a given environment variable or option is set to a value
-#' that can be interpreted as true. It first checks for an environment variable of the form
-#' R_OPTION_NAME, then falls back to the value set in the specified environment.
+#' This function returns another function that checks if a given environment variable
+#' or option is set to a value that can be interpreted as true. It first checks for
+#' an environment variable of the form R_OPTION_NAME, then falls back to the value
+#' set in the specified environment.
 #'
-#' @param x The name of the option or environment variable to check
 #' @param envir The environment in which to look for the option. Can be NULL (default, uses .GlobalEnv),
 #'   a string (package name), or an environment.
 #'
-#' @return A logical value: TRUE if the option or environment variable is set to a truthy value,
+#' @return A function that takes a parameter 'x' (the name of the option or environment variable to check)
+#'   and returns a logical value: TRUE if the option or environment variable is set to a truthy value,
 #'   FALSE otherwise.
 #'
 #' @examples
+#' is_true <- envvar_is_true_pkg()
 #' Sys.setenv(R_MY_OPTION = "true")
-#' envvar_is_true_pkg("my_option")  # Returns TRUE
+#' is_true("my_option")  # Returns TRUE
 #'
 #' Sys.setenv(R_MY_OPTION = "false")
-#' envvar_is_true_pkg("my_option")  # Returns FALSE
+#' is_true("my_option")  # Returns FALSE
 #'
 #' Sys.setenv(MY_ENV_VAR = "yes")
-#' envvar_is_true_pkg("MY_ENV_VAR")  # Returns TRUE
+#' is_true("MY_ENV_VAR")  # Returns TRUE
 #'
 #' @export
-envvar_is_true_pkg <- function(x, envir = NULL) {
+envvar_is_true_pkg <- function(envir = NULL) {
   if (is.null(envir)) {
     envir <- .GlobalEnv
   } else if (is.character(envir)) {
@@ -523,33 +525,38 @@ envvar_is_true_pkg <- function(x, envir = NULL) {
     stop("'envir' must be NULL, a string (package name), or an environment.")
   }
 
-  spec <- get_option_spec_pkg(x, envir = envir, print_spec = FALSE)
+  fn <- function(x) {
+    spec <- get_option_spec_pkg(x, envir = envir, print_spec = FALSE)
 
-  if (!is.null(spec)) {
-    envvar_value <- Sys.getenv(spec$envvar_name, unset = NA)
-    if (!is.na(envvar_value)) {
-      value <- envvar_value
+    if (!is.null(spec)) {
+      envvar_value <- Sys.getenv(spec$envvar_name, unset = NA)
+      if (!is.na(envvar_value)) {
+        value <- envvar_value
+      } else {
+        value <- opt_pkg(x, envir = envir)
+      }
     } else {
-      value <- opt_pkg(x, envir = envir)
+      envvar_value <- Sys.getenv(paste0("R_", toupper(x)), unset = NA)
+      if (!is.na(envvar_value)) {
+        value <- envvar_value
+      } else if (exists(x, envir = envir, inherits = FALSE)) {
+        value <- get(x, envir = envir)
+      } else {
+        value <- Sys.getenv(x, unset = NA)
+      }
     }
-  } else {
-    envvar_value <- Sys.getenv(paste0("R_", toupper(x)), unset = NA)
-    if (!is.na(envvar_value)) {
-      value <- envvar_value
-    } else if (exists(x, envir = envir, inherits = FALSE)) {
-      value <- get(x, envir = envir)
+
+    if (is.logical(value)) {
+      return(value)
+    } else if (is.character(value) && !is.na(value)) {
+      return(tolower(value) %in% c("true", "t", "yes", "y", "1"))
     } else {
-      value <- Sys.getenv(x, unset = NA)
+      return(FALSE)
     }
   }
 
-  if (is.logical(value)) {
-    return(value)
-  } else if (is.character(value) && !is.na(value)) {
-    return(tolower(value) %in% c("true", "t", "yes", "y", "1"))
-  } else {
-    return(FALSE)
-  }
+  attr(fn, "desc") <- "TRUE if one of 'TRUE', 'T', 'YES', 'Y', '1' (case-insensitive), FALSE otherwise"
+  return(fn)
 }
 
 #' Split an environment variable or option string into a vector

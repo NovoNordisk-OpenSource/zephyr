@@ -4,31 +4,32 @@
 \alias{envvar_is_true_pkg}
 \title{Check if an environment variable or option is set to a truthy value}
 \usage{
-envvar_is_true_pkg(x, envir = NULL)
+envvar_is_true_pkg(envir = NULL)
 }
 \arguments{
-\item{x}{The name of the option or environment variable to check}
-
 \item{envir}{The environment in which to look for the option. Can be NULL (default, uses .GlobalEnv),
 a string (package name), or an environment.}
 }
 \value{
-A logical value: TRUE if the option or environment variable is set to a truthy value,
+A function that takes a parameter 'x' (the name of the option or environment variable to check)
+and returns a logical value: TRUE if the option or environment variable is set to a truthy value,
 FALSE otherwise.
 }
 \description{
-This function checks if a given environment variable or option is set to a value
-that can be interpreted as true. It first checks for an environment variable of the form
-R_OPTION_NAME, then falls back to the value set in the specified environment.
+This function returns another function that checks if a given environment variable
+or option is set to a value that can be interpreted as true. It first checks for
+an environment variable of the form R_OPTION_NAME, then falls back to the value
+set in the specified environment.
 }
 \examples{
+is_true <- envvar_is_true_pkg()
 Sys.setenv(R_MY_OPTION = "true")
-envvar_is_true_pkg("my_option")  # Returns TRUE
+is_true("my_option")  # Returns TRUE
 
 Sys.setenv(R_MY_OPTION = "false")
-envvar_is_true_pkg("my_option")  # Returns FALSE
+is_true("my_option")  # Returns FALSE
 
 Sys.setenv(MY_ENV_VAR = "yes")
-envvar_is_true_pkg("MY_ENV_VAR")  # Returns TRUE
+is_true("MY_ENV_VAR")  # Returns TRUE
 
 }
