@@ -347,3 +347,280 @@ opts_pkg <- function(envir = NULL, names_only = FALSE, full = FALSE) {
   return(options_list)
 }
 
+#' Generate Roxygen documentation for package options
+#'
+#' This function generates Roxygen documentation for all package options
+#' defined in the global environment. It creates documentation for a
+#' `set_pkg_options()` function, which allows users to set these options.
+#'
+#' @return A character vector containing Roxygen documentation for the
+#'   `set_pkg_options()` function, including descriptions of all available options.
+#'
+#' @examples
+#' # Assuming you have defined some options in your package
+#' cat(as_roxygen_docs_pkg(), sep = "\n")
+#'
+#' @export
+as_roxygen_docs_pkg <- function() {
+  # Use the global environment to find the options
+  options <- opts_pkg(envir = .GlobalEnv, full = TRUE)
+
+  # Generate Roxygen docs for each option
+  roxygen_docs <- lapply(names(options), function(name) {
+    opt <- options[[name]]
+
+    c(
+      paste0("#' @param ", name, " ", opt$desc),
+      paste0("#'   Default: ", deparse(opt$expr)),
+      paste0("#'   Environment variable: ", opt$envvar_name),
+      if (!is.null(opt$validator)) "#'   Has custom validator." else character(0),
+      ""
+    )
+  })
+
+  # Combine all documentation parts
+  result <- c(
+    "#' Set package options",
+    "#'",
+    "#' This function allows you to set various options for the package.",
+    "#' These options can control the behavior of different package functions.",
+    "#'",
+    "#' @param ... Option names and values to set.",
+    "#'",
+    unlist(roxygen_docs),
+    "#' @return Invisibly returns the old values of the options that were changed.",
+    "#'",
+    "#' @examples",
+    "#' # Set a single option",
+    "#' set_pkg_options(my_option = TRUE)",
+    "#'",
+    "#' # Set multiple options",
+    "#' set_pkg_options(my_option = TRUE, test_option = 'new value')",
+    "#'",
+    "#' @export",
+    "set_pkg_options <- function(...) {",
+    "  set_options_pkg(...)",
+    "}"
+  )
+
+  result
+}
+
+#' Generate a list of parameters for package options
+#'
+#' This function generates a list of parameters for options defined using
+#' the custom options functions. The resulting list can be used in documentation
+#' or for other purposes.
+#'
+#' @param envir The environment containing the options. Can be NULL (default,
+#'   uses the calling environment), a string (package name), or an environment object.
+#' @param include A character vector of option names to include. If NULL (default),
+#'   all options are included.
+#' @param exclude A character vector of option names to exclude. Default is NULL.
+#'
+#' @return A list of parameter descriptions, where each element is a character
+#'   vector describing an option.
+#'
+#' @examples
+#' \dontrun{
+#' # Assuming some options are defined in the current environment
+#' params <- as_params_pkg()
+#' str(params)
+#'
+#' # For a specific package
+#' params <- as_params_pkg("mypackage")
+#' str(params)
+#'
+#' # Include only specific options
+#' params <- as_params_pkg(include = c("option1", "option2"))
+#' str(params)
+#'
+#' # Exclude specific options
+#' params <- as_params_pkg(exclude = c("option3", "option4"))
+#' str(params)
+#' }
+#'
+#' @export
+as_params_pkg <- function(envir = NULL, include = NULL, exclude = NULL) {
+  # Determine the environment to use
+  if (is.null(envir)) {
+    envir <- parent.frame()
+  } else if (is.character(envir)) {
+    if (!requireNamespace(envir, quietly = TRUE)) {
+      stop(paste("Package", envir, "is not available."))
+    }
+    envir <- asNamespace(envir)
+  } else if (!is.environment(envir)) {
+    stop("'envir' must be NULL, a string (package name), or an environment.")
+  }
+
+  # Get all options with full details
+  options <- opts_pkg(envir, full = TRUE)
+
+  # Filter options based on include and exclude parameters
+  if (!is.null(include)) {
+    options <- options[names(options) %in% include]
+  }
+  if (!is.null(exclude)) {
+    options <- options[!names(options) %in% exclude]
+  }
+
+  # Generate the parameter list
+  params <- lapply(names(options), function(name) {
+    opt <- options[[name]]
+
+    # Create the parameter description
+    desc <- c(
+      opt$desc,
+      paste0("Default: ", deparse(opt$expr)),
+      paste0("Option: ", opt$option_name),
+      paste0("Environment variable: ", opt$envvar_name)
+    )
+
+    # Combine the description into a single string
+    paste(desc, collapse = " ")
+  })
+
+  # Name the list elements with the option names
+  names(params) <- names(options)
+
+  return(params)
+}
+
+#' Check if an environment variable or option is set to a truthy value
+#'
+#' This function checks if a given environment variable or option is set to a value
+#' that can be interpreted as true. It first checks for an environment variable of the form
+#' R_OPTION_NAME, then falls back to the value set in the specified environment.
+#'
+#' @param x The name of the option or environment variable to check
+#' @param envir The environment in which to look for the option. Can be NULL (default, uses .GlobalEnv),
+#'   a string (package name), or an environment.
+#'
+#' @return A logical value: TRUE if the option or environment variable is set to a truthy value,
+#'   FALSE otherwise.
+#'
+#' @examples
+#' Sys.setenv(R_MY_OPTION = "true")
+#' envvar_is_true_pkg("my_option")  # Returns TRUE
+#'
+#' Sys.setenv(R_MY_OPTION = "false")
+#' envvar_is_true_pkg("my_option")  # Returns FALSE
+#'
+#' Sys.setenv(MY_ENV_VAR = "yes")
+#' envvar_is_true_pkg("MY_ENV_VAR")  # Returns TRUE
+#'
+#' @export
+envvar_is_true_pkg <- function(x, envir = NULL) {
+  if (is.null(envir)) {
+    envir <- .GlobalEnv
+  } else if (is.character(envir)) {
+    if (!requireNamespace(envir, quietly = TRUE)) {
+      stop(paste("Package", envir, "is not available."))
+    }
+    envir <- asNamespace(envir)
+  } else if (!is.environment(envir)) {
+    stop("'envir' must be NULL, a string (package name), or an environment.")
+  }
+
+  spec <- get_option_spec_pkg(x, envir = envir, print_spec = FALSE)
+
+  if (!is.null(spec)) {
+    envvar_value <- Sys.getenv(spec$envvar_name, unset = NA)
+    if (!is.na(envvar_value)) {
+      value <- envvar_value
+    } else {
+      value <- opt_pkg(x, envir = envir)
+    }
+  } else {
+    envvar_value <- Sys.getenv(paste0("R_", toupper(x)), unset = NA)
+    if (!is.na(envvar_value)) {
+      value <- envvar_value
+    } else if (exists(x, envir = envir, inherits = FALSE)) {
+      value <- get(x, envir = envir)
+    } else {
+      value <- Sys.getenv(x, unset = NA)
+    }
+  }
+
+  if (is.logical(value)) {
+    return(value)
+  } else if (is.character(value) && !is.na(value)) {
+    return(tolower(value) %in% c("true", "t", "yes", "y", "1"))
+  } else {
+    return(FALSE)
+  }
+}
+
+#' Split an environment variable or option string into a vector
+#'
+#' This function retrieves the value of an environment variable or option,
+#' splits it into a vector using a specified separator, and optionally trims whitespace.
+#' It first checks for an environment variable of the form R_OPTION_NAME,
+#' then falls back to the value set in the specified environment.
+#'
+#' @param x The name of the option or environment variable to check
+#' @param envir The environment in which to look for the option. Can be NULL (default, uses .GlobalEnv),
+#'   a string (package name), or an environment.
+#' @param sep The separator to use for splitting the string. Default is ",".
+#' @param trim Logical, whether to trim whitespace from the resulting vector elements. Default is TRUE.
+#'
+#' @return A character vector of the split string, or NULL if the variable is not set or empty.
+#'
+#' @examples
+#' Sys.setenv(R_MY_LIST_OPTION = "item1,item2,item3")
+#' envvar_str_split_pkg("my_list_option")  # Returns c("item1", "item2", "item3")
+#'
+#' Sys.setenv(MY_ENV_LIST = "a, b, c")
+#' envvar_str_split_pkg("MY_ENV_LIST")  # Returns c("a", "b", "c")
+#'
+#' Sys.setenv(MY_ENV_LIST = "x|y|z")
+#' envvar_str_split_pkg("MY_ENV_LIST", sep = "|")  # Returns c("x", "y", "z")
+#'
+#' @export
+envvar_str_split_pkg <- function(x, envir = NULL, sep = ",", trim = TRUE) {
+  if (is.null(envir)) {
+    envir <- .GlobalEnv
+  } else if (is.character(envir)) {
+    if (!requireNamespace(envir, quietly = TRUE)) {
+      stop(paste("Package", envir, "is not available."))
+    }
+    envir <- asNamespace(envir)
+  } else if (!is.environment(envir)) {
+    stop("'envir' must be NULL, a string (package name), or an environment.")
+  }
+
+  spec <- get_option_spec_pkg(x, envir = envir, print_spec = FALSE)
+
+  if (!is.null(spec)) {
+    envvar_value <- Sys.getenv(spec$envvar_name, unset = NA)
+    if (!is.na(envvar_value)) {
+      value <- envvar_value
+    } else {
+      value <- opt_pkg(x, envir = envir)
+    }
+  } else {
+    envvar_value <- Sys.getenv(paste0("R_", toupper(x)), unset = NA)
+    if (!is.na(envvar_value)) {
+      value <- envvar_value
+    } else if (exists(x, envir = envir, inherits = FALSE)) {
+      value <- get(x, envir = envir)
+    } else {
+      value <- Sys.getenv(x, unset = NA)
+    }
+  }
+
+  if (is.na(value) || value == "") {
+    return(NULL)
+  }
+
+  result <- strsplit(value, split = sep, fixed = TRUE)[[1]]
+
+  if (trim) {
+    result <- trimws(result)
+  }
+
+  result <- result[nzchar(result)]
+
+  return(result)
+}
