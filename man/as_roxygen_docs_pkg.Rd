@@ -10,18 +10,18 @@ as_roxygen_docs_pkg(pkg)
 \item{pkg}{The name of the package as a string.}
 }
 \value{
-A character vector containing Roxygen documentation for the
-\code{set_pkg_options()} function, including descriptions of all available options.
+A character string containing Roxygen documentation for the
+\verb{set_[pkg]_options()} function, including descriptions of all available options.
 }
 \description{
 This function generates Roxygen documentation for all package options
 defined in the package environment. It creates documentation for a
-\code{set_pkg_options()} function, which allows users to set these options.
+\verb{set_[pkg]_options()} function, which allows users to set these options.
 }
 \examples{
 \dontrun{
 # Generate documentation for the package options
-cat(as_roxygen_docs_pkg("zephyr"), sep = "\n")
+cat(as_roxygen_docs_pkg("mypackage"))
 }
 
 }

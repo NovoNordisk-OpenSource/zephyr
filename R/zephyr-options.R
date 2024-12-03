@@ -350,13 +350,13 @@ opts_pkg <- function(envir = NULL, names_only = FALSE, full = FALSE) {
 #'
 #' @param pkg The name of the package as a string.
 #'
-#' @return A character vector containing Roxygen documentation for the
+#' @return A character string containing Roxygen documentation for the
 #'   `set_[pkg]_options()` function, including descriptions of all available options.
 #'
 #' @examples
 #' \dontrun{
 #' # Generate documentation for the package options
-#' cat(as_roxygen_docs_pkg("mypackage"), sep = "\n")
+#' cat(as_roxygen_docs_pkg("mypackage"))
 #' }
 #'
 #' @export
@@ -364,39 +364,23 @@ as_roxygen_docs_pkg <- function(pkg) {
   # Get all options with full details
   options <- opts_pkg(pkg, full = TRUE)
 
-  # Generate Roxygen docs for each option
-  roxygen_docs <- lapply(names(options), function(name) {
-    opt <- options[[name]]
-
-    c(
-      paste0("#' @param ", name, " ", opt$desc),
-      paste0("#'   Default: ", deparse(opt$expr)),
-      paste0("#'   Environment variable: ", opt$envvar_name),
-      if (!is.null(opt$validator)) "#'   Has custom validator." else character(0),
-      ""
-    )
-  })
+  # Generate parameter descriptions
+  params <- as_params_pkg(pkg)
 
   # Combine all documentation parts
-  result <- c(
-    paste0("#' Set package options for ", pkg),
-    "#'",
-    paste0("#' This function allows you to set various options for the ", pkg, " package."),
-    "#' These options can control the behavior of different package functions.",
-    "#'",
-    "#' @param ... Option names and values to set.",
-    "#'",
-    unlist(roxygen_docs),
-    "#' @return Invisibly returns the old values of the options that were changed.",
-    "#'",
-    "#' @examples",
-    "#' # Set a single option",
-    paste0("#' set_", pkg, "_options(my_option = TRUE)"),
-    "#'",
-    "#' # Set multiple options",
-    paste0("#' set_", pkg, "_options(my_option = TRUE, another_option = 'value')"),
-    "#'",
-    "#' @export"
+  result <- paste0(
+    "Set package options for ", pkg, "\n\n",
+    "This function allows you to set various options for the ", pkg, " package.\n",
+    "These options can control the behavior of different package functions.\n\n",
+    "@param ... Option names and values to set.\n\n",
+    paste(params, collapse = "\n\n"), "\n\n",
+    "@return Invisibly returns the old values of the options that were changed.\n\n",
+    "@examples\n",
+    "# Set a single option\n",
+    "set_", pkg, "_options(my_option = TRUE)\n\n",
+    "# Set multiple options\n",
+    "set_", pkg, "_options(my_option = TRUE, another_option = 'value')\n\n",
+    "@export"
   )
 
   result
