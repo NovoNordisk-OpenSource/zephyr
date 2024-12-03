@@ -561,31 +561,28 @@ envvar_is_true_pkg <- function(envir = NULL) {
 
 #' Split an environment variable or option string into a vector
 #'
-#' This function retrieves the value of an environment variable or option,
-#' splits it into a vector using a specified delimiter, and optionally trims whitespace.
-#' It first checks for an environment variable of the form R_OPTION_NAME,
-#' then falls back to the value set in the specified environment.
+#' This function returns another function that splits a given string (from an environment variable or option)
+#' into a vector using a specified delimiter, and trims whitespace.
 #'
-#' @param x The name of the option or environment variable to check
+#' @param delim The delimiter to use for splitting the string. Default is ",".
 #' @param envir The environment in which to look for the option. Can be NULL (default, uses .GlobalEnv),
 #'   a string (package name), or an environment.
-#' @param delim The delimiter to use for splitting the string. Default is ",".
-#' @param trim Logical, whether to trim whitespace from the resulting vector elements. Default is TRUE.
 #'
-#' @return A character vector of the split string, or NULL if the variable is not set or empty.
+#' @return A function that takes parameters:
+#'   - x: The name of the option or environment variable to check
+#'   - ...: Additional arguments (currently unused)
 #'
 #' @examples
+#' split_fn <- envvar_str_split_pkg()
 #' Sys.setenv(R_MY_LIST_OPTION = "item1,item2,item3")
-#' envvar_str_split_pkg("my_list_option")  # Returns c("item1", "item2", "item3")
-#'
-#' Sys.setenv(MY_ENV_LIST = "a, b, c")
-#' envvar_str_split_pkg("MY_ENV_LIST")  # Returns c("a", "b", "c")
+#' split_fn("my_list_option")  # Returns c("item1", "item2", "item3")
 #'
 #' Sys.setenv(MY_ENV_LIST = "x|y|z")
-#' envvar_str_split_pkg("MY_ENV_LIST", delim = "|")  # Returns c("x", "y", "z")
+#' split_fn <- envvar_str_split_pkg(delim = "|")
+#' split_fn("MY_ENV_LIST")  # Returns c("x", "y", "z")
 #'
 #' @export
-envvar_str_split_pkg <- function(x, envir = NULL, delim = ",", trim = TRUE) {
+envvar_str_split_pkg <- function(delim = ",", envir = NULL) {
   if (is.null(envir)) {
     envir <- .GlobalEnv
   } else if (is.character(envir)) {
@@ -597,37 +594,35 @@ envvar_str_split_pkg <- function(x, envir = NULL, delim = ",", trim = TRUE) {
     stop("'envir' must be NULL, a string (package name), or an environment.")
   }
 
-  spec <- get_option_spec_pkg(x, envir = envir, print_spec = FALSE)
+  fn <- function(x, ...) {
+    spec <- get_option_spec_pkg(x, envir = envir, print_spec = FALSE)
 
-  if (!is.null(spec)) {
-    envvar_value <- Sys.getenv(spec$envvar_name, unset = NA)
-    if (!is.na(envvar_value)) {
-      value <- envvar_value
+    if (!is.null(spec)) {
+      envvar_value <- Sys.getenv(spec$envvar_name, unset = NA)
+      if (!is.na(envvar_value)) {
+        value <- envvar_value
+      } else {
+        value <- opt_pkg(x, envir = envir)
+      }
     } else {
-      value <- opt_pkg(x, envir = envir)
+      envvar_value <- Sys.getenv(paste0("R_", toupper(x)), unset = NA)
+      if (!is.na(envvar_value)) {
+        value <- envvar_value
+      } else if (exists(x, envir = envir, inherits = FALSE)) {
+        value <- get(x, envir = envir)
+      } else {
+        value <- Sys.getenv(x, unset = NA)
+      }
     }
-  } else {
-    envvar_value <- Sys.getenv(paste0("R_", toupper(x)), unset = NA)
-    if (!is.na(envvar_value)) {
-      value <- envvar_value
-    } else if (exists(x, envir = envir, inherits = FALSE)) {
-      value <- get(x, envir = envir)
-    } else {
-      value <- Sys.getenv(x, unset = NA)
+
+    if (is.na(value) || value == "") {
+      return(NULL)
     }
+
+    result <- trimws(strsplit(value, delim, fixed = TRUE)[[1]])
+    result[nzchar(result)]
   }
 
-  if (is.na(value) || value == "") {
-    return(NULL)
-  }
-
-  result <- strsplit(value, split = delim, fixed = TRUE)[[1]]
-
-  if (trim) {
-    result <- trimws(result)
-  }
-
-  result <- result[nzchar(result)]
-
-  return(result)
+  attr(fn, "desc") <- sprintf("as character vector, split on '%s' delimiter", delim)
+  return(fn)
 }

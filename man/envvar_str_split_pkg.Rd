@@ -4,35 +4,32 @@
 \alias{envvar_str_split_pkg}
 \title{Split an environment variable or option string into a vector}
 \usage{
-envvar_str_split_pkg(x, envir = NULL, sep = ",", trim = TRUE)
+envvar_str_split_pkg(delim = ",", envir = NULL)
 }
 \arguments{
-\item{x}{The name of the option or environment variable to check}
+\item{delim}{The delimiter to use for splitting the string. Default is ",".}
 
 \item{envir}{The environment in which to look for the option. Can be NULL (default, uses .GlobalEnv),
 a string (package name), or an environment.}
-
-\item{sep}{The separator to use for splitting the string. Default is ",".}
-
-\item{trim}{Logical, whether to trim whitespace from the resulting vector elements. Default is TRUE.}
 }
 \value{
-A character vector of the split string, or NULL if the variable is not set or empty.
+A function that takes parameters:
+\itemize{
+\item x: The name of the option or environment variable to check
+\item ...: Additional arguments (currently unused)
+}
 }
 \description{
-This function retrieves the value of an environment variable or option,
-splits it into a vector using a specified separator, and optionally trims whitespace.
-It first checks for an environment variable of the form R_OPTION_NAME,
-then falls back to the value set in the specified environment.
+This function returns another function that splits a given string (from an environment variable or option)
+into a vector using a specified delimiter, and trims whitespace.
 }
 \examples{
+split_fn <- envvar_str_split_pkg()
 Sys.setenv(R_MY_LIST_OPTION = "item1,item2,item3")
-envvar_str_split_pkg("my_list_option")  # Returns c("item1", "item2", "item3")
-
-Sys.setenv(MY_ENV_LIST = "a, b, c")
-envvar_str_split_pkg("MY_ENV_LIST")  # Returns c("a", "b", "c")
+split_fn("my_list_option")  # Returns c("item1", "item2", "item3")
 
 Sys.setenv(MY_ENV_LIST = "x|y|z")
-envvar_str_split_pkg("MY_ENV_LIST", sep = "|")  # Returns c("x", "y", "z")
+split_fn <- envvar_str_split_pkg(delim = "|")
+split_fn("MY_ENV_LIST")  # Returns c("x", "y", "z")
 
 }
