@@ -194,6 +194,22 @@ opt_source_pkg <- function(spec, envir = parent.frame()) {
 #'
 #' @export
 opt_pkg <- function(option_name, default = NULL, envir = NULL) {
+  # Determine the package name (if applicable)
+  pkg_name <- NULL
+  if (is.character(envir)) {
+    pkg_name <- envir
+  }
+
+  # Check for package-specific global option first
+  if (!is.null(pkg_name)) {
+    pkg_global_option <- paste0(pkg_name, ".", option_name)
+    pkg_global_value <- getOption(pkg_global_option)
+
+    if (!is.null(pkg_global_value)) {
+      return(pkg_global_value)
+    }
+  }
+
   # Determine the environment to use
   if (is.null(envir)) {
     envir <- parent.frame()
@@ -207,24 +223,22 @@ opt_pkg <- function(option_name, default = NULL, envir = NULL) {
   }
 
   spec <- get_option_spec_pkg(option_name, envir = envir, print_spec = FALSE)
-
   if (is.null(spec)) {
     return(default)
   }
 
   source <- opt_source_pkg(spec, envir = envir)
-
   value <- switch(source,
-    envvar = {
-      env_value <- Sys.getenv(spec$envvar_name, unset = NA)
-      if (!is.null(spec$envvar_fn)) spec$envvar_fn(env_value, spec$envvar_name) else env_value
-    },
-    option = {
-      getOption(spec$option_name)
-    },
-    default = {
-      if (is.null(spec$expr)) default else eval(spec$expr, envir = spec$envir)
-    }
+                  envvar = {
+                    env_value <- Sys.getenv(spec$envvar_name, unset = NA)
+                    if (!is.null(spec$envvar_fn)) spec$envvar_fn(env_value, spec$envvar_name) else env_value
+                  },
+                  option = {
+                    getOption(spec$option_name)
+                  },
+                  default = {
+                    if (is.null(spec$expr)) default else eval(spec$expr, envir = spec$envir)
+                  }
   )
 
   if (!is.null(spec$option_fn)) {
