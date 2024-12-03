@@ -346,17 +346,17 @@ opts_pkg <- function(envir = NULL, names_only = FALSE, full = FALSE) {
 #'
 #' This function generates Roxygen documentation for all package options
 #' defined in the package environment. It creates documentation for a
-#' `set_pkg_options()` function, which allows users to set these options.
+#' `set_[pkg]_options()` function, which allows users to set these options.
 #'
 #' @param pkg The name of the package as a string.
 #'
 #' @return A character vector containing Roxygen documentation for the
-#'   `set_pkg_options()` function, including descriptions of all available options.
+#'   `set_[pkg]_options()` function, including descriptions of all available options.
 #'
 #' @examples
 #' \dontrun{
 #' # Generate documentation for the package options
-#' cat(as_roxygen_docs_pkg("zephyr"), sep = "\n")
+#' cat(as_roxygen_docs_pkg("mypackage"), sep = "\n")
 #' }
 #'
 #' @export
@@ -379,9 +379,9 @@ as_roxygen_docs_pkg <- function(pkg) {
 
   # Combine all documentation parts
   result <- c(
-    "#' Set package options for zephyr",
+    paste0("#' Set package options for ", pkg),
     "#'",
-    "#' This function allows you to set various options for the zephyr package.",
+    paste0("#' This function allows you to set various options for the ", pkg, " package."),
     "#' These options can control the behavior of different package functions.",
     "#'",
     "#' @param ... Option names and values to set.",
