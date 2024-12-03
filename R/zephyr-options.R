@@ -171,11 +171,7 @@ opt_source_pkg <- function(spec, envir = parent.frame()) {
     return("envvar")
   }
 
-  if (!is.null(spec$expr)) {
-    return("default")
-  }
-
-  return(NULL)
+  return("default")
 }
 
 #' Get the value of an option
@@ -227,9 +223,8 @@ opt_pkg <- function(option_name, default = NULL, envir = NULL) {
       getOption(spec$option_name)
     },
     default = {
-      eval(spec$expr, envir = spec$envir)
-    },
-    default
+      if (is.null(spec$expr)) default else eval(spec$expr, envir = spec$envir)
+    }
   )
 
   if (!is.null(spec$option_fn)) {
