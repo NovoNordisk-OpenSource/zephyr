@@ -69,48 +69,64 @@
 #' \code{\link{msg}}, \code{\link{msg_debug}}, \code{\link{msg_success}}, \code{\link{msg_minimal}}
 #'
 #' @importFrom utils getFromNamespace
-get_verbosity_level <- function(env = parent.frame()) {
-  # 1. **global package option**
-  #    options("[package].verbosity_level")
-  if (!is.null(get_package_name_and_verbosity()$verbosity_level)) {
-    return(get_package_name_and_verbosity()$verbosity_level)
+get_verbosity_level <-  function(env = parent.frame()) {
+  # Helper function to get package name
+  get_package_name <- function() {
+    env_name <- environmentName(env)
+    if (env_name != "") {
+      return(sub("package:", "", env_name))
+    }
+    # If not in a package environment, try to find the package name
+    calls <- sys.calls()
+    for (call in calls) {
+      if (identical(call[[1]], as.name("::")) || identical(call[[1]], as.name(":::"))) {
+        return(as.character(call[[2]]))
+      }
+    }
+    return(NULL)
   }
 
-  # 2. **package environment variables**
-  #    Sys.getenv("R_WHIRL_VERBOSITY_LEVEL")
-  if (!is.null(get_package_name_and_env_verbosity()$verbosity_level)) {
-    return(get_package_name_and_env_verbosity()$verbosity_level)
+  pkg_name <- get_package_name()
+
+  # 1. Global package-specific option
+  if (!is.null(pkg_name)) {
+    pkg_specific <- getOption(paste0(pkg_name, ".verbosity_level"))
+    if (!is.null(pkg_specific)) {
+      return(validate_verbosity_level(pkg_specific))
+    }
   }
 
-  # 3. **global zephyr package options**
-  #     options("zephyr.verbosity_level")
+  # 2. Package-specific environment variable
+  if (!is.null(pkg_name)) {
+    pkg_env_specific <- Sys.getenv(paste0("R_", toupper(pkg_name), "_VERBOSITY_LEVEL"))
+    if (nzchar(pkg_env_specific)) {
+      return(validate_verbosity_level(pkg_env_specific))
+    }
+  }
+
+  # 3. Global zephyr package options
   global_option <- getOption("zephyr.verbosity_level")
   if (!is.null(global_option)) {
     return(validate_verbosity_level(global_option))
   }
 
-  # 4. **zephyr environment variables**
-  #     Sys.getenv("R_ZEPHYR_VERBOSITY_LEVEL")
+  # 4. Zephyr environment variables
   env_var <- Sys.getenv("R_ZEPHYR_VERBOSITY_LEVEL")
   if (nzchar(env_var)) {
     return(validate_verbosity_level(env_var))
   }
 
-  # 5. **Package-specific options**
-  #   Default set with define_option_pkg("verbosity_level")
-  # Check for an environment-specific option
-
+  # 5. Package-specific options
   tryCatch({
-    option_name <- get_package_option(option_name = "verbosity_level", pkg_env = env)
-    pkg_specific_value <- opt_pkg(option_name, envir = env)
+    pkg_specific_value <- opt_pkg("verbosity_level", envir = env)
     if (!is.null(pkg_specific_value)) {
       return(validate_verbosity_level(pkg_specific_value))
     }
   }, error = function(e) {
-    # If there's an error, we'll just move on to set a default
+    message("Error when checking package-specific option: ", e$message)
   })
-  # 6. **Default value**
-  # If no option is set, return the default value
+
+  # 6. Default value
   return("verbose")
 }
 

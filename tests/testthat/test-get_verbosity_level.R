@@ -1,42 +1,97 @@
-env_without_option <- create_env_with_fun(add_option = FALSE)
+# Helper function to reset all options and environment variables
+reset_all <-  function() {
+  options(list(
+    "testpkg.verbosity_level" = NULL,
+    "zephyr.verbosity_level" = NULL
+  ))
+  Sys.unsetenv("R_TESTPKG_VERBOSITY_LEVEL")
+  Sys.unsetenv("R_ZEPHYR_VERBOSITY_LEVEL")
 
-test_that("The function extracts the zephyr set option if no package option is set", {
-  opt <- get_verbosity_level(env = env_without_option)
+  # Clear package-specific options more safely
+  env <- parent.frame()
+  if (exists(".options", envir = env, inherits = FALSE)) {
+    if (is.environment(env$.options)) {
+      rm(list = ls(envir = env$.options), envir = env$.options)
+    }
+  }
+}
 
-  expect_equal(opt, "verbose")
-})
+test_that("get_verbosity_level respects priority hierarchy", {
+  # Helper function to set package environment
+  set_package_env <- function(pkg_name) {
+    env <- new.env(parent = emptyenv())
+    attr(env, "name") <- paste0("package:", pkg_name)
+    env
+  }
 
-# Create an environment and define a test option in it
-foo_pkg <- create_env_with_fun("foo",
-                               default = "test")
+  # Test setup
+  test_pkg <- "testpkg"
+  test_env <- set_package_env(test_pkg)
 
-test_that("Option can be extracted", {
-  opt <- get_verbosity_level(env = foo_pkg)
+  # Test 1: Default value
+  reset_all()
+  expect_equal(get_verbosity_level(test_env), "verbose")
 
-  expect_equal(opt, "test")
-})
+  # Test 2: Package-specific option (highest priority)
+  reset_all()
+  options(list(testpkg.verbosity_level = "debug"))
+  expect_equal(get_verbosity_level(test_env), "debug")
 
-test_that("Option can be overwritten with global option or envvar", {
-  glob_opt_list <- list(zephyr.verbosity_level = "glob_opt",
-                        foo_pkg.verbosity_level = "pkg_opt")
+  # Test 3: Package-specific environment variable
+  reset_all()
+  Sys.setenv(R_TESTPKG_VERBOSITY_LEVEL = "minimal")
+  expect_equal(get_verbosity_level(test_env), "minimal")
 
-  opt <- withr::with_options(glob_opt_list, {
-    get_verbosity_level(env = foo_pkg)
-  })
-  expect_equal(opt, "glob_opt")
+  # Test 4: Global Zephyr package option
+  reset_all()
+  options(zephyr.verbosity_level = "quiet")
+  expect_equal(get_verbosity_level(test_env), "quiet")
 
-  glob_env_list <- list(R_ZEPHYR_VERBOSITY_LEVEL = "glob_opt",
-                        R_FOO_PKG_VERBOSITY_LEVEL = "pkg_opt")
+  # Test 5: Zephyr environment variable
+  reset_all()
+  Sys.setenv(R_ZEPHYR_VERBOSITY_LEVEL = "debug")
+  expect_equal(get_verbosity_level(test_env), "debug")
 
-  withr::with_envvar(glob_env_list, {
-    opt2 <- get_verbosity_level(env = foo_pkg)
-    expect_equal(opt2, "glob_opt")
-  })
+  # Test 6: Package-specific option set with define_option_pkg
+  reset_all()
+  define_option_pkg("verbosity_level", default = "minimal", envir = test_env)
+  expect_equal(get_verbosity_level(test_env), "minimal")
 
-  opt3 <- withr::with_envvar(list(R_ZEPHYR_VERBOSITY_LEVEL = "glob_opt"), {
-    withr::with_options(list(foo_pkg.verbosity_level = "pkg_opt"), {
-      get_verbosity_level(env = foo_pkg)
-    })
-  })
-  expect_equal(opt3, "pkg_opt")
+  # Test 7: Priority order (1 > 2)
+  reset_all()
+  options(list(testpkg.verbosity_level = "debug"))
+  Sys.setenv(R_TESTPKG_VERBOSITY_LEVEL = "minimal")
+  expect_equal(get_verbosity_level(test_env), "debug")
+
+  # Test 8: Priority order (2 > 3)
+  reset_all()
+  Sys.setenv(R_TESTPKG_VERBOSITY_LEVEL = "minimal")
+  options(zephyr.verbosity_level = "quiet")
+  expect_equal(get_verbosity_level(test_env), "minimal")
+
+  # Test 9: Priority order (3 > 4)
+  reset_all()
+  options(zephyr.verbosity_level = "quiet")
+  Sys.setenv(R_ZEPHYR_VERBOSITY_LEVEL = "debug")
+  expect_equal(get_verbosity_level(test_env), "quiet")
+
+  # Test 10: Priority order (4 > 5)
+  reset_all()
+  Sys.setenv(R_ZEPHYR_VERBOSITY_LEVEL = "debug")
+  define_option_pkg("verbosity_level", default = "minimal", envir = test_env)
+  expect_equal(get_verbosity_level(test_env), "debug")
+
+  # Test 11: Priority order (5 > 6)
+  reset_all()
+  define_option_pkg("verbosity_level", default = "minimal", envir = test_env)
+  expect_equal(get_verbosity_level(test_env), "minimal")
+
+  # Test 12: Full priority chain
+  reset_all()
+  options(list(testpkg.verbosity_level = "debug"))
+  Sys.setenv(R_TESTPKG_VERBOSITY_LEVEL = "minimal")
+  options(zephyr.verbosity_level = "quiet")
+  Sys.setenv(R_ZEPHYR_VERBOSITY_LEVEL = "verbose")
+  define_option_pkg("verbosity_level", default = "debug", envir = test_env)
+  expect_equal(get_verbosity_level(test_env), "debug")
 })
