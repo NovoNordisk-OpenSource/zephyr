@@ -62,7 +62,9 @@ option_spec_pkg <- function(name, default = NULL, desc = NULL, option_name = NUL
 
 #' Define an option
 #'
-#' This function defines an option and stores its specification in the environment.
+#' This function defines an option for a package. It attempts to set the option
+#' in the package environment. If that fails (e.g., due to a locked namespace),
+#' it falls back to setting a global option with a "zephyr." prefix.
 #'
 #' @inheritParams option_spec_pkg
 #' @param option The name of the option to define.
@@ -172,24 +174,34 @@ remove_option_pkg <- function(option, envir = parent.frame()) {
 #'
 #' @export
 opt_source_pkg <- function(spec, envir = parent.frame()) {
-  if (!is.list(spec) || !("name" %in% names(spec))) {
-    stop("Invalid spec object. Expected a list with at least a 'name' element.")
+  if (is.null(spec) || !is.list(spec) || is.null(spec$name)) {
+    stop("Invalid spec object")
   }
 
-  # Check if the option is defined in the package environment
-  if (!is.null(spec$envir) && is.environment(spec$envir) &&
-      exists(spec$name, envir = spec$envir, inherits = FALSE)) {
-    return("package")
+  pkg_name <- "zephyr"  # Assuming "zephyr" is the package name
+  if (is.character(envir)) {
+    pkg_name <- envir
   }
 
-  # Check if the option is set globally
-  if (!is.null(spec$option_name) && !is.null(getOption(spec$option_name))) {
+  # Check for package-specific global option first
+  pkg_global_option <- paste0(pkg_name, ".", spec$name)
+  if (!is.null(getOption(pkg_global_option))) {
     return("option")
   }
 
-  # Check if the option is set via an environment variable
+  # Check environment variable
   if (!is.null(spec$envvar_name) && nzchar(Sys.getenv(spec$envvar_name))) {
     return("envvar")
+  }
+
+  # Check R option
+  if (!is.null(getOption(spec$name))) {
+    return("option")
+  }
+
+  # Check if it's defined in the package environment
+  if (is.environment(envir) && exists(spec$name, envir = envir, inherits = FALSE)) {
+    return("package")
   }
 
   # If none of the above, it's using the default value
@@ -217,20 +229,7 @@ opt_source_pkg <- function(spec, envir = parent.frame()) {
 #' @export
 opt_pkg <- function(option_name, default = NULL, envir = NULL) {
   # Determine the package name (if applicable)
-  pkg_name <- NULL
-  if (is.character(envir)) {
-    pkg_name <- envir
-  }
-
-  # Check for package-specific global option first
-  if (!is.null(pkg_name)) {
-    pkg_global_option <- paste0(pkg_name, ".", option_name)
-    pkg_global_value <- getOption(pkg_global_option)
-
-    if (!is.null(pkg_global_value)) {
-      return(pkg_global_value)
-    }
-  }
+  pkg_name <- "zephyr"  # Assuming "zephyr" is the package name
 
   # Determine the environment to use
   if (is.null(envir)) {
@@ -240,34 +239,65 @@ opt_pkg <- function(option_name, default = NULL, envir = NULL) {
       stop(paste("Package", envir, "is not available."))
     }
     envir <- asNamespace(envir)
+    pkg_name <- envir  # Use the provided package name
   } else if (!is.environment(envir)) {
     stop("'envir' must be NULL, a string (package name), or an environment.")
   }
 
-  spec <- get_option_spec_pkg(option_name, envir = envir, print_spec = FALSE)
+  # Try to get the spec from the package environment
+  spec <- if (exists(".options", envir = envir, inherits = FALSE) &&
+      exists(option_name, envir = envir$.options, inherits = FALSE)) {
+    envir$.options[[option_name]]
+  } else {
+    NULL
+  }
+
+  # If spec is not found in the package environment, create a basic spec
   if (is.null(spec)) {
+    spec <- list(
+      name = option_name,
+      option_name = option_name,
+      envvar_name = toupper(paste0("R_", gsub(".", "_", option_name, fixed = TRUE)))
+    )
+  }
+
+  # Check environment variable first
+  if (!is.null(spec$envvar_name)) {
+    env_value <- Sys.getenv(spec$envvar_name, unset = NA)
+    if (!is.na(env_value)) {
+      if (!is.null(spec$envvar_fn)) {
+        return(spec$envvar_fn(env_value, spec$envvar_name))
+      } else {
+        return(env_value)
+      }
+    }
+  }
+
+  # Check for package-specific global option
+  pkg_global_option <- paste0(pkg_name, ".", option_name)
+  pkg_global_value <- getOption(pkg_global_option)
+  if (!is.null(pkg_global_value)) {
+    return(pkg_global_value)
+  }
+
+  # Check for regular option
+  if (!is.null(spec$option_name)) {
+    opt_value <- getOption(spec$option_name)
+    if (!is.null(opt_value)) {
+      return(opt_value)
+    }
+  }
+
+  # Use default value
+  if (is.null(spec$expr)) {
     return(default)
+  } else {
+    value <- if (isTRUE(spec$quoted)) spec$expr else eval(spec$expr, envir = spec$envir)
+    if (!is.null(spec$option_fn)) {
+      value <- spec$option_fn(value, x = option_name, default = default, env = envir, source = "default")
+    }
+    return(value)
   }
-
-  source <- opt_source_pkg(spec, envir = envir)
-  value <- switch(source,
-                  envvar = {
-                    env_value <- Sys.getenv(spec$envvar_name, unset = NA)
-                    if (!is.null(spec$envvar_fn)) spec$envvar_fn(env_value, spec$envvar_name) else env_value
-                  },
-                  option = {
-                    getOption(spec$option_name)
-                  },
-                  default = {
-                    if (is.null(spec$expr)) default else eval(spec$expr, envir = spec$envir)
-                  }
-  )
-
-  if (!is.null(spec$option_fn)) {
-    value <- spec$option_fn(value, x = option_name, default = default, env = envir, source = source)
-  }
-
-  return(value)
 }
 
 #' Get the option specification
@@ -351,7 +381,25 @@ opts_pkg <- function(envir = NULL, names_only = FALSE, full = FALSE) {
 
   # Check if the .options environment exists in the specified environment
   if (!exists(".options", envir = envir, inherits = FALSE)) {
-    return(if (names_only) character(0) else list())  # Return empty vector or list
+    # If not, look for global options starting with "zephyr."
+    all_options <- options()
+    zephyr_options <- all_options[grep("^zephyr\\.", names(all_options))]
+
+    if (length(zephyr_options) == 0) {
+      return(if (names_only) character(0) else list())  # Return empty vector or list
+    }
+
+    if (names_only) {
+      return(sub("^zephyr\\.", "", names(zephyr_options)))
+    }
+
+    if (full) {
+      return(lapply(zephyr_options, function(opt) {
+        list(name = sub("^zephyr\\.", "", names(opt)), expr = opt, envir = .GlobalEnv)
+      }))
+    }
+
+    return(zephyr_options)
   }
 
   # Get the .options environment
@@ -370,7 +418,13 @@ opts_pkg <- function(envir = NULL, names_only = FALSE, full = FALSE) {
     if (full) {
       opt
     } else {
-      opt$expr
+      if (is.null(opt$expr)) {
+        NULL
+      } else if (isTRUE(opt$quoted)) {
+        opt$expr
+      } else {
+        tryCatch(eval(opt$expr, envir = opt$envir), error = function(e) NULL)
+      }
     }
   })
   names(options_list) <- option_names
@@ -418,6 +472,16 @@ opts_pkg <- function(envir = NULL, names_only = FALSE, full = FALSE) {
 #' @export
 as_roxygen_docs_pkg <- function(pkg) {
   # Get all options with full details
+  if (is.environment(pkg)) {
+    options <- opts_pkg(pkg, full = TRUE)
+    pkg_name <- environmentName(pkg)
+    if (pkg_name == "") pkg_name <- "package"
+  } else {
+    options <- opts_pkg(pkg, full = TRUE)
+    pkg_name <- pkg
+  }
+
+  # Get all options with full details
   options <- opts_pkg(pkg, full = TRUE)
 
   # Function to wrap text
@@ -454,7 +518,7 @@ as_roxygen_docs_pkg <- function(pkg) {
       paste0("    ", wrap_text(opt$desc)),
       "    \\itemize{",
       paste0("      \\item Default: ", format_default(opt$expr)),
-      paste0("      \\item Option: \\code{", pkg, ".", param, "}"),
+      paste0("      \\item Option: \\code{", pkg_name, ".", param, "}"),
       paste0("      \\item Environment variable: \\code{", opt$envvar_name, "} (",
         wrap_text(if(is.logical(opt$expr)) "TRUE if one of 'TRUE', '1', FALSE otherwise"
           else if(is.character(opt$expr)) "evaluated if possible, raw string otherwise"
@@ -589,23 +653,19 @@ envvar_is_true_pkg <- function(envir = NULL) {
   }
 
   fn <- function(x) {
-    spec <- get_option_spec_pkg(x, envir = envir, print_spec = FALSE)
+    # First, check for the environment variable
+    envvar_name <- paste0("R_", toupper(x))
+    envvar_value <- Sys.getenv(envvar_name, unset = NA)
 
-    if (!is.null(spec)) {
-      envvar_value <- Sys.getenv(spec$envvar_name, unset = NA)
-      if (!is.na(envvar_value)) {
-        value <- envvar_value
-      } else {
-        value <- opt_pkg(x, envir = envir)
-      }
+    if (!is.na(envvar_value)) {
+      value <- envvar_value
     } else {
-      envvar_value <- Sys.getenv(paste0("R_", toupper(x)), unset = NA)
-      if (!is.na(envvar_value)) {
-        value <- envvar_value
-      } else if (exists(x, envir = envir, inherits = FALSE)) {
+      # If environment variable is not set, check for the option
+      if (exists(x, envir = envir, inherits = FALSE)) {
         value <- get(x, envir = envir)
       } else {
-        value <- Sys.getenv(x, unset = NA)
+        # If neither environment variable nor option is set, return FALSE
+        return(FALSE)
       }
     }
 
@@ -658,28 +718,30 @@ envvar_str_split_pkg <- function(delim = ",", envir = NULL) {
   }
 
   fn <- function(x, ...) {
-    spec <- get_option_spec_pkg(x, envir = envir, print_spec = FALSE)
+    # Check environment variable first
+    envvar_name <- paste0("R_", toupper(x))
+    envvar_value <- Sys.getenv(envvar_name, unset = NA)
 
-    if (!is.null(spec)) {
-      envvar_value <- Sys.getenv(spec$envvar_name, unset = NA)
-      if (!is.na(envvar_value)) {
-        value <- envvar_value
-      } else {
-        value <- opt_pkg(x, envir = envir)
-      }
+    if (!is.na(envvar_value)) {
+      value <- envvar_value
+    } else if (exists(x, envir = envir, inherits = FALSE)) {
+      # If environment variable is not set, check for the option in the specified environment
+      value <- get(x, envir = envir)
     } else {
-      envvar_value <- Sys.getenv(paste0("R_", toupper(x)), unset = NA)
-      if (!is.na(envvar_value)) {
-        value <- envvar_value
-      } else if (exists(x, envir = envir, inherits = FALSE)) {
-        value <- get(x, envir = envir)
-      } else {
-        value <- Sys.getenv(x, unset = NA)
-      }
+      # If neither environment variable nor option is set, return NULL
+      return(NULL)
     }
 
-    if (is.na(value) || value == "") {
+    if (is.null(value) || is.na(value) || value == "") {
       return(NULL)
+    }
+
+    # Convert to character if it's not already
+    value <- as.character(value)
+
+    # If the value doesn't contain the delimiter, return it as is
+    if (!grepl(delim, value, fixed = TRUE)) {
+      return(value)
     }
 
     result <- trimws(strsplit(value, delim, fixed = TRUE)[[1]])
