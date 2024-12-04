@@ -73,9 +73,7 @@ option_spec_pkg <- function(name, default = NULL, desc = NULL, option_name = NUL
 #' define_option_pkg("my_option", default = 42, desc = "An example option")
 #'
 #' @export
-define_option_pkg <- function(option, default = NULL, desc = NULL, option_name = NULL,
-  envvar_name = NULL, option_fn = NULL, envvar_fn = NULL,
-  quoted = FALSE, eager = FALSE, envir = parent.frame(), print_spec = TRUE) {
+define_option_pkg <- function(option, default = NULL, desc = NULL, option_name = NULL, envvar_name = NULL, option_fn = NULL, envvar_fn = NULL, quoted = FALSE, eager = FALSE, envir = parent.frame(), print_spec = TRUE) {
   spec <- option_spec_pkg(
     name = option,
     default = default,
@@ -90,13 +88,21 @@ define_option_pkg <- function(option, default = NULL, desc = NULL, option_name =
     print_spec = print_spec
   )
 
-  if (!exists(".options", envir = envir, inherits = FALSE)) {
-    envir$.options <- new.env(parent = emptyenv())
-  }
+  # Try to set the option in the package environment
+  tryCatch({
+    if (!exists(".options", envir = envir, inherits = FALSE)) {
+      envir$.options <- new.env(parent = emptyenv())
+    }
+    envir$.options[[option]] <- spec
+    message(sprintf("Option '%s' successfully set in the package environment.", option))
+  }, error = function(e) {
+    # If we can't set it in the package environment, use a global option
+    global_option_name <- paste0("zephyr.", option)
+    options(setNames(list(spec), global_option_name))
+    message(sprintf("Option '%s' set as global option '%s'.", option, global_option_name))
+  })
 
-  envir$.options[[option]] <- spec
-
-  return(invisible(spec))
+  invisible(spec)
 }
 
 #' Remove a package-specific option
@@ -149,28 +155,40 @@ remove_option_pkg <- function(option, envir = parent.frame()) {
 
 #' Determine the source of an option value
 #'
-#' This function determines the source of an option value (option, environment variable, or default).
+#' This function determines the source of an option value (package environment, global option, environment variable, or default).
 #'
 #' @param spec An option specification object.
-#' @param envir The environment in which to look for the option.
+#' @param envir The environment in which to look for the option. Defaults to the parent frame.
 #'
-#' @return A character string indicating the source of the option value.
+#' @return A character string indicating the source of the option value: "package", "option", "envvar", or "default".
 #'
 #' @examples
-#' define_option_pkg("my_option", default = 42)
-#' spec <- get_option_spec_pkg("my_option")
+#' spec <- get_option_spec_pkg("verbosity_level", envir = getNamespace("zephyr"))
 #' opt_source_pkg(spec)
 #'
 #' @export
 opt_source_pkg <- function(spec, envir = parent.frame()) {
+  if (!is.list(spec) || !("name" %in% names(spec))) {
+    stop("Invalid spec object. Expected a list with at least a 'name' element.")
+  }
+
+  # Check if the option is defined in the package environment
+  if (!is.null(spec$envir) && is.environment(spec$envir) &&
+      exists(spec$name, envir = spec$envir, inherits = FALSE)) {
+    return("package")
+  }
+
+  # Check if the option is set globally
   if (!is.null(spec$option_name) && !is.null(getOption(spec$option_name))) {
     return("option")
   }
 
+  # Check if the option is set via an environment variable
   if (!is.null(spec$envvar_name) && nzchar(Sys.getenv(spec$envvar_name))) {
     return("envvar")
   }
 
+  # If none of the above, it's using the default value
   return("default")
 }
 
