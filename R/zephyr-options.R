@@ -224,7 +224,7 @@ opt_source_pkg <- function(spec, envir = parent.frame()) {
 #' @examples
 #' define_option_pkg("my_option", default = 42)
 #' opt_pkg("my_option")
-#' opt_pkg("verbosity_level", envir = "zephyr")
+#' opt_pkg("verbosity_level", envir = getNamespace("zephyr"))
 #'
 #' @export
 opt_pkg <- function(option_name, default = NULL, envir = NULL) {
@@ -618,8 +618,8 @@ as_params_pkg <- function(envir = NULL, include = NULL, exclude = NULL) {
 #'
 #' This function returns another function that checks if a given environment variable
 #' or option is set to a value that can be interpreted as true. It first checks for
-#' an environment variable of the form R_OPTION_NAME, then falls back to the value
-#' set in the specified environment.
+#' an environment variable of the form R_OPTION_NAME or the exact name provided,
+#' then falls back to the value set in the specified environment.
 #'
 #' @param envir The environment in which to look for the option. Can be NULL (default, uses .GlobalEnv),
 #'   a string (package name), or an environment.
@@ -653,9 +653,14 @@ envvar_is_true_pkg <- function(envir = NULL) {
   }
 
   fn <- function(x) {
-    # First, check for the environment variable
+    # First, check for the environment variable with R_ prefix
     envvar_name <- paste0("R_", toupper(x))
     envvar_value <- Sys.getenv(envvar_name, unset = NA)
+
+    # If not found, check for the exact name provided
+    if (is.na(envvar_value)) {
+      envvar_value <- Sys.getenv(x, unset = NA)
+    }
 
     if (!is.na(envvar_value)) {
       value <- envvar_value
