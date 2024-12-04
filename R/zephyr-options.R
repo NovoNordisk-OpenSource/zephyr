@@ -73,7 +73,11 @@ option_spec_pkg <- function(name, default = NULL, desc = NULL, option_name = NUL
 #' define_option_pkg("my_option", default = 42, desc = "An example option")
 #'
 #' @export
-define_option_pkg <- function(option, default = NULL, desc = NULL, option_name = NULL, envvar_name = NULL, option_fn = NULL, envvar_fn = NULL, quoted = FALSE, eager = FALSE, envir = parent.frame(), print_spec = TRUE) {
+define_option_pkg <- function(option, default = NULL, desc = NULL,
+  option_name = NULL, envvar_name = NULL,
+  option_fn = NULL, envvar_fn = NULL,
+  quoted = FALSE, eager = FALSE,
+  envir = parent.frame(), print_spec = TRUE) {
   spec <- option_spec_pkg(
     name = option,
     default = default,
@@ -98,7 +102,7 @@ define_option_pkg <- function(option, default = NULL, desc = NULL, option_name =
   }, error = function(e) {
     # If we can't set it in the package environment, use a global option
     global_option_name <- paste0("zephyr.", option)
-    options(setNames(list(spec), global_option_name))
+    options(setNames(list(default), global_option_name))
     message(sprintf("Option '%s' set as global option '%s'.", option, global_option_name))
   })
 
