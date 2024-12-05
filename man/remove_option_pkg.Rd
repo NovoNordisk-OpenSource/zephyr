@@ -25,10 +25,11 @@ within the given environment. If the \code{.options} environment or the specifie
 option doesn't exist, the function will do nothing.
 }
 \examples{
+\dontrun{
 # Assuming we have previously set an option:
 # define_option_pkg("my_option", default = "value")
 
 # To remove the option:
 remove_option_pkg("my_option")
-
+}
 }

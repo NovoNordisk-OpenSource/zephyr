@@ -129,12 +129,13 @@ define_option_pkg <- function(option, default = NULL, desc = NULL,
 #' option doesn't exist, the function will do nothing.
 #'
 #' @examples
+#' \dontrun{
 #' # Assuming we have previously set an option:
 #' # define_option_pkg("my_option", default = "value")
 #'
 #' # To remove the option:
 #' remove_option_pkg("my_option")
-#'
+#'}
 #' @export
 remove_option_pkg <- function(option, envir = parent.frame()) {
   # Find the environment containing .options

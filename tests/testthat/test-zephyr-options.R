@@ -141,18 +141,6 @@ test_that("as_roxygen_docs_pkg generates correct documentation", {
   # Define the option in the test environment
   define_option_pkg("test_option", default = 42, desc = "Test description", envir = test_env)
 
-  # Mock the opts_pkg function to return the expected structure
-  mockery::stub(as_roxygen_docs_pkg, "opts_pkg", function(pkg, full = FALSE) {
-    list(
-      test_option = list(
-        name = "test_option",
-        desc = "Test description",
-        expr = 42,
-        envvar_name = "R_TEST_OPTION"
-      )
-    )
-  })
-
   # Call the function with the test environment
   docs <- as_roxygen_docs_pkg(test_env)
 

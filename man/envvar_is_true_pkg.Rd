@@ -18,8 +18,8 @@ FALSE otherwise.
 \description{
 This function returns another function that checks if a given environment variable
 or option is set to a value that can be interpreted as true. It first checks for
-an environment variable of the form R_OPTION_NAME, then falls back to the value
-set in the specified environment.
+an environment variable of the form R_OPTION_NAME or the exact name provided,
+then falls back to the value set in the specified environment.
 }
 \examples{
 is_true <- envvar_is_true_pkg()

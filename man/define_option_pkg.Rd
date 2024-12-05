@@ -45,7 +45,9 @@ define_option_pkg(
 An invisible option specification object.
 }
 \description{
-This function defines an option and stores its specification in the environment.
+This function defines an option for a package. It attempts to set the option
+in the package environment. If that fails (e.g., due to a locked namespace),
+it falls back to setting a global option with a "zephyr." prefix.
 }
 \examples{
 define_option_pkg("my_option", default = 42, desc = "An example option")

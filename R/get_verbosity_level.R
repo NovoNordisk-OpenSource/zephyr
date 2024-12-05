@@ -62,7 +62,6 @@
 #' Sys.unsetenv("R_MYPACKAGE_VERBOSITY_LEVEL")
 #' options(zephyr.verbosity_level = NULL)
 #' Sys.unsetenv("R_ZEPHYR_VERBOSITY_LEVEL")
-#' rm(list = ls(envir = .options))  # Remove package-specific options
 #' get_verbosity_level()  # Returns "verbose" (default)
 #'
 #' @seealso
