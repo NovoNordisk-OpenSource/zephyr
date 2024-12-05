@@ -4,12 +4,12 @@
 \alias{opt_source_pkg}
 \title{Determine the source of an option value}
 \usage{
-opt_source_pkg(spec, envir = parent.frame())
+opt_source_pkg(spec, envir = NULL)
 }
 \arguments{
 \item{spec}{An option specification object.}
 
-\item{envir}{The environment in which to look for the option. Defaults to the parent frame.}
+\item{envir}{The environment in which to look for the option. Can be NULL (default), a string (package name), or an environment.}
 }
 \value{
 A character string indicating the source of the option value: "package", "option", "envvar", or "default".
@@ -18,7 +18,7 @@ A character string indicating the source of the option value: "package", "option
 This function determines the source of an option value (package environment, global option, environment variable, or default).
 }
 \examples{
-spec <- get_option_spec_pkg("verbosity_level", envir = getNamespace("zephyr"))
-opt_source_pkg(spec)
+spec <- get_option_spec_pkg("verbosity_level", envir = "zephyr")
+opt_source_pkg(spec, envir = "zephyr")
 
 }

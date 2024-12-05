@@ -163,23 +163,37 @@ remove_option_pkg <- function(option, envir = parent.frame()) {
 #' This function determines the source of an option value (package environment, global option, environment variable, or default).
 #'
 #' @param spec An option specification object.
-#' @param envir The environment in which to look for the option. Defaults to the parent frame.
+#' @param envir The environment in which to look for the option. Can be NULL (default), a string (package name), or an environment.
 #'
 #' @return A character string indicating the source of the option value: "package", "option", "envvar", or "default".
 #'
 #' @examples
-#' spec <- get_option_spec_pkg("verbosity_level", envir = getNamespace("zephyr"))
-#' opt_source_pkg(spec)
+#' spec <- get_option_spec_pkg("verbosity_level", envir = "zephyr")
+#' opt_source_pkg(spec, envir = "zephyr")
 #'
 #' @export
-opt_source_pkg <- function(spec, envir = parent.frame()) {
+opt_source_pkg <- function(spec, envir = NULL) {
   if (is.null(spec) || !is.list(spec) || is.null(spec$name)) {
     stop("Invalid spec object")
   }
 
-  pkg_name <- "zephyr"  # Assuming "zephyr" is the package name
-  if (is.character(envir)) {
-    pkg_name <- envir
+  # Determine the package name and environment to use
+  if (is.null(envir)) {
+    pkg_name <- "zephyr"  # Default package name
+    envir <- parent.frame()
+  } else if (is.character(envir)) {
+    if (!requireNamespace(envir, quietly = TRUE)) {
+      stop(paste("Package", envir, "is not available."))
+    }
+    pkg_name <- envir  # Store the package name
+    envir <- asNamespace(envir)  # Get the namespace environment
+  } else if (is.environment(envir)) {
+    pkg_name <- environmentName(envir)  # Get the name of the environment
+    if (pkg_name == "") {
+      pkg_name <- "zephyr"  # Default to "zephyr" if environment has no name
+    }
+  } else {
+    stop("'envir' must be NULL, a string (package name), or an environment.")
   }
 
   # Check for package-specific global option first
@@ -199,7 +213,7 @@ opt_source_pkg <- function(spec, envir = parent.frame()) {
   }
 
   # Check if it's defined in the package environment
-  if (is.environment(envir) && exists(spec$name, envir = envir, inherits = FALSE)) {
+  if (exists(spec$name, envir = envir, inherits = FALSE)) {
     return("package")
   }
 
@@ -307,7 +321,7 @@ opt_pkg <- function(option_name, default = NULL, envir = NULL) {
 #' This function retrieves the option specification for a given option name.
 #'
 #' @param x The name of the option.
-#' @param envir The environment in which to look for the option.
+#' @param envir The environment in which to look for the option. Can be NULL (default), a string (package name), or an environment.
 #' @param print_spec Whether to print the option specification.
 #'
 #' @return The option specification object, or NULL if not found.
@@ -315,9 +329,29 @@ opt_pkg <- function(option_name, default = NULL, envir = NULL) {
 #' @examples
 #' define_option_pkg("my_option", default = 42)
 #' get_option_spec_pkg("my_option")
+#' get_option_spec_pkg("my_option", envir = "zephyr")
 #'
 #' @export
-get_option_spec_pkg <- function(x, envir = parent.frame(), print_spec = FALSE) {
+get_option_spec_pkg <- function(x, envir = NULL, print_spec = FALSE) {
+  # Determine the package name and environment to use
+  if (is.null(envir)) {
+    pkg_name <- "zephyr"  # Default package name
+    envir <- parent.frame()
+  } else if (is.character(envir)) {
+    if (!requireNamespace(envir, quietly = TRUE)) {
+      stop(paste("Package", envir, "is not available."))
+    }
+    pkg_name <- envir  # Store the package name
+    envir <- asNamespace(envir)  # Get the namespace environment
+  } else if (is.environment(envir)) {
+    pkg_name <- environmentName(envir)  # Get the name of the environment
+    if (pkg_name == "") {
+      pkg_name <- "zephyr"  # Default to "zephyr" if environment has no name
+    }
+  } else {
+    stop("'envir' must be NULL, a string (package name), or an environment.")
+  }
+
   if (!exists(".options", envir = envir, inherits = FALSE)) {
     return(NULL)
   }

@@ -4,12 +4,12 @@
 \alias{get_option_spec_pkg}
 \title{Get the option specification}
 \usage{
-get_option_spec_pkg(x, envir = parent.frame(), print_spec = FALSE)
+get_option_spec_pkg(x, envir = NULL, print_spec = FALSE)
 }
 \arguments{
 \item{x}{The name of the option.}
 
-\item{envir}{The environment in which to look for the option.}
+\item{envir}{The environment in which to look for the option. Can be NULL (default), a string (package name), or an environment.}
 
 \item{print_spec}{Whether to print the option specification.}
 }
@@ -22,5 +22,6 @@ This function retrieves the option specification for a given option name.
 \examples{
 define_option_pkg("my_option", default = 42)
 get_option_spec_pkg("my_option")
+get_option_spec_pkg("my_option", envir = "zephyr")
 
 }
