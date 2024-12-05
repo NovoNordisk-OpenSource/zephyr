@@ -27,6 +27,6 @@ This function retrieves the value of an option, considering its various possible
 \examples{
 define_option_pkg("my_option", default = 42)
 opt_pkg("my_option")
-opt_pkg("verbosity_level", envir = getNamespace("zephyr"))
+opt_pkg("verbosity_level", envir = "zephyr")
 
 }

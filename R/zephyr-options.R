@@ -223,23 +223,26 @@ opt_source_pkg <- function(spec, envir = parent.frame()) {
 #' @examples
 #' define_option_pkg("my_option", default = 42)
 #' opt_pkg("my_option")
-#' opt_pkg("verbosity_level", envir = getNamespace("zephyr"))
+#' opt_pkg("verbosity_level", envir = "zephyr")
 #'
 #' @export
 opt_pkg <- function(option_name, default = NULL, envir = NULL) {
-  # Determine the package name (if applicable)
-  pkg_name <- "zephyr"  # Assuming "zephyr" is the package name
-
-  # Determine the environment to use
+  # Determine the package name and environment to use
   if (is.null(envir)) {
+    pkg_name <- "zephyr"  # Default package name
     envir <- parent.frame()
   } else if (is.character(envir)) {
     if (!requireNamespace(envir, quietly = TRUE)) {
       stop(paste("Package", envir, "is not available."))
     }
-    envir <- asNamespace(envir)
-    pkg_name <- envir  # Use the provided package name
-  } else if (!is.environment(envir)) {
+    pkg_name <- envir  # Store the package name
+    envir <- asNamespace(envir)  # Get the namespace environment
+  } else if (is.environment(envir)) {
+    pkg_name <- environmentName(envir)  # Get the name of the environment
+    if (pkg_name == "") {
+      pkg_name <- "zephyr"  # Default to "zephyr" if environment has no name
+    }
+  } else {
     stop("'envir' must be NULL, a string (package name), or an environment.")
   }
 
