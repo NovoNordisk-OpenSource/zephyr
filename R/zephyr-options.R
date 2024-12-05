@@ -100,12 +100,10 @@ define_option_pkg <- function(option, default = NULL, desc = NULL,
       envir$.options <- new.env(parent = emptyenv())
     }
     envir$.options[[option]] <- spec
-    packageStartupMessage(sprintf("Option '%s' successfully set in the package environment.", option))
   }, error = function(e) {
     # If we can't set it in the package environment, use a global option
     global_option_name <- paste0("zephyr.", option)
     options(stats::setNames(list(default), global_option_name))
-    packageStartupMessage(sprintf("Option '%s' set as global option '%s'.", option, global_option_name))
   })
 
   invisible(spec)
