@@ -49,5 +49,5 @@ cat(paste(docs, collapse = "\n"))
 
 }
 \seealso{
-\code{\link[options]{options}}, \code{\link[base]{Sys.getenv}}
+\code{\link[base:options]{base::options()}}, \code{\link[base:Sys.getenv]{base::Sys.getenv()}}
 }
