@@ -103,7 +103,6 @@ msg <-  function(message,
     } else {
       ns_of_fun <- parent.frame()
     }
-
     verbosity_level <- get_verbosity_level(env = ns_of_fun)
   }
 

@@ -1,11 +1,12 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# zephyr <a href="https://novonordisk-opensource.github.io/zephyr/"><img src="man/figures/logo.png" align="right" height="138" alt="zephyr website" /></a>
+# zephyr <a href="https://novonordisk-opensource.github.io/zephyr/"><img src="man/figures/logo.png" alt="zephyr website" align="right" height="138"/></a>
 
 <!-- badges: start -->
 
 [![Checks](https://github.com/NovoNordisk-OpenSource/zephyr/actions/workflows/check_and_co.yaml/badge.svg)](https://github.com/NovoNordisk-OpenSource/zephyr/actions/workflows/check_and_co.yaml)
+
 <!-- badges: end -->
 
 The zephyr package provides small functionalities for developers of R
@@ -126,22 +127,19 @@ verbosity level in the entire package. By default the `msg` functions
 will fetch the `verbosity_level` option set in the package of the
 function wherein the `msg` function is called.
 
-When using zephyr options the verbosity level is determined by checking
-the following sources in order:
+When using zephyr options, the verbosity level is determined by checking
+the following sources in order of priority:
 
-- Global package-specific option: `options("[package].verbosity_level")`
-
-- Package-specific environment variable:
-  `Sys.getenv("R_[PACKAGE]_VERBOSITY_LEVEL")`
-
-- Global Zephyr package option: `options("zephyr.verbosity_level")`
-
-- Zephyr environment variable: `Sys.getenv("R_ZEPHYR_VERBOSITY_LEVEL")`
-
-- Package-specific option set with
-  `define_option_pkg("verbosity_level")`
-
-- Default value: “verbose”
+1.  Global package-specific option:
+    `options("[package].verbosity_level")`
+2.  Package-specific environment variable:
+    `Sys.getenv("R_[PACKAGE]_VERBOSITY_LEVEL")`
+3.  Global Zephyr package option: `options("zephyr.verbosity_level")`
+4.  Zephyr environment variable:
+    `Sys.getenv("R_ZEPHYR_VERBOSITY_LEVEL")`
+5.  Package-specific option set with
+    `define_option_pkg("verbosity_level")`
+6.  Default value: “verbose”
 
 ##### Simulating creation of a package
 
@@ -149,71 +147,79 @@ We create an environment with an option where the `verbosity_level` have
 been specified, and a function `foo` that uses the `msg` function:
 
 ``` r
-create_env_with_fun <- function(fun_name = "foo",
-  message = "test",
-  add_option = TRUE,
-  default = "verbose",
-  fun = function(msg_fun = msg, ...) {
-    Sys.sleep(0.5)
-    msg_fun(message, ...)
-  }) {
-  e <- rlang::env()
-  environment(fun) <- e
-  assign(fun_name, fun, envir = e)
-  
-  if (add_option) {
-    # Use define_option_pkg from zephyr
-    full_option_name <- paste0(fun_name, "_pkg.verbosity_level")
-    option_spec <- define_option_pkg(full_option_name,
-      default = default,
-      desc = "Option for testing",
-      option_name = full_option_name,
-      envvar_name = paste0("R_", toupper(fun_name), "_PKG_VERBOSITY_LEVEL"),
-      envir = e)
-    
-    # Store the option_spec in the environment
-    assign(full_option_name, option_spec, envir = e)
+simulate_package_env <- function(parent_pkg_name, new_pkg_name) {
+  parent_env <- as.environment(paste0("package:", parent_pkg_name))
+  pkg_env <- new.env(parent = parent_env)
+
+  # Set the name of the new environment using attr
+  attr(pkg_env, "name") <- paste0(new_pkg_name)
+
+  r_files <- list.files(path = "R", pattern = "\\.R$", full.names = TRUE)
+  for (file in r_files) {
+    sys.source(file, envir = pkg_env)
   }
-  
-  return(e)
+  pkg_env
 }
 
-# Create the environment with options
-foo_pkg <- create_env_with_fun(
-  message = "Hello from foo_pkg!",
-  default = "verbose",
-  fun_name = "foo",
-  fun = function() {
-    msg_debug("Inform my user the function is trying to do stuff")
-    # Do stuff
-    msg_success("Inform my user that stuff succeeded")
-  }
-)
-#> foo_pkg.verbosity_level =
-#> 
-#>   Option for testing
-#> 
-#>   option  : foo_pkg.verbosity_level
-#>   envvar  : R_FOO_PKG_VERBOSITY_LEVEL (evaluated if possible, raw string otherwise)
-#>  *default : "verbose"
+filter_data <-  function(data, infilter, ...) {
+  infilter_e <- rlang::enquo(infilter)
+  infilter_lb <- rlang::as_label(infilter_e)
+
+  msg(
+    "Attempting to filter {.field data} by {.field {infilter_lb}}",
+    levels_to_write = c("verbose", "debug"),
+    msg_fun = cli::cli_h2
+  )
+
+  msg_debug("debug: Trying to filter data")
+
+  result <- data |>
+    dplyr::filter({{infilter}})
+
+  msg_success("success: Data filtered by {.field {infilter_lb}}")
+  msg_minimal("minimal: Filtered {nrow(result)} rows")
+
+  invisible(result)
+
+}
+
+# Simulate the package environment
+pkg_env <- simulate_package_env("zephyr", "foo_pkg")
+
+pkg_env$filter_data <-  filter_data
 
 # Access the function
-(foo_func <- foo_pkg$foo)
-#> function() {
-#>     msg_debug("Inform my user the function is trying to do stuff")
-#>     # Do stuff
-#>     msg_success("Inform my user that stuff succeeded")
-#>   }
-#> <environment: 0x12225ef0>
+(foo_func <- pkg_env$filter_data)
+#> function(data, infilter, ...) {
+#>   infilter_e <- rlang::enquo(infilter)
+#>   infilter_lb <- rlang::as_label(infilter_e)
+#> 
+#>   msg(
+#>     "Attempting to filter {.field data} by {.field {infilter_lb}}",
+#>     levels_to_write = c("verbose", "debug"),
+#>     msg_fun = cli::cli_h2
+#>   )
+#> 
+#>   msg_debug("debug: Trying to filter data")
+#> 
+#>   result <- data |>
+#>     dplyr::filter({{infilter}})
+#> 
+#>   msg_success("success: Data filtered by {.field {infilter_lb}}")
+#>   msg_minimal("minimal: Filtered {nrow(result)} rows")
+#> 
+#>   invisible(result)
+#> 
+#> }
 
-# Check set option
-opts_pkg(foo_pkg)
-#> $foo_pkg.verbosity_level
-#> [1] "verbose"
 
 # Call the function
-foo_func()
-#> ✔ Inform my user that stuff succeeded
+foo_func(data = cars, infilter = speed > 12)
+#> 
+#> ── Attempting to filter data by speed > 12 ──
+#> 
+#> ✔ success: Data filtered by speed > 12
+#> ℹ minimal: Filtered 35 rows
 ```
 
 ###### Default (implicit) behavior when using `msg` functions in your package
@@ -224,33 +230,39 @@ set in `foo_pkg` when calling `foo`:
 ``` r
 # Does not write a message
 withr::with_envvar(list(R_FOO_PKG_VERBOSITY_LEVEL = "quiet"), {
-  foo_pkg$foo()
+  foo_func(data = cars, infilter = speed > 12)
 })
 
 # Writes a message
 withr::with_options(list(foo_pkg.verbosity_level = "debug"), {
-  foo_pkg$foo()
+  foo_func(data = cars, infilter = speed > 12)
 })
-#> Inform my user the function is trying to do stuff
-#> ✔ Inform my user that stuff succeeded
+#> 
+#> ── Attempting to filter data by speed > 12 ──
+#> 
+#> debug: Trying to filter data
+#> ✔ success: Data filtered by speed > 12
+#> 
+#> ℹ minimal: Filtered 35 rows
 ```
 
 However, a feature of the package (specifically the
 `get_verbosity_level` function) is that you can set the verbosity level
-for `zephyr` functionalities globally by setting the
-`zephyr.verbosity_level` option, which will override individual package
-level options:
+for individual packages globally by setting the
+`[package].verbosity_level` option, which will take precedence over all
+other settings. The global Zephyr package option
+`zephyr.verbosity_level` will override package-specific settings only if
+no package-specific global option or environment variable is set.
 
 ``` r
-# Writes a message
+# Will not write a message
 withr::with_options(list(
   foo_pkg.verbosity_level = "quiet",
   zephyr.verbosity_level = "verbose"
 ),
 {
-  foo_pkg$foo()
+  foo_func(data = cars, infilter = speed > 12)
 })
-#> ✔ Inform my user that stuff succeeded
 ```
 
 Setting an environmental variable of `R_ZEPHYR_VERBOSITY_LEVEL` will
@@ -258,21 +270,31 @@ only override the package level option in case the package level option
 is not set using `foo_pkg_verbosity_level`:
 
 ``` r
-# Will not write a message since the Zephyr environment variable overrides the package level
+# Will write a message since the package-specific environment variable overrides the Zephyr environment variable  
 withr::with_envvar(list(
   R_ZEPHYR_VERBOSITY_LEVEL = "quiet",
   R_FOO_PKG_VERBOSITY_LEVEL = "verbose"
 ),
 {
-  foo_pkg$foo()
+  foo_func(data = cars, infilter = speed > 12)
 })
+#> 
+#> ── Attempting to filter data by speed > 12 ──
+#> 
+#> ✔ success: Data filtered by speed > 12
+#> ℹ minimal: Filtered 35 rows
 
-# Will write a message since option overrides the Zephyr environment variable
+# Will write a message since global package-specific option overrides the Zephyr environment variable
 withr::with_envvar(list(R_ZEPHYR_VERBOSITY_LEVEL = "quiet"), {
   withr::with_options(list(foo_pkg.verbosity_level = "verbose"), {
-    foo_pkg$foo()
+    foo_func(data = cars, infilter = speed > 12)
   })
 })
+#> 
+#> ── Attempting to filter data by speed > 12 ──
+#> 
+#> ✔ success: Data filtered by speed > 12
+#> ℹ minimal: Filtered 35 rows
 ```
 
 ###### Controlling verbosity level through options with more transparency for the user
@@ -311,4 +333,4 @@ foo <- function(my_arg,
     want to inform your user - allowing them to specify a
     `verbosity_level` directly as an argument or only through options.
 3.  Write in the documentation of your functions that verbosity level
-    can be controlled through options
+    can be controlled through options \`\`\`

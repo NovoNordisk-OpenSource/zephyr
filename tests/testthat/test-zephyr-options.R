@@ -5,7 +5,7 @@ test_env <- new.env()
 test_that("opt_source_pkg identifies correct source", {
   # Setup
   test_env <- new.env()
-  define_option_pkg("test_option", default = 42, envir = test_env)
+  define_option_pkg("test_option", default = 42, envir = test_env, print_spec = FALSE)
 
   # Test default
   expect_equal(
@@ -76,7 +76,7 @@ test_that("opt_source_pkg identifies correct source", {
 # Tests for opt_pkg
 test_that("opt_pkg retrieves correct option value", {
   test_env <- new.env()
-  define_option_pkg("test_option", default = 42, envir = test_env)
+  define_option_pkg("test_option", default = 42, envir = test_env, print_spec = FALSE)
 
   expect_equal(opt_pkg("test_option", envir = test_env), 42,
     info = "Should return default when no option is set")
@@ -96,7 +96,7 @@ test_that("opt_pkg retrieves correct option value", {
 
 # Tests for get_option_spec_pkg
 test_that("get_option_spec_pkg retrieves correct specification", {
-  define_option_pkg("test_option", default = 42, desc = "Test description", envir = test_env)
+  define_option_pkg("test_option", default = 42, desc = "Test description", envir = test_env, print_spec = FALSE)
 
   spec <- get_option_spec_pkg("test_option", envir = test_env)
   expect_s3_class(spec, "option_spec_pkg")
@@ -111,8 +111,8 @@ test_that("opts_pkg retrieves all options correctly", {
   test_env <- new.env(parent = emptyenv())
 
   # Define options in the test environment
-  define_option_pkg("test_option1", default = 42, envir = test_env)
-  define_option_pkg("test_option2", default = "hello", envir = test_env)
+  define_option_pkg("test_option1", default = 42, envir = test_env, print_spec = FALSE)
+  define_option_pkg("test_option2", default = "hello", envir = test_env, print_spec = FALSE)
 
   # Test retrieving all options
   all_opts <- opts_pkg(envir = test_env)
@@ -139,7 +139,7 @@ test_that("as_roxygen_docs_pkg generates correct documentation", {
   test_env <- new.env(parent = emptyenv())
 
   # Define the option in the test environment
-  define_option_pkg("test_option", default = 42, desc = "Test description", envir = test_env)
+  define_option_pkg("test_option", default = 42, desc = "Test description", envir = test_env, print_spec = FALSE)
 
   # Call the function with the test environment
   docs <- as_roxygen_docs_pkg(test_env)
@@ -164,7 +164,7 @@ test_that("as_params_pkg generates correct parameter descriptions", {
   test_env <- new.env(parent = emptyenv())
 
   # Define the option in the test environment
-  define_option_pkg("test_option", default = 42, desc = "Test description", envir = test_env)
+  define_option_pkg("test_option", default = 42, desc = "Test description", envir = test_env, print_spec = FALSE)
 
   # Call as_params_pkg with the test environment
   params <- as_params_pkg(envir = test_env)
@@ -188,7 +188,7 @@ test_that("envvar_is_true_pkg correctly interprets truthy values", {
   test_env <- new.env(parent = emptyenv())
 
   # Define a test option in the environment
-  define_option_pkg("test_option", default = FALSE, desc = "Test option", envir = test_env)
+  define_option_pkg("test_option", default = FALSE, desc = "Test option", envir = test_env, print_spec = FALSE)
 
   is_true <- envvar_is_true_pkg(envir = test_env)
 

@@ -68,11 +68,12 @@ option_spec_pkg <- function(name, default = NULL, desc = NULL, option_name = NUL
 #'
 #' @inheritParams option_spec_pkg
 #' @param option The name of the option to define.
+#' @param envir The environment in which to define the option. Defaults to the parent frame.
 #'
 #' @return An invisible option specification object.
 #'
 #' @examples
-#' define_option_pkg("my_option", default = 42, desc = "An example option")
+#' define_option_pkg("verbosity_level", default = "verbose", desc = "Verbosity level for output")
 #'
 #' @export
 define_option_pkg <- function(option, default = NULL, desc = NULL,
@@ -80,6 +81,7 @@ define_option_pkg <- function(option, default = NULL, desc = NULL,
   option_fn = NULL, envvar_fn = NULL,
   quoted = FALSE, eager = FALSE,
   envir = parent.frame(), print_spec = TRUE) {
+
   spec <- option_spec_pkg(
     name = option,
     default = default,
@@ -118,31 +120,36 @@ define_option_pkg <- function(option, default = NULL, desc = NULL,
 #' @param option A character string specifying the name of the option to remove.
 #' @param envir The environment where the `.options` environment is located.
 #'   Default is `parent.frame()`.
+#' @param silent Logical; if TRUE (default), suppresses all messages.
 #'
 #' @return Invisible NULL. The function is called for its side effect of removing the option.
 #'
 #' @details
 #' The function removes the specified option from the `.options` environment
 #' within the given environment. If the `.options` environment or the specified
-#' option doesn't exist, the function will do nothing.
+#' option doesn't exist, the function will do nothing. By default, the function
+#' operates silently, but setting `silent = FALSE` will display informative messages.
 #'
 #' @examples
 #' \dontrun{
 #' # Assuming we have previously set an option:
 #' # define_option_pkg("my_option", default = "value")
 #'
-#' # To remove the option:
+#' # To remove the option silently (default behavior):
 #' remove_option_pkg("my_option")
+#'
+#' # To remove the option with messages:
+#' remove_option_pkg("my_option", silent = FALSE)
 #'}
 #' @export
-remove_option_pkg <- function(option, envir = parent.frame()) {
+remove_option_pkg <- function(option, envir = parent.frame(), silent = TRUE) {
   # Find the environment containing .options
   while (!is.null(envir) && !exists(".options", envir = envir, inherits = FALSE)) {
     envir <- parent.env(envir)
   }
 
   if (is.null(envir)) {
-    message("No .options environment found in the calling stack.")
+    if (!silent) message("No .options environment found in the calling stack.")
     return(invisible(NULL))
   }
 
@@ -150,9 +157,9 @@ remove_option_pkg <- function(option, envir = parent.frame()) {
 
   if (exists(option, envir = options_env, inherits = FALSE)) {
     rm(list = option, envir = options_env)
-    message(sprintf("Option '%s' has been removed.", option))
+    if (!silent) message(sprintf("Option '%s' has been removed.", option))
   } else {
-    message(sprintf("Option '%s' does not exist.", option))
+    if (!silent) message(sprintf("Option '%s' does not exist.", option))
   }
 
   invisible(NULL)

@@ -37,7 +37,7 @@ define_option_pkg(
 
 \item{eager}{Whether to evaluate the default value eagerly.}
 
-\item{envir}{The environment in which to evaluate the option.}
+\item{envir}{The environment in which to define the option. Defaults to the parent frame.}
 
 \item{print_spec}{Whether to print the option specification.}
 }
@@ -50,6 +50,6 @@ in the package environment. If that fails (e.g., due to a locked namespace),
 it falls back to setting a global option with a "zephyr." prefix.
 }
 \examples{
-define_option_pkg("my_option", default = 42, desc = "An example option")
+define_option_pkg("verbosity_level", default = "verbose", desc = "Verbosity level for output")
 
 }
