@@ -4,13 +4,15 @@
 \alias{remove_option_pkg}
 \title{Remove a package-specific option}
 \usage{
-remove_option_pkg(option, envir = parent.frame())
+remove_option_pkg(option, envir = parent.frame(), silent = TRUE)
 }
 \arguments{
 \item{option}{A character string specifying the name of the option to remove.}
 
 \item{envir}{The environment where the \code{.options} environment is located.
 Default is \code{parent.frame()}.}
+
+\item{silent}{Logical; if TRUE (default), suppresses all messages.}
 }
 \value{
 Invisible NULL. The function is called for its side effect of removing the option.
@@ -22,14 +24,18 @@ the \code{define_option_pkg} function.
 \details{
 The function removes the specified option from the \code{.options} environment
 within the given environment. If the \code{.options} environment or the specified
-option doesn't exist, the function will do nothing.
+option doesn't exist, the function will do nothing. By default, the function
+operates silently, but setting \code{silent = FALSE} will display informative messages.
 }
 \examples{
 \dontrun{
 # Assuming we have previously set an option:
 # define_option_pkg("my_option", default = "value")
 
-# To remove the option:
+# To remove the option silently (default behavior):
 remove_option_pkg("my_option")
+
+# To remove the option with messages:
+remove_option_pkg("my_option", silent = FALSE)
 }
 }

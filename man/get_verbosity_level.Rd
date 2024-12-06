@@ -18,13 +18,14 @@ It checks various sources for the verbosity level setting and returns the first
 valid value it finds. While the examples use "zephyr", this function works with any package.
 }
 \details{
-The function checks the following sources in order of priority:
+The function checks for the verbosity level in the following order:
 \enumerate{
-\item Temporary environment variable: \code{Sys.getenv("R_VERBOSITY_LEVEL")} (set by withr::with_envvar)
-\item Global package-specific option: \code{options("[package].verbosity_level")}
-\item Package-specific environment variable: \code{Sys.getenv("R_[PACKAGE]_VERBOSITY_LEVEL")}
-\item Package-specific option set with \code{define_option_pkg("verbosity_level")}
-\item Default value: "verbose"
+\item Global package-specific option (e.g., \code{options("packagename.verbosity_level")})
+\item Package-specific environment variable (e.g., \code{R_PACKAGENAME_VERBOSITY_LEVEL})
+\item Global zephyr package option (\code{options("zephyr.verbosity_level")})
+\item Zephyr environment variable (\code{R_ZEPHYR_VERBOSITY_LEVEL})
+\item Package-specific options using \code{opt_pkg("verbosity_level")}
+\item Default value ("verbose")
 }
 
 Replace \link{package} with your actual package name in the above.
