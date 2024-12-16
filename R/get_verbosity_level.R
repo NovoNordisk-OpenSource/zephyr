@@ -211,8 +211,6 @@ get_all_verbosity_levels <- function() {
 #'
 #' @seealso
 #' \code{\link{msg}}, \code{\link{msg_debug}}, \code{\link{msg_success}}, \code{\link{msg_minimal}}
-#'
-#' @importFrom utils getFromNamespace
 get_verbosity_level <-  function(env = parent.frame()) {
   # Get all verbosity levels
   all_levels <- get_all_verbosity_levels()

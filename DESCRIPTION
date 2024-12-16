@@ -26,5 +26,4 @@ Config/testthat/edition: 3
 URL: https://novonordisk-opensource.github.io/zephyr/, https://github.com/NovoNordisk-OpenSource/zephyr
 Imports: 
     cli,
-    rlang,
-    utils
+    rlang
