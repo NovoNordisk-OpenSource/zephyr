@@ -190,26 +190,21 @@ pkg_env$filter_data <-  filter_data
 
 # Access the function
 (foo_func <- pkg_env$filter_data)
-#> function(data, infilter, ...) {
-#>   infilter_e <- rlang::enquo(infilter)
-#>   infilter_lb <- rlang::as_label(infilter_e)
-#> 
-#>   msg(
-#>     "Attempting to filter {.field data} by {.field {infilter_lb}}",
-#>     levels_to_write = c("verbose", "debug"),
-#>     msg_fun = cli::cli_h2
-#>   )
-#> 
-#>   msg_debug("debug: Trying to filter data")
-#> 
-#>   result <- data |>
-#>     dplyr::filter({{infilter}})
-#> 
-#>   msg_success("success: Data filtered by {.field {infilter_lb}}")
-#>   msg_minimal("minimal: Filtered {nrow(result)} rows")
-#> 
-#>   invisible(result)
-#> 
+#> function (data, infilter, ...) 
+#> {
+#>     infilter_e <- rlang::enquo(infilter)
+#>     infilter_lb <- rlang::as_label(infilter_e)
+#>     msg("Attempting to filter {.field data} by {.field {infilter_lb}}", 
+#>         levels_to_write = c("verbose", "debug"), msg_fun = cli::cli_h2)
+#>     msg_debug("debug: Trying to filter data")
+#>     result <- dplyr::filter(data, {
+#>         {
+#>             infilter
+#>         }
+#>     })
+#>     msg_success("success: Data filtered by {.field {infilter_lb}}")
+#>     msg_minimal("minimal: Filtered {nrow(result)} rows")
+#>     invisible(result)
 #> }
 
 

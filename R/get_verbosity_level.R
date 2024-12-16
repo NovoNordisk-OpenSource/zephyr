@@ -161,7 +161,7 @@ get_all_verbosity_levels <- function() {
 #' 5. Package-specific options using `opt_pkg("verbosity_level")`
 #' 6. Default value ("verbose")
 #'
-#' Replace [package] with your actual package name in the above.
+#' Replace "package" with your actual package name in the above.
 #'
 #' Verbosity levels, from least to most verbose:
 #' - "quiet": No messages

@@ -28,7 +28,7 @@ The function checks for the verbosity level in the following order:
 \item Default value ("verbose")
 }
 
-Replace \link{package} with your actual package name in the above.
+Replace "package" with your actual package name in the above.
 
 Verbosity levels, from least to most verbose:
 \itemize{
