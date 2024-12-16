@@ -25,6 +25,8 @@
 #' @export
 
 report_checkmate_assertions <- function(collection, msg = "Invalid input(s):", env = parent.frame()) {
+  rlang::check_installed("checkmate")
+
   checkmate::assert_class(collection, "AssertCollection")
 
   if (!collection$isEmpty()) {
