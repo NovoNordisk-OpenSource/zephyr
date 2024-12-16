@@ -18,7 +18,7 @@ report_checkmate_assertions(
 \item{env}{\code{\link[=environment]{environment()}} Environment to use for the error message}
 }
 \description{
-Improved reporting of \code{AssertCollections} created with the \code{\link[checkmate:AssertCollection]{checkmate::makeAssertCollection()}} package
+Improved reporting of \code{AssertCollections} created with the \code{\link[checkmate:AssertCollection]{checkmate::makeAssertCollection()}}
 using \code{\link[cli:cli_abort]{cli::cli_abort()}} instead of \code{\link[checkmate:AssertCollection]{checkmate::reportAssertions()}} in order to provide a more
 informative error message.
 

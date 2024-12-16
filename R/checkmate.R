@@ -1,6 +1,6 @@
 #' Report collection of assertions
 #' @description
-#' Improved reporting of `AssertCollections` created with the [checkmate::makeAssertCollection()] package
+#' Improved reporting of `AssertCollections` created with the [checkmate::makeAssertCollection()]
 #' using [cli::cli_abort()] instead of [checkmate::reportAssertions()] in order to provide a more
 #' informative error message.
 #'
