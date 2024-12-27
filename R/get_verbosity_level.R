@@ -210,8 +210,9 @@ get_all_verbosity_levels <- function() {
 #' get_verbosity_level()  # Returns "verbose" (default)
 #'
 #' @seealso
-#' \code{\link{msg}}, \code{\link{msg_debug}}, \code{\link{msg_success}}, \code{\link{msg_minimal}}
+#' \code{\link{msg}}
 get_verbosity_level <-  function(env = parent.frame()) {
+  # TODO: Assert verbosity values
   # Get all verbosity levels
   all_levels <- get_all_verbosity_levels()
 

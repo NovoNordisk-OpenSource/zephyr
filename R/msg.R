@@ -1,162 +1,152 @@
 #' Write messages based on verbosity level
 #'
 #' @description
-#' The `msg` function is a general function for writing messages to the console
-#' based on options set using the [options] package. As a default, an option
-#' called `verbosity_level` set in the package defining a function calling `msg`
-#' is used. If a global option with prefix `zephyr.` is set, it will overwrite
-#' the package level option.
+#' The `msg()` function is a general utility function for writing messages to the
+#' console based on the verbosity level set for your session and package.
 #'
-#' Valid values are `quiet`, `minimal`, `verbose`, and `debug`.
-#' - `quiet`: No messages are displayed
-#' - `minimal`: Only essential messages are displayed
-#' - `verbose`: Informative messages are displayed (default)
-#' - `debug`: Detailed messages for debugging are displayed
+#' Verbosity level can be any of the four values below:
 #'
-#' @param message `character` of message to write
-#' @param levels_to_write `character` vector of levels of verbosity for which
-#' to display the message. Valid values are `quiet`, `minimal`, `verbose`, and `debug`
-#' @param msg_fun `function` taking `message` as first argument. Usually a
-#' `cli_...` function
-#' @param ... Additional arguments passed to `msg_fun`
-#' @param verbosity_level The verbosity level to use. If `NULL`, the function
-#' will use the `which` argument to determine the environment in which to find
-#' an option called `verbosity_level`. By default, it will look in the environment
-#' of the function calling `msg(_...)`. If no option is set in this calling
-#' environment, it will look in the `zephyr` namespace.
-#' @param which `integer` passed to [sys.function()] in case `verbosity_level = NULL`.
-#' Default is -1, meaning it will look in the environment of the function calling `msg(_...)`.
-#' @param .envir `environment` passed to `msg_fun`
+#' 1. `quiet`: No messages are displayed.
+#' 2. `minimal`: Only essential messages are displayed. As default `msg()` will
+#' write messages at this level and higher.
+#' 3. `verbose`: More informative messages are displayed. Use `msg_verbose()` to
+#' easily write messages at this level and above.
+#' 4. `debug`: Detailed messages for debugging are displayed. Use `msg_debug()`
+#' to report debug messages.
 #'
-#' @details
-#' The `msg` function is a general function, which can be used to write messages
-#' based on options.
+#' For simple messages in your functions the recommended approach is to use the
+#' following wrappers for consistency across packages:
 #'
-#' The `msg_debug` function is a wrapper around `msg` with
-#' `levels_to_write = "debug"` and `msg_fun = cli::cli_inform`.
+#' - `msg_success()`: To indicate a successful operation. Wrapper around `msg()`
+#' using `cli::cli_alert_success()` to display the message.
+#' - `msg_danger()`: To indicate a failed operation. Wrapper around `msg()`
+#' using `cli::cli_alert_danger()` to display the message.
+#' - `msg_warning()`: To indicate a warning. Wrapper around `msg_verbose()` using
+#' `cli::cli_alert_warning()` to display the message.
+#' - `msg_info()`: To provide additional information. Wrapper around `msg_verbose()`
+#' using `cli::cli_alert_info()` to display the message.
 #'
-#' The `msg_success` function is a wrapper around `msg` with
-#' `levels_to_write = c("minimal", "verbose", "debug")` and `msg_fun = cli::cli_alert_success`.
+#' For more information on the verbosity levels, see `get_verbosity_level()`.
 #'
-#' The `msg_minimal` function is a wrapper around `msg` with
-#' `levels_to_write = c("minimal", "verbose", "debug")` and `msg_fun = cli::cli_alert_info`.
+#' @param message `character` string with the text to display.
+#' @param levels_to_write `character` vector with the verbosity levels for
+#' which the message should be displayed. Options are `minimal`, `verbose`, and
+#' `debug`.
+#' @param msg_fun The function to use for writing the message. Most commonly
+#' from the cli package. Default is `cli::cli_alert_info()`.
+#' @param ... Additional arguments to pass to `msg_fun()`
+#' @param .envir The `environment` to use for evaluating the verbosity level.
+#' Default `parent.frame()` will be sufficient for most use cases. Parsed on to
+#' `msg_fun()`.
 #'
-#' @return None
+#' @return Return from `msg_fun()`
 #'
 #' @examples
-#' filter_data <- function(data, infilter, ...) {
-#'   infilter_e <- rlang::enquo(infilter)
-#'   infilter_lb <- rlang::as_label(infilter_e)
-#'
-#'   msg(
-#'     "Attempting to filter {.field data} by {.field {infilter_lb}}",
-#'     levels_to_write = c("verbose", "debug"),
-#'     msg_fun = cli::cli_h2
-#'   )
-#'
-#'   msg_debug("debug: Trying to filter data")
-#'
-#'   result <- data |>
-#'     dplyr::filter({{infilter}})
-#'
-#'   msg_success("success: Data filtered by {.field {infilter_lb}}")
-#'   msg_minimal("minimal: Filtered {nrow(result)} rows")
-#'
-#'   head(result)
-#' }
-#'
-#' # Test with different verbosity levels
-#' withr::with_options(list(verbosity_level = "quiet"),
-#'   filter_data(data = cars, infilter = speed > 12))
-#'
-#' withr::with_options(list(verbosity_level = "minimal"),
-#'   filter_data(data = cars, infilter = speed > 12))
-#'
-#' withr::with_options(list(verbosity_level = "verbose"),
-#'   filter_data(data = cars, infilter = speed > 12))
-#'
-#' withr::with_options(list(verbosity_level = "debug"),
-#'   filter_data(data = cars, infilter = speed > 12))
-#'
+#' msg("General message")
+#' msg_success("Operation successful")
+#' msg_danger("Operation failed")
+#' msg_warning("Warning message")
+#' msg_info("Additional information")
 #' @export
-msg <-  function(message,
-  levels_to_write = c("minimal", "verbose", "debug"),
-  msg_fun = cli::cli_alert_info,
-  ...,
-  verbosity_level = NULL,
-  which = -1,
-  .envir = parent.frame()) {
-
-  match.arg(levels_to_write,
-    choices = c("quiet", "minimal", "verbose", "debug"),
-    several.ok = TRUE)
-
-  if (is.null(verbosity_level)) {
-    called_within <- length(sys.calls()) > 1
-
-    if (called_within) {
-      ns_of_fun <- tryCatch({
-        environment(sys.function(which = which))
-      }, error = function(e) {
-        parent.frame()
-      })
-    } else {
-      ns_of_fun <- parent.frame()
-    }
-    verbosity_level <- get_verbosity_level(env = ns_of_fun)
-  }
-
-  if (verbosity_level %in% levels_to_write) {
-    msg_fun(message, ..., .envir = .envir)
-  }
-
-  invisible()
-}
-
-#' @rdname msg
-#' @export
-msg_debug <- function(message,
-  ...,
-  verbosity_level = NULL,
-  which = -1,
-  .envir = parent.frame()) {
-  msg(message,
-    levels_to_write = "debug",
-    msg_fun = cli::cli_inform,
-    ...,
-    verbosity_level = verbosity_level,
-    which = -1 + which,
-    .envir = .envir)
-}
-
-#' @rdname msg
-#' @export
-msg_success <- function(message,
-  ...,
-  verbosity_level = NULL,
-  which = -1,
-  .envir = parent.frame()) {
-  msg(message,
-    levels_to_write = c("minimal", "verbose", "debug"),
-    msg_fun = cli::cli_alert_success,
-    ...,
-    verbosity_level = verbosity_level,
-    which = -1 + which,
-    .envir = .envir)
-}
-
-#' @rdname msg
-#' @export
-msg_minimal <- function(message,
-  ...,
-  verbosity_level = NULL,
-  which = -1,
-  .envir = parent.frame()) {
-  msg(message,
+msg <- function(
+    message,
     levels_to_write = c("minimal", "verbose", "debug"),
     msg_fun = cli::cli_alert_info,
     ...,
-    verbosity_level = verbosity_level,
-    which = -1 + which,
-    .envir = .envir)
+    .envir = parent.frame()) {
+  levels_to_write <- rlang::arg_match(arg = levels_to_write, multiple = TRUE)
+
+  if (!get_verbosity_level(env = .envir) %in% levels_to_write) {
+    return(invisible())
+  }
+
+  msg_fun(message, ..., .envir = .envir)
+}
+
+#' @rdname msg
+#' @export
+msg_verbose <- function(
+    message,
+    msg_fun = cli::cli_alert_info,
+    ...,
+    .envir = parent.frame()) {
+  msg(
+    message,
+    levels_to_write = c("verbose", "debug"),
+    msg_fun = msg_fun,
+    ...,
+    .envir = .envir
+  )
+}
+
+#' @rdname msg
+#' @export
+msg_debug <- function(
+    message,
+    msg_fun = cli::cli_alert_info,
+    ...,
+    .envir = parent.frame()) {
+  msg(
+    message,
+    levels_to_write = "debug",
+    msg_fun = msg_fun,
+    ...,
+    .envir = .envir
+  )
+}
+
+#' @rdname msg
+#' @export
+msg_success <- function(
+    message,
+    ...,
+    .envir = parent.frame()) {
+  msg(
+    message = message,
+    msg_fun = cli::cli_alert_success,
+    ...,
+    .envir = .envir
+  )
+}
+
+#' @rdname msg
+#' @export
+msg_danger <- function(
+    message,
+    ...,
+    .envir = parent.frame()) {
+  msg(
+    message = message,
+    msg_fun = cli::cli_alert_danger,
+    ...,
+    .envir = .envir
+  )
+}
+
+#' @rdname msg
+#' @export
+msg_warning <- function(
+    message,
+    ...,
+    .envir = parent.frame()) {
+  msg_verbose(
+    message = message,
+    msg_fun = cli::cli_alert_warning,
+    ...,
+    .envir = .envir
+  )
+}
+
+#' @rdname msg
+#' @export
+msg_info <- function(
+    message,
+    ...,
+    .envir = parent.frame()) {
+  msg_verbose(
+    message = message,
+    msg_fun = cli::cli_alert_info,
+    ...,
+    .envir = .envir
+  )
 }

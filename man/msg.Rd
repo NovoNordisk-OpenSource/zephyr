@@ -2,9 +2,12 @@
 % Please edit documentation in R/msg.R
 \name{msg}
 \alias{msg}
+\alias{msg_verbose}
 \alias{msg_debug}
 \alias{msg_success}
-\alias{msg_minimal}
+\alias{msg_danger}
+\alias{msg_warning}
+\alias{msg_info}
 \title{Write messages based on verbosity level}
 \usage{
 msg(
@@ -12,121 +15,79 @@ msg(
   levels_to_write = c("minimal", "verbose", "debug"),
   msg_fun = cli::cli_alert_info,
   ...,
-  verbosity_level = NULL,
-  which = -1,
   .envir = parent.frame()
 )
 
-msg_debug(
+msg_verbose(
   message,
+  msg_fun = cli::cli_alert_info,
   ...,
-  verbosity_level = NULL,
-  which = -1,
   .envir = parent.frame()
 )
 
-msg_success(
-  message,
-  ...,
-  verbosity_level = NULL,
-  which = -1,
-  .envir = parent.frame()
-)
+msg_debug(message, msg_fun = cli::cli_alert_info, ..., .envir = parent.frame())
 
-msg_minimal(
-  message,
-  ...,
-  verbosity_level = NULL,
-  which = -1,
-  .envir = parent.frame()
-)
+msg_success(message, ..., .envir = parent.frame())
+
+msg_danger(message, ..., .envir = parent.frame())
+
+msg_warning(message, ..., .envir = parent.frame())
+
+msg_info(message, ..., .envir = parent.frame())
 }
 \arguments{
-\item{message}{\code{character} of message to write}
+\item{message}{\code{character} string with the text to display.}
 
-\item{levels_to_write}{\code{character} vector of levels of verbosity for which
-to display the message. Valid values are \code{quiet}, \code{minimal}, \code{verbose}, and \code{debug}}
+\item{levels_to_write}{\code{character} vector with the verbosity levels for
+which the message should be displayed. Options are \code{minimal}, \code{verbose}, and
+\code{debug}.}
 
-\item{msg_fun}{\code{function} taking \code{message} as first argument. Usually a
-\code{cli_...} function}
+\item{msg_fun}{The function to use for writing the message. Most commonly
+from the cli package. Default is \code{cli::cli_alert_info()}.}
 
-\item{...}{Additional arguments passed to \code{msg_fun}}
+\item{...}{Additional arguments to pass to \code{msg_fun()}}
 
-\item{verbosity_level}{The verbosity level to use. If \code{NULL}, the function
-will use the \code{which} argument to determine the environment in which to find
-an option called \code{verbosity_level}. By default, it will look in the environment
-of the function calling \verb{msg(_...)}. If no option is set in this calling
-environment, it will look in the \code{zephyr} namespace.}
-
-\item{which}{\code{integer} passed to \code{\link[=sys.function]{sys.function()}} in case \code{verbosity_level = NULL}.
-Default is -1, meaning it will look in the environment of the function calling \verb{msg(_...)}.}
-
-\item{.envir}{\code{environment} passed to \code{msg_fun}}
+\item{.envir}{The \code{environment} to use for evaluating the verbosity level.
+Default \code{parent.frame()} will be sufficient for most use cases. Parsed on to
+\code{msg_fun()}.}
 }
 \value{
-None
+Return from \code{msg_fun()}
 }
 \description{
-The \code{msg} function is a general function for writing messages to the console
-based on options set using the \link{options} package. As a default, an option
-called \code{verbosity_level} set in the package defining a function calling \code{msg}
-is used. If a global option with prefix \code{zephyr.} is set, it will overwrite
-the package level option.
+The \code{msg()} function is a general utility function for writing messages to the
+console based on the verbosity level set for your session and package.
 
-Valid values are \code{quiet}, \code{minimal}, \code{verbose}, and \code{debug}.
+Verbosity level can be any of the four values below:
+\enumerate{
+\item \code{quiet}: No messages are displayed.
+\item \code{minimal}: Only essential messages are displayed. As default \code{msg()} will
+write messages at this level and higher.
+\item \code{verbose}: More informative messages are displayed. Use \code{msg_verbose()} to
+easily write messages at this level and above.
+\item \code{debug}: Detailed messages for debugging are displayed. Use \code{msg_debug()}
+to report debug messages.
+}
+
+For simple messages in your functions the recommended approach is to use the
+following wrappers for consistency across packages:
 \itemize{
-\item \code{quiet}: No messages are displayed
-\item \code{minimal}: Only essential messages are displayed
-\item \code{verbose}: Informative messages are displayed (default)
-\item \code{debug}: Detailed messages for debugging are displayed
+\item \code{msg_success()}: To indicate a successful operation. Wrapper around \code{msg()}
+using \code{cli::cli_alert_success()} to display the message.
+\item \code{msg_danger()}: To indicate a failed operation. Wrapper around \code{msg()}
+using \code{cli::cli_alert_danger()} to display the message.
+\item \code{msg_warning()}: To indicate a warning. Wrapper around \code{msg_verbose()} using
+\code{cli::cli_alert_warning()} to display the message.
+\item \code{msg_info()}: To provide additional information. Wrapper around \code{msg_verbose()}
+using \code{cli::cli_alert_info()} to display the message.
 }
-}
-\details{
-The \code{msg} function is a general function, which can be used to write messages
-based on options.
 
-The \code{msg_debug} function is a wrapper around \code{msg} with
-\code{levels_to_write = "debug"} and \code{msg_fun = cli::cli_inform}.
-
-The \code{msg_success} function is a wrapper around \code{msg} with
-\code{levels_to_write = c("minimal", "verbose", "debug")} and \code{msg_fun = cli::cli_alert_success}.
-
-The \code{msg_minimal} function is a wrapper around \code{msg} with
-\code{levels_to_write = c("minimal", "verbose", "debug")} and \code{msg_fun = cli::cli_alert_info}.
+For more information on the verbosity levels, see \code{get_verbosity_level()}.
 }
 \examples{
-filter_data <- function(data, infilter, ...) {
-  infilter_e <- rlang::enquo(infilter)
-  infilter_lb <- rlang::as_label(infilter_e)
-
-  msg(
-    "Attempting to filter {.field data} by {.field {infilter_lb}}",
-    levels_to_write = c("verbose", "debug"),
-    msg_fun = cli::cli_h2
-  )
-
-  msg_debug("debug: Trying to filter data")
-
-  result <- data |>
-    dplyr::filter({{infilter}})
-
-  msg_success("success: Data filtered by {.field {infilter_lb}}")
-  msg_minimal("minimal: Filtered {nrow(result)} rows")
-
-  head(result)
-}
-
-# Test with different verbosity levels
-withr::with_options(list(verbosity_level = "quiet"),
-  filter_data(data = cars, infilter = speed > 12))
-
-withr::with_options(list(verbosity_level = "minimal"),
-  filter_data(data = cars, infilter = speed > 12))
-
-withr::with_options(list(verbosity_level = "verbose"),
-  filter_data(data = cars, infilter = speed > 12))
-
-withr::with_options(list(verbosity_level = "debug"),
-  filter_data(data = cars, infilter = speed > 12))
-
+msg("General message")
+msg_success("Operation successful")
+msg_danger("Operation failed")
+msg_warning("Warning message")
+msg_info("Additional information")
 }

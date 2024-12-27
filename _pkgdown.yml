@@ -1,4 +1,17 @@
 url: https://novonordisk-opensource.github.io/zephyr/
 template:
   bootstrap: 5
-
+reference:
+  - title: Messages
+    description:
+    contents:
+      - msg
+      - report_checkmate_assertions
+  - title: Verbosity
+    description:
+    contents:
+      -  contains("verbosity")
+  - title: Options
+    description: Options etc.
+    contents:
+      - starts_with(".")

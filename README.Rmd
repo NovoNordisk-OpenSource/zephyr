@@ -11,8 +11,8 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
-# library(zephyr)
-devtools::load_all(".")
+
+library(zephyr)
 ```
 
 # zephyr <a href="https://novonordisk-opensource.github.io/zephyr/"><img src="man/figures/logo.png" alt="zephyr website" align="right" height="138"/></a>

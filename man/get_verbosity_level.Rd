@@ -78,5 +78,5 @@ get_verbosity_level()  # Returns "verbose" (default)
 
 }
 \seealso{
-\code{\link{msg}}, \code{\link{msg_debug}}, \code{\link{msg_success}}, \code{\link{msg_minimal}}
+\code{\link{msg}}
 }
