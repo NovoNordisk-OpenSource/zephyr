@@ -6,16 +6,17 @@
 \usage{
 report_checkmate_assertions(
   collection,
-  msg = "Invalid input(s):",
-  env = parent.frame()
+  message = "Invalid input(s):",
+  .envir = parent.frame()
 )
 }
 \arguments{
-\item{collection}{A collection of assertions created with \code{\link[checkmate:AssertCollection]{checkmate::makeAssertCollection()}}}
+\item{collection}{A collection of assertions created with \code{\link[checkmate:AssertCollection]{checkmate::makeAssertCollection()}}.}
 
-\item{msg}{\code{\link[=character]{character()}} Header of the error message if any assertions failed}
+\item{message}{\code{character} string with the header of the error message if any assertions failed}
 
-\item{env}{\code{\link[=environment]{environment()}} Environment to use for the error message}
+\item{.envir}{The \code{environment} to use for the error message.
+Default \code{parent.frame()} will be sufficient for most use cases.}
 }
 \description{
 Improved reporting of \code{AssertCollections} created with the \code{\link[checkmate:AssertCollection]{checkmate::makeAssertCollection()}}
