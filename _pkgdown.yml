@@ -3,15 +3,22 @@ template:
   bootstrap: 5
 reference:
   - title: Messages
-    description:
+    description: |
+      Functions to provide concistent messages to users across our packages,
+      including the handling of different levels of verbosity.
     contents:
       - msg
       - report_checkmate_assertions
   - title: Verbosity
-    description:
+    description: |
+      Use `verbosity_level` in your package, and utility functions to
+      retrieve the current verbosity level.
     contents:
       -  contains("verbosity")
   - title: Options
     description: Options etc.
     contents:
-      - starts_with(".")
+      - matches("opt")
+      - as_params_pkg
+      - as_roxygen_docs_pkg
+      - starts_with("envvar")

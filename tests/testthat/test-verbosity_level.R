@@ -65,3 +65,38 @@ test_that("get_verbosity_level respects priority hierarchy", {
   # Clean up
   reset_all()
 })
+
+
+test_that("verbosity level", {
+
+  get_verbosity_level() |>
+    expect_equal("verbose")
+
+  withr::local_envvar(list(R_ZEPHYR_VERBOSITY_LEVEL = "quiet"))
+
+  get_verbosity_level() |>
+      expect_equal("quiet")
+
+  withr::local_options(list(zephyr.verbosity_level = "minimal"))
+
+  get_verbosity_level() |>
+      expect_equal("minimal")
+
+  get_verbosity_level("foo") |>
+    expect_equal("minimal")
+
+  withr::local_envvar(list(R_FOO_VERBOSITY_LEVEL = "debug"))
+
+  get_verbosity_level("foo") |>
+      expect_equal("debug")
+
+  withr::local_options(list(foo.verbosity_level = "verbose"))
+
+  get_verbosity_level("foo") |>
+      expect_equal("verbose")
+
+  get_verbosity_level() |>
+    expect_equal("minimal")
+})
+
+

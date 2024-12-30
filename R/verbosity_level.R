@@ -635,3 +635,16 @@ get_package_name_and_env_verbosity <- function() {
 
   return(result)
 }
+
+#' Use verbosity level
+#'
+#' Sets up the `verbosity_level` option in your package and adds the
+#' documentation.
+#' @export
+use_verbosity_level <- function() {
+# TODO: When define_option is ready
+}
+
+
+
+
