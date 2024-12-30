@@ -1,6 +1,6 @@
 Package: zephyr
 Title: Tools for Informing Users Based on Package Options
-Version: 0.0.5.9000
+Version: 0.0.4.9000
 Authors@R: c(
     person("Aksel", "Thomsen", , "oath@novonordisk.com", role = c("aut", "cre")),
     person("Mathias Lerbech", "Jeppesen", , "nmlj@novonordisk.com", role = "aut"),
@@ -23,9 +23,11 @@ Imports:
 Suggests: 
     checkmate,
     dplyr,
+    glue,
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),
+    usethis,
     withr
 Config/testthat/edition: 3
 Encoding: UTF-8
