@@ -30,7 +30,7 @@ use_zephyr <- function() {
   usethis::write_over(path = path, lines = script)
   usethis::edit_file(path = path)
 
-  cli::cli_alert_info("Add new options with {.code zephyr::define_option_pkg()}.")
+  cli::cli_alert_info("Add new options with {.code zephyr::create_option()}.")
   cli::cli_alert_info("And reuse their documentation with in functions with {.code @inheritParams {pkgname}-options-params}.")
   cli::cli_alert_info("Run {.run devtools::document()} to update documentation.")
 }
