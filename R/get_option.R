@@ -38,7 +38,10 @@ get_option <- function(name, .envir = sys.function(which = -1)) {
 
   env <- envname(.envir)
 
-  default <- getNamespace(env)[[".zephyr_options"]][[name]][["default"]]
+  default <- NULL
+  if (env %in% loadedNamespaces()) {
+    default <- getNamespace(env)[[".zephyr_options"]][[name]][["default"]]
+  }
 
   coalesce_dots(
     paste(env, name, sep = ".") |>

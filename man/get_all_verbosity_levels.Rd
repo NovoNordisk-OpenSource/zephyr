@@ -29,32 +29,6 @@ The function checks for verbosity settings in the following ways:
 \item Package-specific options using \code{opt_pkg} with package environments for all loaded packages
 }
 }
-\note{
-This function relies on the \code{opt_pkg} function being available in the
-environment. If \code{opt_pkg} is not found, it will catch the error and continue
-with the other checks.
-}
 \examples{
-# Set some options and environment variables for demonstration
-options(package1.verbosity_level = "quiet", Package2.Verbosity_Level = "debug")
-Sys.setenv(R_PACKAGE3_VERBOSITY_LEVEL = "info")
-
-# Get all verbosity levels
-verbosity_levels <- get_all_verbosity_levels()
-
-# Print results
-for (setting in verbosity_levels) {
-  cat("Environment:", setting$env_name, "\n")
-  cat("Option:", setting$option_name, "\n")
-  cat("Value:", setting$value, "\n")
-  cat("Source:", setting$source, "\n\n")
-}
-
-# Clean up
-options(package1.verbosity_level = NULL, Package2.Verbosity_Level = NULL)
-Sys.unsetenv("R_PACKAGE3_VERBOSITY_LEVEL")
-
-}
-\seealso{
-\code{\link{get_verbosity_level}}
+get_all_verbosity_levels()
 }

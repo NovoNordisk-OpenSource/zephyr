@@ -42,5 +42,5 @@ list_options(as = "params", .envir = "zephyr") |>
 
 # List options in markdown format
 list_options(as = "markdown", .envir = "zephyr") |>
- cat()
+  cat()
 }

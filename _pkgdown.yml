@@ -9,6 +9,7 @@ reference:
       functions to retrieve the current verbosity level.
     contents:
       - msg
+      - verbosity_level
       - get_verbosity_level
       - get_all_verbosity_levels
   - title: Options
