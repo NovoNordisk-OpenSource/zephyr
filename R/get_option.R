@@ -1,4 +1,35 @@
-#' Get option
+#' Get value of package option
+#'
+#' @description
+#' Retrieves the value of an `zephyr_option`.
+#' The value is looked up in the following order:
+#'
+#' 1. User defined option: "\{pkgname\}.\{name\}"
+#' 1. System variable: "R_\{pkgname\}_\{name\}"
+#' 1. Default value defined with `create_option()`
+#'
+#' And returns the first set value.
+#'
+#' @details
+#' Environment variables are always defined as character strings.
+#' In order to return consistent values the following conversions are applied:
+#'
+#' 1. If they contain a ";" they are split into a vector using ";" as the
+#' delimiter.
+#' 1. If the class of the default value is not character, the value is converted
+#' to the same class using the naive `as.{class}` function. E.g. conversions to
+#' numeric are done with `as.numeric()`.
+#'
+#' These conversions are simple in nature and will not cover advanced cases, but
+#' we should try to keep our options this simple.
+#'
+#' @param name `[character(1)]` Name of the option
+#' @param .envir Environment in which the option is defined.
+#' Default is suitable for use inside your package.
+#' @returns Value of the option
+#' @examples
+#' # Retrieve the verbosity level option set by default in zephyr:
+#' get_option(name = "verbosity_level", .envir = "zephyr")
 #' @export
 get_option <- function(name, .envir = sys.function(which = -1)) {
   if (!is.character(name) || length(name) > 1) {
@@ -10,16 +41,13 @@ get_option <- function(name, .envir = sys.function(which = -1)) {
   default <- getNamespace(env)[[".zephyr_options"]][[name]][["default"]]
 
   coalesce_dots(
-
     paste(env, name, sep = ".") |>
       tolower() |>
       getOption(),
-
     paste("R", env, name, sep = "_") |>
       toupper() |>
       sys_getenv() |>
       fix_env_class(to_class = class(default)),
-
     default
   )
 }
@@ -41,8 +69,10 @@ envname <- function(.envir) {
 #' @noRd
 sys_getenv <- function(x) {
   x <- Sys.getenv(x)
-  if (x == "") return(NULL)
-  strsplit(x = x, split = ";|:") |>
+  if (x == "") {
+    return(NULL)
+  }
+  strsplit(x = x, split = ";") |>
     unlist()
 }
 
@@ -64,7 +94,7 @@ coalesce_dots <- function(...) {
   dots <- rlang::list2(...)
   for (i in seq_along(dots)) {
     dot <- dots[[i]]
-    if (!is.null(dot) && !any(is.na(dot))) {
+    if (!is.null(dot) && !all(is.na(dot))) {
       return(dot)
     }
   }

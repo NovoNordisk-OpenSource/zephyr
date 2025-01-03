@@ -2,10 +2,34 @@
 % Please edit documentation in R/create_option.R
 \name{create_option}
 \alias{create_option}
-\title{Create option}
+\title{Create package option}
 \usage{
 create_option(name, default, description)
 }
+\arguments{
+\item{name}{\verb{[character(1)]} Name of the option}
+
+\item{default}{\verb{[any]} Default value of the option}
+
+\item{description}{\verb{[character(1)]} Description of the option}
+}
+\value{
+Invisible \code{zephyr_option} object
+}
 \description{
-Create option
+Use inside your package to setup a \code{zephyr_option} that you can use in your
+functions with \code{get_option()}. The specification is stored inside the
+environment of your package.
+
+For more information and how to get started see \code{use_zephyr()}.
+}
+\examples{
+\dontshow{if (FALSE) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# Must be run inside a package
+create_option(
+  name = "answer",
+  default = 42,
+  description = "This is supposed to be the question"
+)
+\dontshow{\}) # examplesIf}
 }

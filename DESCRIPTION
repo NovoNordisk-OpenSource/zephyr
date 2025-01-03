@@ -19,11 +19,11 @@ URL: https://novonordisk-opensource.github.io/zephyr/,
     https://github.com/NovoNordisk-OpenSource/zephyr
 Imports: 
     cli,
+    glue,
     rlang
 Suggests: 
     checkmate,
     dplyr,
-    glue,
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),

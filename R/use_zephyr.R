@@ -12,7 +12,6 @@ use_zephyr <- function() {
   cli::cli_h1("Setting up {.pkg zephyr}")
 
   rlang::check_installed("usethis")
-  rlang::check_installed("glue")
 
   pkgname <- basename(usethis::proj_path())
 

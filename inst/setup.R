@@ -1,5 +1,6 @@
 #' @title Options for {pkg}
 #' @name {pkg}-options
+#' @
 #' @eval zephyr::as_roxygen_docs_pkg("{pkg}")
 NULL
 
@@ -9,7 +10,7 @@ NULL
 #' @keywords internal
 NULL
 
-zephyr::define_option_pkg(
+zephyr::create_option(
   option = "greeting",
   default = "Hi",
   desc = "Which greeting to use",

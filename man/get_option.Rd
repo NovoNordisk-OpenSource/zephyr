@@ -2,10 +2,45 @@
 % Please edit documentation in R/get_option.R
 \name{get_option}
 \alias{get_option}
-\title{Get option}
+\title{Get value of package option}
 \usage{
 get_option(name, .envir = sys.function(which = -1))
 }
+\arguments{
+\item{name}{\verb{[character(1)]} Name of the option}
+
+\item{.envir}{Environment in which the option is defined.
+Default is suitable for use inside your package.}
+}
+\value{
+Value of the option
+}
 \description{
-Get option
+Retrieves the value of an \code{zephyr_option}.
+The value is looked up in the following order:
+\enumerate{
+\item User defined option: "\{pkgname\}.\{name\}"
+\item System variable: "R_\{pkgname\}_\{name\}"
+\item Default value defined with \code{create_option()}
+}
+
+And returns the first set value.
+}
+\details{
+Environment variables are always defined as character strings.
+In order to return consistent values the following conversions are applied:
+\enumerate{
+\item If they contain a ";" they are split into a vector using ";" as the
+delimiter.
+\item If the class of the default value is not character, the value is converted
+to the same class using the naive \verb{as.\{class\}} function. E.g. conversions to
+numeric are done with \code{as.numeric()}.
+}
+
+These conversions are simple in nature and will not cover advanced cases, but
+we should try to keep our options this simple.
+}
+\examples{
+# Retrieve the verbosity level option set by default in zephyr:
+get_option(name = "verbosity_level", .envir = "zephyr")
 }

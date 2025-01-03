@@ -20,10 +20,8 @@ reference:
     contents:
       - use_zephyr
       - create_option
-      - matches("opt")
-      - as_params_pkg
-      - as_roxygen_docs_pkg
-      - starts_with("envvar")
+      - get_option
+      - list_options
   - title: Utilities
     description: |
       Other utility functions used across our packages.
