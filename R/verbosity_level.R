@@ -1,4 +1,38 @@
-#' Verbosity level
+#' Verbosity level to control package behavior
+#' @description
+#' In zephyr we define a central verbosity level to control the amount of
+#' messages the user receives when using zephyr and other packages
+#' in the ecosystem.
+#'
+#' Verbosity level can be any of the four values below:
+#'
+#' 1. `quiet`: No messages are displayed.
+#' 1. `minimal`: Only essential messages are displayed.
+#' 1. `verbose` (*default*): More informative messages are displayed.
+#' 1. `debug`: Detailed messages for debugging are displayed.
+#'
+#' See [use_zephyr()] and [msg] for how to implement the use of verbosity levels
+#' in your package and its functions.
+#'
+#' Verbosity level is a special kind of option that can be scoped both for a
+#' specific package and and globally for the ecosystem
+#' (assigned to the zephyr package).
+#' It can be set using either R `options()` or environment variables.
+#'
+#' Verbosity level is retrieved using the [get_verbosity_level()] function.
+#' Since the level can have multiples scopes, the following hierarchy is used:
+#'
+#' 1. Package specific option: `{pkgname}.verbosity_level`
+#' 1. Package specific environment variable: `R_{PKGNAME}_VERBOSITY_LEVEL`
+#' 1. Ecosystem wide option: `zephyr.verbosity_level`
+#' 1. Ecosystem wide environment variable (`R_ZEPHYR_VERBOSITY_LEVEL`)
+#' 1. Default value specified in zephyr (`verbose`, see above).
+#'
+#' In order to see all registered verbosity levels across scopes call
+#' [get_all_verbosity_levels()].
+#' @examples
+#' get_verbosity_level("zephyr")
+#' get_all_verbosity_levels()
 #' @name verbosity_level
 NULL
 
@@ -8,32 +42,18 @@ create_option(
   description = "test"
   )
 
-#' Get All Verbosity Levels
+#' Get all verbosity levels
+#' @description
+#' Retrieves all active verbosity levels set for loaded packages.
 #'
-#' This function retrieves all verbosity level settings from various sources,
-#' including global options, environment variables, package-specific options,
-#' package environments, and package-specific options using opt_pkg for all loaded packages.
+#' See also [verbosity_level] and [get_verbosity_level()].
 #'
-#' @return A list of verbosity level settings. Each element in the list contains:
-#'   \item{env_name}{The name of the environment where the setting was found}
-#'   \item{option_name}{The name of the option or variable}
-#'   \item{value}{The value of the verbosity level setting}
-#'   \item{source}{The source of the setting (e.g., "option", "env", "pkg_env", etc.)}
-#'
-#' @details
-#' The function checks for verbosity settings in the following ways:
-#' 1. Global options ending with ".verbosity_level" (case-insensitive)
-#' 2. Environment variables of the form "R_*_VERBOSITY_LEVEL"
-#' 3. The specific option "zephyr.verbosity_level"
-#' 4. Package-specific options via the `opt_pkg` function
-#' 5. Options in package environments
-#' 6. Package-specific options using `opt_pkg` with package environments for all loaded packages
-#'
+#' @returns Named `[character()]` vector with package as names and their verbosity
+#' levels as values.
 #' @examples
 #' get_all_verbosity_levels()
 #' @export
 get_all_verbosity_levels <- function() {
-
   envs <- loadedNamespaces()
   names(envs) <- envs
 
@@ -44,46 +64,35 @@ get_all_verbosity_levels <- function() {
     unlist()
 }
 
-
-#' Get verbosity level with priority hierarchy
-#'
+#' Get verbosity level
 #' @description
-#' This function retrieves the `verbosity_level` option using a priority hierarchy.
-#' It checks various sources for the verbosity level setting and returns the first
-#' valid value it finds. While the examples use "zephyr", this function works with any package.
+#' This function retrieves the `verbosity_level` for your environment using the
+#' priority hierarchy as described in [verbosity_level].
 #'
-#' @param env Environment to search for the package-specific option (default: parent.frame())
+#' While the examples use `zephyr`, this function works with any package,
+#' and inside a package it is not necessary to specify it; the default value
+#' of `.envir` is enough.
 #'
-#' @return Character string representing the verbosity level: "quiet", "minimal", "verbose", or "debug"
+#' It is normally not relevant to query the `verbosity_level` yourself. Instead
+#' use the appropriate [msg] function.
 #'
-#' @details
-#' The function checks for the verbosity level in the following order:
-#' 1. Global package-specific option (e.g., `options("packagename.verbosity_level")`)
-#' 2. Package-specific environment variable (e.g., `R_PACKAGENAME_VERBOSITY_LEVEL`)
-#' 3. Global zephyr package option (`options("zephyr.verbosity_level")`)
-#' 4. Zephyr environment variable (`R_ZEPHYR_VERBOSITY_LEVEL`)
-#' 5. Package-specific options using `opt_pkg("verbosity_level")`
-#' 6. Default value ("verbose")
-#'
-#' Replace "package" with your actual package name in the above.
-#'
-#' Verbosity levels, from least to most verbose:
-#' - "quiet": No messages
-#' - "minimal": Only essential messages
-#' - "verbose": Informative messages (default)
-#' - "debug": Detailed messages for debugging
-#'
-#' This function is primarily used by the `msg` function family to determine
-#' whether to display messages based on the current verbosity level.
-#'
+#' @param .envir Environment in which the options are defined.
+#' Default is suitable for use inside your package.
+#' @returns `[character(1)]` representing the verbosity level.
 #' @examples
 #' # Get the verbosity level
 #' # Note: Specifying the environment is not needed when used inside a package
 #' get_verbosity_level("zephyr")
 #'
-#' # Using withr::with_envvar to temporarily set verbosity level
+#' # Temporarily change verbosity level using an environment variable
 #' withr::with_envvar(
 #'   new = c("R_ZEPHYR_VERBOSITY_LEVEL" = "quiet"),
+#'   code = get_verbosity_level("zephyr")
+#'   )
+#'
+#' # Temporarily change verbosity level using an option value
+#' withr::with_options(
+#'   new = c("zephyr.verbosity_level" = "minimal"),
 #'   code = get_verbosity_level("zephyr")
 #'   )
 #'

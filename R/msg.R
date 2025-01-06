@@ -2,17 +2,7 @@
 #'
 #' @description
 #' The `msg()` function is a general utility function for writing messages to the
-#' console based on the verbosity level set for your session and package.
-#'
-#' Verbosity level can be any of the four values below:
-#'
-#' 1. `quiet`: No messages are displayed.
-#' 2. `minimal`: Only essential messages are displayed. As default `msg()` will
-#' write messages at this level and higher.
-#' 3. `verbose`: More informative messages are displayed. Use `msg_verbose()` to
-#' easily write messages at this level and above.
-#' 4. `debug`: Detailed messages for debugging are displayed. Use `msg_debug()`
-#' to report debug messages.
+#' console based on the [verbosity_level] set for your session and package.
 #'
 #' For simple messages in your functions the recommended approach is to use the
 #' following wrappers for consistency across packages:
@@ -26,7 +16,14 @@
 #' - `msg_info()`: To provide additional information. Wrapper around `msg_verbose()`
 #' using `cli::cli_alert_info()` to display the message.
 #'
-#' For more information on the verbosity levels, see `get_verbosity_level()`.
+#' For more control of how the messages are displayed use:
+#'
+#' - `msg()`: To write messages using custom `msg_fun` functions and define your
+#' own verbosity levels to write.
+#' - `msg_verbose()`: To write verbose messages with a custom `msg_fun`.
+#' - `msg_debug()`: To to report messages only relevant when debugging.
+#'
+#' For more information on the verbosity levels, see [verbosity_level].
 #'
 #' @param message `character` string with the text to display.
 #' @param levels_to_write `character` vector with the verbosity levels for
@@ -56,7 +53,7 @@ msg <- function(
     .envir = parent.frame()) {
   levels_to_write <- rlang::arg_match(arg = levels_to_write, multiple = TRUE)
 
-  if (!get_verbosity_level(env = .envir) %in% levels_to_write) {
+  if (!get_verbosity_level() %in% levels_to_write) {
     return(invisible())
   }
 

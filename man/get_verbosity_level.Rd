@@ -2,44 +2,27 @@
 % Please edit documentation in R/verbosity_level.R
 \name{get_verbosity_level}
 \alias{get_verbosity_level}
-\title{Get verbosity level with priority hierarchy}
+\title{Get verbosity level}
 \usage{
 get_verbosity_level(.envir = sys.function(which = -1))
 }
 \arguments{
-\item{env}{Environment to search for the package-specific option (default: parent.frame())}
+\item{.envir}{Environment in which the options are defined.
+Default is suitable for use inside your package.}
 }
 \value{
-Character string representing the verbosity level: "quiet", "minimal", "verbose", or "debug"
+\verb{[character(1)]} representing the verbosity level.
 }
 \description{
-This function retrieves the \code{verbosity_level} option using a priority hierarchy.
-It checks various sources for the verbosity level setting and returns the first
-valid value it finds. While the examples use "zephyr", this function works with any package.
-}
-\details{
-The function checks for the verbosity level in the following order:
-\enumerate{
-\item Global package-specific option (e.g., \code{options("packagename.verbosity_level")})
-\item Package-specific environment variable (e.g., \code{R_PACKAGENAME_VERBOSITY_LEVEL})
-\item Global zephyr package option (\code{options("zephyr.verbosity_level")})
-\item Zephyr environment variable (\code{R_ZEPHYR_VERBOSITY_LEVEL})
-\item Package-specific options using \code{opt_pkg("verbosity_level")}
-\item Default value ("verbose")
-}
+This function retrieves the \code{verbosity_level} for your environment using the
+priority hierarchy as described in \link{verbosity_level}.
 
-Replace "package" with your actual package name in the above.
+While the examples use \code{zephyr}, this function works with any package,
+and inside a package it is not necessary to specify it; the default value
+of \code{.envir} is enough.
 
-Verbosity levels, from least to most verbose:
-\itemize{
-\item "quiet": No messages
-\item "minimal": Only essential messages
-\item "verbose": Informative messages (default)
-\item "debug": Detailed messages for debugging
-}
-
-This function is primarily used by the \code{msg} function family to determine
-whether to display messages based on the current verbosity level.
+It is normally not relevant to query the \code{verbosity_level} yourself. Instead
+use the appropriate \link{msg} function.
 }
 \examples{
 # Get the verbosity level

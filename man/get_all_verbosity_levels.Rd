@@ -2,32 +2,18 @@
 % Please edit documentation in R/verbosity_level.R
 \name{get_all_verbosity_levels}
 \alias{get_all_verbosity_levels}
-\title{Get All Verbosity Levels}
+\title{Get all verbosity levels}
 \usage{
 get_all_verbosity_levels()
 }
 \value{
-A list of verbosity level settings. Each element in the list contains:
-\item{env_name}{The name of the environment where the setting was found}
-\item{option_name}{The name of the option or variable}
-\item{value}{The value of the verbosity level setting}
-\item{source}{The source of the setting (e.g., "option", "env", "pkg_env", etc.)}
+Named \verb{[character()]} vector with package as names and their verbosity
+levels as values.
 }
 \description{
-This function retrieves all verbosity level settings from various sources,
-including global options, environment variables, package-specific options,
-package environments, and package-specific options using opt_pkg for all loaded packages.
-}
-\details{
-The function checks for verbosity settings in the following ways:
-\enumerate{
-\item Global options ending with ".verbosity_level" (case-insensitive)
-\item Environment variables of the form "R_*_VERBOSITY_LEVEL"
-\item The specific option "zephyr.verbosity_level"
-\item Package-specific options via the \code{opt_pkg} function
-\item Options in package environments
-\item Package-specific options using \code{opt_pkg} with package environments for all loaded packages
-}
+Retrieves all active verbosity levels set for loaded packages.
+
+See also \link{verbosity_level} and \code{\link[=get_verbosity_level]{get_verbosity_level()}}.
 }
 \examples{
 get_all_verbosity_levels()

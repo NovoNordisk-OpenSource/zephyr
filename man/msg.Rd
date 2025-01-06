@@ -56,18 +56,7 @@ Return from \code{msg_fun()}
 }
 \description{
 The \code{msg()} function is a general utility function for writing messages to the
-console based on the verbosity level set for your session and package.
-
-Verbosity level can be any of the four values below:
-\enumerate{
-\item \code{quiet}: No messages are displayed.
-\item \code{minimal}: Only essential messages are displayed. As default \code{msg()} will
-write messages at this level and higher.
-\item \code{verbose}: More informative messages are displayed. Use \code{msg_verbose()} to
-easily write messages at this level and above.
-\item \code{debug}: Detailed messages for debugging are displayed. Use \code{msg_debug()}
-to report debug messages.
-}
+console based on the \link{verbosity_level} set for your session and package.
 
 For simple messages in your functions the recommended approach is to use the
 following wrappers for consistency across packages:
@@ -82,7 +71,15 @@ using \code{cli::cli_alert_danger()} to display the message.
 using \code{cli::cli_alert_info()} to display the message.
 }
 
-For more information on the verbosity levels, see \code{get_verbosity_level()}.
+For more control of how the messages are displayed use:
+\itemize{
+\item \code{msg()}: To write messages using custom \code{msg_fun} functions and define your
+own verbosity levels to write.
+\item \code{msg_verbose()}: To write verbose messages with a custom \code{msg_fun}.
+\item \code{msg_debug()}: To to report messages only relevant when debugging.
+}
+
+For more information on the verbosity levels, see \link{verbosity_level}.
 }
 \examples{
 msg("General message")
