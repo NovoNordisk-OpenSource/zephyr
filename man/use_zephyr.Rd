@@ -7,12 +7,13 @@
 use_zephyr()
 }
 \description{
-Utility function to set up the following in your package:
-}
-\details{
-\enumerate{
-\item Use of \code{verbosity_level}
-\item Use of package specific options
-\item Documents all options
-}
+Utility function to set up the use of zephyr options and
+\link{verbosity_level} in your package.
+
+Creates the file \code{R/{pkgname}-options.R} with boiler plate code to setup
+and document options.
+
+This code also creates an package specific \code{verbosity_level} option,
+enabling you to control the verbosity of your package functions using
+the \link{msg} functions.
 }

@@ -1,13 +1,15 @@
 #' Use zephyr options and verbosity levels
+#' @description
+#' Utility function to set up the use of zephyr options and
+#' [verbosity_level] in your package.
 #'
-#' Utility function to set up the following in your package:
+#' Creates the file `R/{pkgname}-options.R` with boiler plate code to setup
+#' and document options.
 #'
-#' 1. Use of `verbosity_level`
-#' 1. Use of package specific options
-#' 1. Documents all options
-#'
+#' This code also creates an package specific `verbosity_level` option,
+#' enabling you to control the verbosity of your package functions using
+#' the [msg] functions.
 #' @export
-
 use_zephyr <- function() {
   cli::cli_h1("Setting up {.pkg zephyr}")
 
@@ -15,7 +17,7 @@ use_zephyr <- function() {
 
   pkgname <- basename(usethis::proj_path())
 
-  script <- system.file("setup.R", package = "zephyr") |>
+  script <- system.file("setup-options.R", package = "zephyr") |>
     readLines() |>
     vapply(
       FUN = \(x, pkg = pkgname) glue::glue(x, pkg = pkg),

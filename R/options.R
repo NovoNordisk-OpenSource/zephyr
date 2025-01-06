@@ -134,7 +134,7 @@ get_option <- function(name, .envir = sys.function(which = -1)) {
 #' @param as `[character(1)]` Format in which to return the options:
 #' * `"list"`: Return a nested list, where each top level element is a list with
 #' the specification of an option.
-#' * `"params"`: Return a character string with the `"@param"` tag entries for each
+#' * `"params"`: Return a character vector with the `"@param"` tag entries for each
 #' option similar to how function parameters are documented with roxygen2.
 #' * `"markdown"`: Return a character string with markdown formatted entries for
 #' each option.
@@ -166,10 +166,9 @@ list_options <- function(as = c("list", "params", "markdown"),
       vapply(
         FUN = glue::glue_data,
         FUN.VALUE = character(1),
-        "@param {name} {description}. Default: `{default}`. See [{environment}-options] for more information.",
+        "@param {name} {description}. Default: `{default}`.",
         USE.NAMES = FALSE
-      ) |>
-      paste(collapse = "\n")
+      )
   } else if (as == "markdown") {
     options <- options |>
       vapply(
