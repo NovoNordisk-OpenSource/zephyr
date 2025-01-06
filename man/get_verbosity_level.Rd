@@ -46,9 +46,15 @@ whether to display messages based on the current verbosity level.
 # Note: Specifying the environment is not needed when used inside a package
 get_verbosity_level("zephyr")
 
-# Using withr::with_envvar to temporarily set verbosity level
+# Temporarily change verbosity level using an environment variable
 withr::with_envvar(
   new = c("R_ZEPHYR_VERBOSITY_LEVEL" = "quiet"),
+  code = get_verbosity_level("zephyr")
+  )
+
+# Temporarily change verbosity level using an option value
+withr::with_options(
+  new = c("zephyr.verbosity_level" = "minimal"),
   code = get_verbosity_level("zephyr")
   )
 
