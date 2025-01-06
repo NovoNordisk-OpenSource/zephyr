@@ -30,7 +30,7 @@ sys_getenv <- function(x) {
 #' Convert env to the required class
 #' Special handling of logical vectors to also convert "truthy" values correct
 #' @noRd
-fix_env_class <- function(x, to_class) {
+fix_env_class <- function(x, to_class = class(x)) {
   if (is.null(x) || class(x) == to_class) {
     return(x)
   }
