@@ -19,9 +19,9 @@ Value of the option
 Retrieves the value of an \code{zephyr_option}.
 The value is looked up in the following order:
 \enumerate{
-\item User defined option: "\{pkgname\}.\{name\}"
-\item System variable: "R_\{pkgname\}_\{name\}"
-\item Default value defined with \code{create_option()}
+\item User defined option: \verb{\{pkgname\}.\{name\}}
+\item System variable: \verb{R_\{PKGNAME\}_\{NAME\}}
+\item Default value defined with \code{\link[=create_option]{create_option()}}
 }
 
 And returns the first set value.
@@ -34,7 +34,7 @@ In order to return consistent values the following conversions are applied:
 delimiter.
 \item If the class of the default value is not character, the value is converted
 to the same class using the naive \verb{as.\{class\}} function. E.g. conversions to
-numeric are done with \code{as.numeric()}.
+numeric are done with \code{\link[=as.numeric]{as.numeric()}}.
 }
 
 These conversions are simple in nature and will not cover advanced cases, but

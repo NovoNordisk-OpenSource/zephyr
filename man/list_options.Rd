@@ -27,7 +27,7 @@ Default is suitable for use inside your package.}
 List all \code{zephyr_options} specified in a package. Either as an \code{list} or as
 as \code{character} vector formatted for use in your package documentation.
 
-To document your options use \code{use_zephyr()} to set everything up, and edit
+To document your options use \code{\link[=use_zephyr]{use_zephyr()}} to set everything up, and edit
 the created template as necessary.
 }
 \examples{

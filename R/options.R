@@ -1,11 +1,10 @@
 #' Create package option
-#'
 #' @description
 #' Use inside your package to setup a `zephyr_option` that you can use in your
-#' functions with `get_option()`. The specification is stored inside the
+#' functions with [get_option()]. The specification is stored inside the
 #' environment of your package.
 #'
-#' For more information and how to get started see `use_zephyr()`.
+#' For more information and how to get started see [use_zephyr()].
 #'
 #' @param name `[character(1)]` Name of the option
 #' @param default `[any]` Default value of the option
@@ -69,14 +68,13 @@ print.zephyr_options <- function(x, ...) {
 }
 
 #' Get value of package option
-#'
 #' @description
 #' Retrieves the value of an `zephyr_option`.
 #' The value is looked up in the following order:
 #'
-#' 1. User defined option: "\{pkgname\}.\{name\}"
-#' 1. System variable: "R_\{pkgname\}_\{name\}"
-#' 1. Default value defined with `create_option()`
+#' 1. User defined option: `{pkgname}.{name}`
+#' 1. System variable: `R_{PKGNAME}_{NAME}`
+#' 1. Default value defined with [create_option()]
 #'
 #' And returns the first set value.
 #'
@@ -88,7 +86,7 @@ print.zephyr_options <- function(x, ...) {
 #' delimiter.
 #' 1. If the class of the default value is not character, the value is converted
 #' to the same class using the naive `as.{class}` function. E.g. conversions to
-#' numeric are done with `as.numeric()`.
+#' numeric are done with [as.numeric()].
 #'
 #' These conversions are simple in nature and will not cover advanced cases, but
 #' we should try to keep our options this simple.
@@ -126,12 +124,11 @@ get_option <- function(name, .envir = sys.function(which = -1)) {
 }
 
 #' List package options
-#'
 #' @description
 #' List all `zephyr_options` specified in a package. Either as an `list` or as
 #' as `character` vector formatted for use in your package documentation.
 #'
-#' To document your options use `use_zephyr()` to set everything up, and edit
+#' To document your options use [use_zephyr()] to set everything up, and edit
 #' the created template as necessary.
 #'
 #' @param as `[character(1)]` Format in which to return the options:

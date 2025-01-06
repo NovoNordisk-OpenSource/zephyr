@@ -18,10 +18,10 @@ Invisible \code{zephyr_option} object
 }
 \description{
 Use inside your package to setup a \code{zephyr_option} that you can use in your
-functions with \code{get_option()}. The specification is stored inside the
+functions with \code{\link[=get_option]{get_option()}}. The specification is stored inside the
 environment of your package.
 
-For more information and how to get started see \code{use_zephyr()}.
+For more information and how to get started see \code{\link[=use_zephyr]{use_zephyr()}}.
 }
 \examples{
 \dontshow{if (FALSE) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
