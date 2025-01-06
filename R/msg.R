@@ -1,8 +1,8 @@
 #' Write messages based on verbosity level
 #'
 #' @description
-#' The `msg()` function is a general utility function for writing messages to the
-#' console based on the [verbosity_level] set for your session and package.
+#' The `msg()` function is a general utility function for writing messages to
+#' the console based on the [verbosity_level] set for your session and package.
 #'
 #' For simple messages in your functions the recommended approach is to use the
 #' following wrappers for consistency across packages:
@@ -11,10 +11,10 @@
 #' using `cli::cli_alert_success()` to display the message.
 #' - `msg_danger()`: To indicate a failed operation. Wrapper around `msg()`
 #' using `cli::cli_alert_danger()` to display the message.
-#' - `msg_warning()`: To indicate a warning. Wrapper around `msg_verbose()` using
-#' `cli::cli_alert_warning()` to display the message.
-#' - `msg_info()`: To provide additional information. Wrapper around `msg_verbose()`
-#' using `cli::cli_alert_info()` to display the message.
+#' - `msg_warning()`: To indicate a warning. Wrapper around `msg_verbose()`
+#' using `cli::cli_alert_warning()` to display the message.
+#' - `msg_info()`: To provide additional information. Wrapper around
+#' `msg_verbose()` using `cli::cli_alert_info()` to display the message.
 #'
 #' For more control of how the messages are displayed use:
 #'

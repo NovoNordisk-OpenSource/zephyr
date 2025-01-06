@@ -101,7 +101,9 @@ print.zephyr_options <- function(x, ...) {
 #' @export
 get_option <- function(name, .envir = sys.function(which = -1)) {
   if (!is.character(name) || length(name) > 1) {
-    cli::cli_abort("{.var name} must be of class {.cls character} and length {.val 1}")
+    cli::cli_abort(
+      "{.var name} must be of class {.cls character} and length {.val 1}"
+    )
   }
 
   env <- envname(.envir)
@@ -134,8 +136,8 @@ get_option <- function(name, .envir = sys.function(which = -1)) {
 #' @param as `[character(1)]` Format in which to return the options:
 #' * `"list"`: Return a nested list, where each top level element is a list with
 #' the specification of an option.
-#' * `"params"`: Return a character vector with the `"@param"` tag entries for each
-#' option similar to how function parameters are documented with roxygen2.
+#' * `"params"`: Return a character vector with the `"@param"` tag entries for
+#' each option similar to how function parameters are documented with roxygen2.
 #' * `"markdown"`: Return a character string with markdown formatted entries for
 #' each option.
 #' @param .envir Environment in which the options are defined.

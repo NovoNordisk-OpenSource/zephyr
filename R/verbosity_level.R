@@ -40,7 +40,7 @@ create_option(
   name = "verbosity_level",
   default = "verbose",
   description = "test"
-  )
+)
 
 #' Get all verbosity levels
 #' @description
@@ -48,8 +48,8 @@ create_option(
 #'
 #' See also [verbosity_level] and [get_verbosity_level()].
 #'
-#' @returns Named `[character()]` vector with package as names and their verbosity
-#' levels as values.
+#' @returns Named `[character()]` vector with package as names and their
+#' verbosity levels as values.
 #' @examples
 #' get_all_verbosity_levels()
 #' @export
@@ -60,7 +60,7 @@ get_all_verbosity_levels <- function() {
   lapply(
     X = envs,
     FUN = \(x) get_option(name = "verbosity_level", .envir = x)
-    ) |>
+  ) |>
     unlist()
 }
 
@@ -88,20 +88,20 @@ get_all_verbosity_levels <- function() {
 #' withr::with_envvar(
 #'   new = c("R_ZEPHYR_VERBOSITY_LEVEL" = "quiet"),
 #'   code = get_verbosity_level("zephyr")
-#'   )
+#' )
 #'
 #' # Temporarily change verbosity level using an option value
 #' withr::with_options(
 #'   new = c("zephyr.verbosity_level" = "minimal"),
 #'   code = get_verbosity_level("zephyr")
-#'   )
+#' )
 #'
 #' @export
-get_verbosity_level <-  function(.envir = sys.function(which = -1)) {
+get_verbosity_level <- function(.envir = sys.function(which = -1)) {
   coalesce_dots(
     get_option(name = "verbosity_level", .envir = .envir),
     get_option(name = "verbosity_level", .envir = "zephyr")
-    ) |>
+  ) |>
     validate_verbosity_level()
 }
 
@@ -114,7 +114,7 @@ validate_verbosity_level <- function(level) {
   } else {
     cli::cli_alert_warning(
       "Invalid verbosity level {.val {level}}. Using {.val verbose}"
-      )
+    )
     return("verbose")
   }
 }

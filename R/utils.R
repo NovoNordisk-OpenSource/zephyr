@@ -8,7 +8,9 @@ envname <- function(.envir) {
     .envir <- environmentName(.envir)
   }
   if (!is.character(.envir) || .envir == "") {
-    cli::cli_abort("{.var .envir} must be of class {.cls function}, {.cls environment}, or {.cls character}")
+    cli::cli_abort(
+      "{.var .envir} must be of class {.cls function}, {.cls environment}, or {.cls character}" # nolint
+    )
   }
   return(.envir)
 }
