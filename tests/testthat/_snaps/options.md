@@ -41,7 +41,20 @@
        $ environment: chr "testenv"
        - attr(*, "class")= chr "zephyr_option"
 
-# list_options
+# zephyr options
+
+    Code
+      print(expect_length(expect_s3_class(list_options(.envir = "zephyr"),
+      "zephyr_options"), 1))
+    Output
+      
+      -- verbosity_level 
+      test
+      * Default: `"verbose"`
+      * Option: `zephyr.verbosity_level`
+      * Environment: `R_ZEPHYR_VERBOSITY_LEVEL`
+
+# list_options - as list
 
     Code
       print(expect_length(expect_s3_class(list_options(.envir = testenv),

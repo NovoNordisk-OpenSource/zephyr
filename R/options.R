@@ -19,25 +19,23 @@
 #'   description = "This is supposed to be the question"
 #' )
 #' @export
-create_option <- function(name, default, description = name, .envir = parent.frame()) {
-  # envir <- parent.frame()
-  envir <- .envir
-
+create_option <- function(name, default, description = name,
+                          .envir = parent.frame()) {
   spec <- structure(
     list(
       default = default,
       name = name,
       description = description,
-      environment = envname(envir)
+      environment = envname(.envir)
     ),
     class = c("zephyr_option")
   )
 
-  if (!exists(".zephyr_options", envir = envir, inherits = FALSE)) {
-    envir[[".zephyr_options"]] <- structure(list(), class = "zephyr_options")
+  if (!exists(".zephyr_options", envir = .envir, inherits = FALSE)) {
+    .envir[[".zephyr_options"]] <- structure(list(), class = "zephyr_options")
   }
 
-  envir[[".zephyr_options"]][[name]] <- spec
+  .envir[[".zephyr_options"]][[name]] <- spec
 
   return(invisible(spec))
 }
@@ -173,16 +171,17 @@ list_options <- function(as = c("list", "params", "markdown"),
     options <- .envir[[".zephyr_options"]]
   }
 
-  if (as == "params") {
-    options <- options |>
+  switch(
+    EXPR = as,
+    "list" = options,
+    "params" = options |>
       vapply(
         FUN = glue::glue_data,
         FUN.VALUE = character(1),
         "@param {name} {description}. Default: `{default}`.",
         USE.NAMES = FALSE
-      )
-  } else if (as == "markdown") {
-    options <- options |>
+      ),
+    "markdown" = options |>
       vapply(
         FUN = glue::glue_data,
         FUN.VALUE = character(1),
@@ -196,7 +195,5 @@ list_options <- function(as = c("list", "params", "markdown"),
         USE.NAMES = FALSE
       ) |>
       paste(collapse = "\n")
-  }
-
-  return(options)
+  )
 }

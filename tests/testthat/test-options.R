@@ -46,7 +46,15 @@ test_that("get_option", {
     expect_error()
 })
 
-test_that("list_options", {
+test_that("zephyr options", {
+  list_options(.envir = "zephyr") |>
+    expect_s3_class("zephyr_options") |>
+    expect_length(1) |>
+    print() |>
+    expect_snapshot()
+})
+
+test_that("list_options - as list", {
   testenv <- simulate_package_env("testenv")
   create_option(name = "test_option", default = 42, .envir = testenv)
 
@@ -55,12 +63,22 @@ test_that("list_options", {
     expect_length(2) |>
     print() |>
     expect_snapshot()
+})
+
+test_that("list_options - as list", {
+  testenv <- simulate_package_env("testenv")
+  create_option(name = "test_option", default = 42, .envir = testenv)
 
   list_options(as = "params", .envir = testenv) |>
     expect_type("character") |>
     expect_length(2) |>
     print() |>
     expect_snapshot()
+})
+
+test_that("list_options - as list", {
+  testenv <- simulate_package_env("testenv")
+  create_option(name = "test_option", default = 42, .envir = testenv)
 
   list_options(as = "markdown", .envir = testenv) |>
     expect_type("character") |>
