@@ -12,14 +12,18 @@ test_that("sys_getenv", {
 
   withr::with_envvar(
     new = list(myenv = "myvalue"),
-    code = {sys_getenv("myenv")}
-    )|>
+    code = {
+      sys_getenv("myenv")
+    }
+  ) |>
     expect_equal("myvalue")
 
   withr::with_envvar(
     new = list(myenv = "value1;value2;value3"),
-    code = {sys_getenv("myenv")}
-  )|>
+    code = {
+      sys_getenv("myenv")
+    }
+  ) |>
     expect_equal(c("value1", "value2", "value3"))
 })
 

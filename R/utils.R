@@ -32,7 +32,7 @@ sys_getenv <- function(x) {
 #' @noRd
 fix_env_class <- function(x, default = x) {
   if (is.null(x) || is.null(default) ||
-      isTRUE(all.equal(class(x), class(default)))) {
+    isTRUE(all.equal(class(x), class(default)))) {
     return(x)
   }
   if (is.character(x) && is.logical(default)) {

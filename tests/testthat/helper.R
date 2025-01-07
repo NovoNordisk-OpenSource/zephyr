@@ -1,5 +1,5 @@
 # Helper function to simulate package environment
-simulate_package_env <-  function(new_pkg_name) {
+simulate_package_env <- function(new_pkg_name) {
   pkg_env <- new.env(parent = emptyenv())
 
   # Set the name of the new environment using attributes
@@ -11,7 +11,7 @@ simulate_package_env <-  function(new_pkg_name) {
     default = NA_character_,
     description = "Dummy verbosity in this package",
     .envir = pkg_env
-    )
+  )
 
   return(pkg_env)
 }

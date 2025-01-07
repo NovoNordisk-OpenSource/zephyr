@@ -1,4 +1,3 @@
-
 test_that("Default verbosity work as intented", {
   msg("This gives a message because default verbosity level is verbose") |>
     expect_message()
@@ -23,7 +22,6 @@ test_that("Default verbosity work as intented", {
 })
 
 test_that("Minimal verbosity has the expected behaviour", {
-
   withr::local_options(list(zephyr.verbosity_level = "minimal"))
 
   msg("This gives a message for everything except quiet") |>

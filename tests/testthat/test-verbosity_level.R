@@ -1,7 +1,18 @@
 test_that("simple verbosity level", {
-
   get_verbosity_level() |>
     expect_equal("verbose")
+
+  withr::with_options(
+    list(zephyr.verbosity_level = "invalid"),
+    {
+      get_verbosity_level() |>
+        expect_message()
+
+      get_verbosity_level() |>
+        suppressMessages() |>
+        expect_equal("verbose")
+    }
+  )
 
   withr::local_envvar(list(R_ZEPHYR_VERBOSITY_LEVEL = "quiet"))
 
@@ -83,16 +94,33 @@ test_that("verbosity level respects priority hierarchy when used in package", {
   withr::with_options(
     list(
       zephyr.verbosity_level = "quiet",
-      testpkg.verbosity_level = "debug"),
+      testpkg.verbosity_level = "debug"
+    ),
     withr::with_envvar(
-      list(R_ZEPHYR_VERBOSITY_LEVEL = "verbose",
-           R_TESTPKG_VERBOSITY_LEVEL = "minimal"),
+      list(
+        R_ZEPHYR_VERBOSITY_LEVEL = "verbose",
+        R_TESTPKG_VERBOSITY_LEVEL = "minimal"
+      ),
       {
         expect_equal(get_verbosity_level(test_env), "debug")
       }
     )
   )
+})
 
+test_that("get_all_verbosity_levels", {
+  get_all_verbosity_levels() |>
+    expect_equal(c(zephyr = "verbose"))
+
+  withr::with_namespace(c("cli", "glue"), {
+    withr::local_options(list(
+      zephyr.verbosity_level = "quiet",
+      cli.verbosity_level = "minimal",
+      glue.verbosity_level = "debug"
+    ))
+    get_all_verbosity_levels() |>
+      expect_mapequal(
+        c(zephyr = "quiet", cli = "minimal", glue = "debug")
+      )
   })
-
-
+})

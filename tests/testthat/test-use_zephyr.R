@@ -21,8 +21,5 @@ test_that("use_zephyr", {
 
     devtools::document() |>
       expect_snapshot() # Expect only the same warnings
-    }
-  )
-
+  })
 })
-

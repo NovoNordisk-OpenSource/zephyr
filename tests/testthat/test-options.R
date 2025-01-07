@@ -23,7 +23,6 @@ test_that("create_option", {
 })
 
 test_that("get_option", {
-
   testenv <- simulate_package_env("testenv")
   create_option(name = "test_option", default = 42, .envir = testenv)
 
@@ -40,10 +39,14 @@ test_that("get_option", {
   get_option("test_option", .envir = testenv) |>
     expect_equal(100, info = "Should prioritize option")
 
+  get_option(1) |>
+    expect_error()
+
+  get_option(c("a", "b")) |>
+    expect_error()
 })
 
 test_that("list_options", {
-
   testenv <- simulate_package_env("testenv")
   create_option(name = "test_option", default = 42, .envir = testenv)
 
