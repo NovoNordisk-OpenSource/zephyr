@@ -30,24 +30,24 @@ test_that("fix_env_class", {
   fix_env_class(x = NULL) |>
     expect_null()
 
-  fix_env_class(x = NULL, to_class = "numeric") |>
+  fix_env_class(x = NULL, default = 1) |>
     expect_null()
 
-  fix_env_class(x = c("YES", "y", "t", "TRUE", "true"), to_class = "logical") |>
+  fix_env_class(x = c("YES", "y", "t", "TRUE", "true"), default = FALSE) |>
     all() |>
     expect_true()
 
-  fix_env_class(x = c("No", "n", "f", "FALSE", "false"), to_class = "logical") |>
+  fix_env_class(x = c("No", "n", "f", "FALSE", "false"), default = TRUE) |>
     all() |>
     expect_false()
 
-  fix_env_class(x = c("1", "2", "3", "4", "5"), to_class = "numeric") |>
+  fix_env_class(x = c("1", "2", "3", "4", "5"), default = 42) |>
     expect_equal(1:5)
 
-  fix_env_class(x = "a", to_class = numeric) |>
-    expect_error()
+  fix_env_class(x = "a", default = 1) |>
+    expect_warning()
 
-  fix_env_class(x = c("T", "false", "a"), to_class = "logical") |>
+  fix_env_class(x = c("T", "false", "a"), default = TRUE) |>
     expect_equal(c(TRUE, FALSE, NA))
 })
 

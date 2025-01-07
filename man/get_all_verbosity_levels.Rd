@@ -7,8 +7,8 @@
 get_all_verbosity_levels()
 }
 \value{
-Named \verb{[character()]} vector with package as names and their verbosity
-levels as values.
+Named \verb{[character()]} vector with package as names and their
+verbosity levels as values.
 }
 \description{
 Retrieves all active verbosity levels set for loaded packages.

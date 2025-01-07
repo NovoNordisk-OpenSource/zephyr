@@ -30,16 +30,17 @@ sys_getenv <- function(x) {
 #' Convert env to the required class
 #' Special handling of logical vectors to also convert "truthy" values correct
 #' @noRd
-fix_env_class <- function(x, to_class = class(x)) {
-  if (is.null(x) || class(x) == to_class) {
+fix_env_class <- function(x, default = x) {
+  if (is.null(x) || is.null(default) ||
+      isTRUE(all.equal(class(x), class(default)))) {
     return(x)
   }
-  if (is.character(x) && to_class == "logical") {
+  if (is.character(x) && is.logical(default)) {
     x <- toupper(x)
     x[x %in% c("Y", "YES", "T")] <- "TRUE"
     x[x %in% c("N", "NO", "F")] <- "FALSE"
   }
-  do.call(what = paste0("as.", to_class), args = list(x))
+  do.call(what = paste0("as.", class(default)[[1]]), args = list(x))
 }
 
 #' Return first non missing input

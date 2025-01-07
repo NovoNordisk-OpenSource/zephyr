@@ -55,8 +55,8 @@ Default \code{parent.frame()} will be sufficient for most use cases. Parsed on t
 Return from \code{msg_fun()}
 }
 \description{
-The \code{msg()} function is a general utility function for writing messages to the
-console based on the \link{verbosity_level} set for your session and package.
+The \code{msg()} function is a general utility function for writing messages to
+the console based on the \link{verbosity_level} set for your session and package.
 
 For simple messages in your functions the recommended approach is to use the
 following wrappers for consistency across packages:
@@ -65,10 +65,10 @@ following wrappers for consistency across packages:
 using \code{cli::cli_alert_success()} to display the message.
 \item \code{msg_danger()}: To indicate a failed operation. Wrapper around \code{msg()}
 using \code{cli::cli_alert_danger()} to display the message.
-\item \code{msg_warning()}: To indicate a warning. Wrapper around \code{msg_verbose()} using
-\code{cli::cli_alert_warning()} to display the message.
-\item \code{msg_info()}: To provide additional information. Wrapper around \code{msg_verbose()}
-using \code{cli::cli_alert_info()} to display the message.
+\item \code{msg_warning()}: To indicate a warning. Wrapper around \code{msg_verbose()}
+using \code{cli::cli_alert_warning()} to display the message.
+\item \code{msg_info()}: To provide additional information. Wrapper around
+\code{msg_verbose()} using \code{cli::cli_alert_info()} to display the message.
 }
 
 For more control of how the messages are displayed use:

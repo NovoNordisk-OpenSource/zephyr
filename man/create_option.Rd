@@ -4,7 +4,7 @@
 \alias{create_option}
 \title{Create package option}
 \usage{
-create_option(name, default, description)
+create_option(name, default, description = name, .envir = parent.frame())
 }
 \arguments{
 \item{name}{\verb{[character(1)]} Name of the option}
@@ -12,6 +12,9 @@ create_option(name, default, description)
 \item{default}{\verb{[any]} Default value of the option}
 
 \item{description}{\verb{[character(1)]} Description of the option}
+
+\item{.envir}{Environment in which the option is defined.
+Default is suitable for use inside your package.}
 }
 \value{
 Invisible \code{zephyr_option} object
@@ -25,7 +28,6 @@ For more information and how to get started see \code{\link[=use_zephyr]{use_zep
 }
 \examples{
 \dontshow{if (FALSE) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-# Must be run inside a package
 create_option(
   name = "answer",
   default = 42,

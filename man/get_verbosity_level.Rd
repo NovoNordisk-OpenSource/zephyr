@@ -33,12 +33,12 @@ get_verbosity_level("zephyr")
 withr::with_envvar(
   new = c("R_ZEPHYR_VERBOSITY_LEVEL" = "quiet"),
   code = get_verbosity_level("zephyr")
-  )
+)
 
 # Temporarily change verbosity level using an option value
 withr::with_options(
   new = c("zephyr.verbosity_level" = "minimal"),
   code = get_verbosity_level("zephyr")
-  )
+)
 
 }

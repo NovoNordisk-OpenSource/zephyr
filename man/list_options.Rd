@@ -14,8 +14,8 @@ list_options(
 \itemize{
 \item \code{"list"}: Return a nested list, where each top level element is a list with
 the specification of an option.
-\item \code{"params"}: Return a character vector with the \code{"@param"} tag entries for each
-option similar to how function parameters are documented with roxygen2.
+\item \code{"params"}: Return a character vector with the \code{"@param"} tag entries for
+each option similar to how function parameters are documented with roxygen2.
 \item \code{"markdown"}: Return a character string with markdown formatted entries for
 each option.
 }}

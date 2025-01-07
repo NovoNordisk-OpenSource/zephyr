@@ -9,17 +9,19 @@
 #' @param name `[character(1)]` Name of the option
 #' @param default `[any]` Default value of the option
 #' @param description `[character(1)]` Description of the option
+#' @param .envir Environment in which the option is defined.
+#' Default is suitable for use inside your package.
 #' @returns Invisible `zephyr_option` object
 #' @examplesIf FALSE
-#' # Must be run inside a package
 #' create_option(
 #'   name = "answer",
 #'   default = 42,
 #'   description = "This is supposed to be the question"
 #' )
 #' @export
-create_option <- function(name, default, description) {
-  envir <- parent.frame()
+create_option <- function(name, default, description = name, .envir = parent.frame()) {
+  # envir <- parent.frame()
+  envir <- .envir
 
   spec <- structure(
     list(
@@ -111,6 +113,8 @@ get_option <- function(name, .envir = sys.function(which = -1)) {
   default <- NULL
   if (env %in% loadedNamespaces()) {
     default <- getNamespace(env)[[".zephyr_options"]][[name]][["default"]]
+  } else if (is.environment(.envir)) {
+    default <- .envir[[".zephyr_options"]][[name]][["default"]]
   }
 
   coalesce_dots(
@@ -120,7 +124,7 @@ get_option <- function(name, .envir = sys.function(which = -1)) {
     paste("R", env, name, sep = "_") |>
       toupper() |>
       sys_getenv() |>
-      fix_env_class(to_class = class(default)),
+      fix_env_class(default = default),
     default
   )
 }
@@ -161,7 +165,13 @@ list_options <- function(as = c("list", "params", "markdown"),
   as <- rlang::arg_match(as)
 
   env <- envname(.envir)
-  options <- getNamespace(env)[[".zephyr_options"]]
+
+  options <- list()
+  if (env %in% loadedNamespaces()) {
+    options <- getNamespace(env)[[".zephyr_options"]]
+  } else if (is.environment(.envir)) {
+    options <- .envir[[".zephyr_options"]]
+  }
 
   if (as == "params") {
     options <- options |>
