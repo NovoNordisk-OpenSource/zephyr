@@ -22,7 +22,9 @@ Imports:
     glue,
     rlang
 Suggests: 
+    callr,
     checkmate,
+    devtools,
     dplyr,
     knitr,
     rmarkdown,

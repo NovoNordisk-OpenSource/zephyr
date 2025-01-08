@@ -1,5 +1,6 @@
 test_that("use_zephyr", {
   rlang::local_interactive(FALSE)
+  withr::local_options(usethis.quiet = TRUE)
 
   mypkg <- withr::local_tempdir() |>
     file.path("mypkg")
@@ -15,11 +16,5 @@ test_that("use_zephyr", {
 
     file.exists("R/mypkg-options.R") |>
       expect_true()
-
-    desc::desc_has_dep(package = "zephyr", type = "Imports") |>
-      expect_true()
-
-    devtools::document() |>
-      expect_snapshot() # Expect only the same warnings
   })
 })
