@@ -20,6 +20,7 @@ libpath <- withr::local_tempdir()
 
 test_that("integration in new package", {
   skip_on_cran()
+  skip_on_covr()
 
   # Settings
 
@@ -66,6 +67,7 @@ test_that("integration in new package", {
 
 test_that("use in new package", {
   skip_on_cran()
+  skip_on_covr()
 
   run_output(\() testpkg::greet("there"), libpath) |>
     expect_output("hello there")
