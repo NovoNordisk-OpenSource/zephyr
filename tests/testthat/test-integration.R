@@ -57,7 +57,7 @@ test_that("integration in new package", {
     expect_snapshot()
 
   run_output_project(
-    \() suppressMessages(devtools::check(error_on = "warning", quiet = TRUE)),
+    \() rcmdcheck::rcmdcheck(quiet = TRUE, error_on = "warning"),
     libpath,
     testpkg
   ) |>
