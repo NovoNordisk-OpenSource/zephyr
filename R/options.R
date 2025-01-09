@@ -40,7 +40,7 @@ create_option <- function(name, default, description = name,
   return(invisible(spec))
 }
 
-#' @export
+#' @noRd
 format.zephyr_option <- function(x, ...) {
   cli::cli_format_method({
     cli::cli_h3(x$name)
@@ -55,13 +55,13 @@ format.zephyr_option <- function(x, ...) {
   })
 }
 
-#' @export
+#' @noRd
 print.zephyr_option <- function(x, ...) {
   cat(format(x, ...), sep = "\n")
   invisible(x)
 }
 
-#' @export
+#' @noRd
 print.zephyr_options <- function(x, ...) {
   lapply(X = x, FUN = print)
   invisible(x)
