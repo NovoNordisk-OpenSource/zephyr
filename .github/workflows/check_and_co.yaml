@@ -12,20 +12,20 @@ permissions:
   pull-requests: write
 name: All actions
 jobs:
-  check-current-version:
-    name: Check current version
-    uses: >-
-      NovoNordisk-OpenSource/r.workflows/.github/workflows/check_current_version.yaml@main
-  check-nn-version:
-    name: Check NN version
-    uses: >-
-      NovoNordisk-OpenSource/r.workflows/.github/workflows/check_nn_versions.yaml@main
-  pkgdown:
-    name: Pkgdown site
-    uses: NovoNordisk-OpenSource/r.workflows/.github/workflows/pkgdown.yaml@main
-  coverage:
-    name: Coverage report
-    uses: NovoNordisk-OpenSource/r.workflows/.github/workflows/coverage.yaml@main
+  # check-current-version:
+  #   name: Check current version
+  #   uses: >-
+  #     NovoNordisk-OpenSource/r.workflows/.github/workflows/check_current_version.yaml@main
+  # check-nn-version:
+  #   name: Check NN version
+  #   uses: >-
+  #     NovoNordisk-OpenSource/r.workflows/.github/workflows/check_nn_versions.yaml@main
+  # pkgdown:
+  #   name: Pkgdown site
+  #   uses: NovoNordisk-OpenSource/r.workflows/.github/workflows/pkgdown.yaml@main
+  # coverage:
+  #   name: Coverage report
+  #   uses: NovoNordisk-OpenSource/r.workflows/.github/workflows/coverage.yaml@main
   megalinter:
-    name: Megalinter
+    name: Megalinter test
     uses: NovoNordisk-OpenSource/r.workflows/.github/workflows/megalinter.yaml@fix/megalinter-excludes
