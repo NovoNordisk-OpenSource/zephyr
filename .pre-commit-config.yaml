@@ -49,6 +49,9 @@ repos:
           (.*/|)WORDLIST|
           \.github/workflows/.*|
           data/.*|
+          .*\.svg|
+          .*\.ico|
+          .*\.webmanifest|
           )$
     # -   id: lintr
     -   id: readme-rmd-rendered
