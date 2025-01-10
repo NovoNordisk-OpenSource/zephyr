@@ -9,7 +9,7 @@ envname <- function(.envir) {
   }
   if (!is.character(.envir) || .envir == "") {
     cli::cli_abort(
-      "{.var .envir} must be of class {.cls function}, {.cls environment}, or {.cls character}" # nolint
+      "{.var .envir} must be of class {.cls function}, {.cls environment}, or {.cls character}" # nolint: line_length_linter
     )
   }
   return(.envir)

@@ -74,7 +74,7 @@ test_that("use in new package", {
     expect_output("hello there")
 
   run_output(
-    \() withr::with_envvar(
+    \() withr::with_envvar( # nolint: brace_linter
       list(R_TESTPKG_GREETING = "hej"),
       testpkg::greet("there")
     ),
@@ -83,7 +83,7 @@ test_that("use in new package", {
     expect_output("hej there")
 
   run_output(
-    \() withr::with_options(
+    \() withr::with_options( # nolint: brace_linter
       list(testpkg.greeting = "hi"),
       testpkg::greet("there")
     ),
@@ -95,7 +95,7 @@ test_that("use in new package", {
     expect_equal("verbose")
 
   run_output(
-    \() withr::with_options(
+    \() withr::with_options( # nolint: brace_linter
       list(zephyr.verbosity_level = "minimal"),
       zephyr::get_verbosity_level(.envir = "testpkg")
     ),
@@ -104,7 +104,7 @@ test_that("use in new package", {
     expect_equal("minimal")
 
   run_output(
-    \() withr::with_options(
+    \() withr::with_options( # nolint: brace_linter
       list(testpkg.verbosity_level = "debug"),
       zephyr::get_verbosity_level(.envir = "testpkg")
     ),
@@ -113,7 +113,7 @@ test_that("use in new package", {
     expect_equal("debug")
 
   run_output(
-    \() withr::with_options(
+    \() withr::with_options( # nolint: brace_linter
       list(zephyr.verbosity_level = "minimal"),
       testpkg::greet("there")
     ),
