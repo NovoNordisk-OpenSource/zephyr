@@ -48,7 +48,8 @@ test_that("integration in new package", {
 
   # Use in new package
 
-  run_output_project(\() {zephyr::use_zephyr(); NULL}, libpath, testpkg) |>
+  run_output_project(\() zephyr::use_zephyr(), libpath, testpkg) |>
+    expect_true() |>
     expect_snapshot()
 
   # Only to not get warnings below

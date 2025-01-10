@@ -1,7 +1,7 @@
 # use_zephyr
 
     Code
-      use_zephyr()
+      expect_true(expect_invisible(use_zephyr()))
     Message
       
       -- Setting up zephyr -----------------------------------------------------------

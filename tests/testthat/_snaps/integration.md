@@ -1,17 +1,14 @@
 # integration in new package
 
     Code
-      run_output_project(function() {
-        zephyr::use_zephyr()
-        NULL
-      }, libpath, testpkg)
+      expect_true(run_output_project(function() zephyr::use_zephyr(), libpath,
+      testpkg))
     Output
       
       ── Setting up zephyr ───────────────────────────────────────────────────────────
       ℹ Add new options with `zephyr::create_option()`.
       ℹ And reuse their documentation with in functions with `@inheritParams testpkg-options-params`.
       ℹ Run `devtools::document()` to update documentation.
-      NULL
 
 ---
 

@@ -38,4 +38,6 @@ use_zephyr <- function() {
   cli::cli_alert_info(
     "Run {.run devtools::document()} to update documentation."
   )
+
+  return(invisible(TRUE))
 }
