@@ -30,7 +30,7 @@
 #' which the message should be displayed. Options are `minimal`, `verbose`, and
 #' `debug`.
 #' @param msg_fun The function to use for writing the message. Most commonly
-#' from the cli package. Default is `cli::cli_alert_info()`.
+#' from the cli package. Default is `cli::cli_alert()`.
 #' @param ... Additional arguments to pass to `msg_fun()`
 #' @param .envir The `environment` to use for evaluating the verbosity level.
 #' Default `parent.frame()` will be sufficient for most use cases. Parsed on to
@@ -48,7 +48,7 @@
 msg <- function(
     message,
     levels_to_write = c("minimal", "verbose", "debug"),
-    msg_fun = cli::cli_alert_info,
+    msg_fun = cli::cli_alert,
     ...,
     .envir = parent.frame()) {
   levels_to_write <- rlang::arg_match(arg = levels_to_write, multiple = TRUE)
@@ -64,7 +64,7 @@ msg <- function(
 #' @export
 msg_verbose <- function(
     message,
-    msg_fun = cli::cli_alert_info,
+    msg_fun = cli::cli_alert,
     ...,
     .envir = parent.frame()) {
   msg(
@@ -80,7 +80,7 @@ msg_verbose <- function(
 #' @export
 msg_debug <- function(
     message,
-    msg_fun = cli::cli_alert_info,
+    msg_fun = cli::cli_alert,
     ...,
     .envir = parent.frame()) {
   msg(
