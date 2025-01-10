@@ -27,5 +27,5 @@ jobs:
   #   name: Coverage report
   #   uses: NovoNordisk-OpenSource/r.workflows/.github/workflows/coverage.yaml@main
   megalinter:
-    name: Megalinter test2
+    name: Megalinter test3
     uses: NovoNordisk-OpenSource/r.workflows/.github/workflows/megalinter.yaml@main
