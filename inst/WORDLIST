@@ -42,10 +42,12 @@ covr
 cph
 cran
 cre
+dev
 devtools
 envir
 envname
 github
+http
 https
 io
 knitr
