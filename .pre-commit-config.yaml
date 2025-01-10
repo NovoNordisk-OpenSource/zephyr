@@ -71,7 +71,7 @@ repos:
     -   id: check-added-large-files
         args: ['--maxkb=200']
     -   id: file-contents-sorter
-        files: '^\.Rbuildignore$'
+        files: '^\.Rbuildignore$|^inst/WORDLIST$'
     -   id: end-of-file-fixer
         exclude: >
           (?x)^(
