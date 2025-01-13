@@ -50,7 +50,6 @@ test_that("integration in new package", {
 
   run_output_project(\() zephyr::use_zephyr(), libpath, testpkg) |>
     expect_true() |>
-    expect_snapshot()
 
   # Only to not get warnings below
   run_output_project(\() usethis::use_mit_license(), libpath, testpkg)

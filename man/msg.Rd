@@ -13,19 +13,14 @@
 msg(
   message,
   levels_to_write = c("minimal", "verbose", "debug"),
-  msg_fun = cli::cli_alert_info,
+  msg_fun = cli::cli_alert,
   ...,
   .envir = parent.frame()
 )
 
-msg_verbose(
-  message,
-  msg_fun = cli::cli_alert_info,
-  ...,
-  .envir = parent.frame()
-)
+msg_verbose(msg_fun = cli::cli_alert, ..., .envir = parent.frame())
 
-msg_debug(message, msg_fun = cli::cli_alert_info, ..., .envir = parent.frame())
+msg_debug(message, msg_fun = cli::cli_alert, ..., .envir = parent.frame())
 
 msg_success(message, ..., .envir = parent.frame())
 
@@ -43,7 +38,7 @@ which the message should be displayed. Options are \code{minimal}, \code{verbose
 \code{debug}.}
 
 \item{msg_fun}{The function to use for writing the message. Most commonly
-from the cli package. Default is \code{cli::cli_alert_info()}.}
+from the cli package. Default is \code{cli::cli_alert()}.}
 
 \item{...}{Additional arguments to pass to \code{msg_fun()}}
 

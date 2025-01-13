@@ -17,9 +17,9 @@ they want to receive.
 zephyr also has utilities to create, get, and document options used in
 your packages.
 
-The scope of zephyr is to be used inside other R packages published
-under the [Novo Nordisk Open
-Source](https://novonordisk-opensource.github.io/R-packages/) umbrella.
+The zephyr package is designed and intended for use within other R
+packages developed and published under the [Novo Nordisk Open
+Source](https://novonordisk-opensource.github.io/R-packages/) ecosystem.
 
 For packages outside our ecosystem, we recommend using the
 [options](https://cran.r-project.org/package=options) package  
@@ -125,7 +125,7 @@ withr::with_options(
   new = list(zephyr.verbosity_level = "debug"),
   code = foo()
 )
-#> ℹ Some important debug information about the function
+#> → Some important debug information about the function
 #> ℹ Starting calculations
 #> ✔ Output created
 #> [1] 2
