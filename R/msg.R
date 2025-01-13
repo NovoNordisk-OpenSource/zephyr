@@ -1,143 +1,149 @@
 #' Write messages based on verbosity level
 #'
 #' @description
+#' The `msg()` function is a general utility function for writing messages to
+#' the console based on the [verbosity_level] set for your session and package.
 #'
-#' The `msg` function is a general function for writing messages to the console
-#' based on options set using the [options] package. As a default, an option
-#' called `verbosity_level` set in the package defining a function calling `msg`
-#' is used. If a global option with prefix `zephyr.` is set, it will overwrite
-#' the package level option.
+#' For simple messages in your functions the recommended approach is to use the
+#' following wrappers for consistency across packages:
 #'
-#' Valid values are `quiet`, `verbose` and `debug`.
-#' `verbose` is used in `levels_to_write` vector argument when the developer
-#' wants to inform the user about something. `debug` is ised when the developer
-#' wants to give the user extra information that can help with debugging. See
-#' example for possible use case.
+#' - `msg_success()`: To indicate a successful operation. Wrapper around `msg()`
+#' using `cli::cli_alert_success()` to display the message.
+#' - `msg_danger()`: To indicate a failed operation. Wrapper around `msg()`
+#' using `cli::cli_alert_danger()` to display the message.
+#' - `msg_warning()`: To indicate a warning. Wrapper around `msg_verbose()`
+#' using `cli::cli_alert_warning()` to display the message.
+#' - `msg_info()`: To provide additional information. Wrapper around
+#' `msg_verbose()` using `cli::cli_alert_info()` to display the message.
 #'
-#' @param message `character` of message to write
-#' @param levels_to_write `character` vector of levels of verbosity for which
-#' to display the message. Valid values are `quiet`, `verbose` and `debug`
-#' @param msg_fun `function` taking `message` as first argument. Usually a
-#' `cli_...` function
-#' @param ... Additional arguments passed to `msg_fun`
-#' @param verbosity_level The verbosity level to use. If `NULL`, the function
-#' will use the `which` argument to determine the environment in which to find
-#' and option called `verbosity_level`. By default, it will look in the environment
-#' of the function calling `msg(_...)`. If no option is set in this calling
-#' environment, it will look in the `zephyr` namespace.
-#' @param which `integer` passed to [sys.function()] in case `verbosity_level = NULL`.
-#' Default is -1, meaning it will look in the environment of the function calling `msg(_...)`.
-#' @param .envir `environment` passed to `msg_fun`
+#' For more control of how the messages are displayed use:
 #'
-#' @details
-#' The `msg` function is a general function, which can be used to write messages
-#' based on options.
+#' - `msg()`: To write messages using custom `msg_fun` functions and define your
+#' own verbosity levels to write.
+#' - `msg_verbose()`: To write verbose messages with a custom `msg_fun`.
+#' - `msg_debug()`: To to report messages only relevant when debugging.
 #'
-#' The `msg_debug` function is a wrapper around `msg` with
-#' `levels_to_write = "debug"` and `msg_fun = cli::cli_inform`, while the
-#' `msg_success` function is a wrapper around `msg` with
-#' `levels_to_write = c("verbose", "debug")` and `msg_fun = cli::cli_alert_success`.
+#' For more information on the verbosity levels, see [verbosity_level].
 #'
-#' @return None
+#' @param message `character` string with the text to display.
+#' @param levels_to_write `character` vector with the verbosity levels for
+#' which the message should be displayed. Options are `minimal`, `verbose`, and
+#' `debug`.
+#' @param msg_fun The function to use for writing the message. Most commonly
+#' from the cli package. Default is `cli::cli_alert()`.
+#' @param ... Additional arguments to pass to `msg_fun()`
+#' @param .envir The `environment` to use for evaluating the verbosity level.
+#' Default `parent.frame()` will be sufficient for most use cases. Parsed on to
+#' `msg_fun()`.
+#'
+#' @return Return from `msg_fun()`
 #'
 #' @examples
-#' filter_data <- function(data, infilter, ...) {
-#'
-#'   #Defusing the filter arguments
-#'   infilter_e <- rlang::enquo(infilter)
-#'   infilter_lb <- rlang::as_label(infilter_e)
-#'
-#'   msg("Attempting to filter {.field data} by {.field {infilter_lb}}",
-#'     levels_to_write = c("verbose", "debug"),
-#'     msg_fun = cli::cli_h2)
-#'
-#'   #Adding a debug message that only will appear if verbosity level is set to
-#'   "debug"
-#'   msg_debug("Trying to filter data")
-#'
-#'   data |>
-#'     dplyr::filter({{infilter}})
-#'
-#'   msg_success("Data filtered by {.field {infilter_lb}}")
-#'  }
-#'
-#' withr::with_options(
-#' list(zephyr.verbosity_level = "verbose"),
-#'      filter_data(data = cars, infilter = speed > 12)
-#' )
-#'
-#' withr::with_options(
-#'   list(zephyr.verbosity_level = "debug"),
-#'        filter_data(data = cars, infilter = speed > 12)
-#' )
-#'
+#' msg("General message")
+#' msg_success("Operation successful")
+#' msg_danger("Operation failed")
+#' msg_warning("Warning message")
+#' msg_info("Additional information")
 #' @export
-msg <- function(message,
-                levels_to_write = c("verbose", "debug"),
-                msg_fun = cli::cli_alert_info,
-                ...,
-                verbosity_level = NULL,
-                which = -1,
-                .envir = parent.frame()) {
-  # TODO add a destination argument to control whether to write to console,
-  # write to a file, etc.
+msg <- function(
+    message,
+    levels_to_write = c("minimal", "verbose", "debug"),
+    msg_fun = cli::cli_alert,
+    ...,
+    .envir = parent.frame()) {
+  levels_to_write <- rlang::arg_match(arg = levels_to_write, multiple = TRUE)
 
-  match.arg(levels_to_write,
-            choices = c("quiet", "verbose", "debug"),
-            several.ok = TRUE)
-
-  if (is.null(verbosity_level)) {
-    # Is msg called within another function call?
-    called_within <- length(sys.calls()) > 1
-
-    # If msg is called within another function definition, get the environment
-    # of that function
-    if (called_within) {
-      ns_of_fun <- environment(sys.function(which = which))
-    } else {
-      ns_of_fun <- getNamespace("zephyr")
-    }
-
-    # Get value of option
-    verbosity_level <- get_verbosity_level(env = ns_of_fun)
+  if (!get_verbosity_level() %in% levels_to_write) {
+    return(invisible())
   }
 
-
-  if (verbosity_level %in% levels_to_write) {
-    msg_fun(message, ..., .envir = .envir)
-  }
-
-  invisible()
+  msg_fun(message, ..., .envir = .envir)
 }
 
 #' @rdname msg
 #' @export
-msg_debug <- function(message,
-                      ...,
-                      verbosity_level = NULL,
-                      which = -1,
-                      .envir = parent.frame()) {
-  msg(message,
-      levels_to_write = "debug",
-      msg_fun = cli::cli_inform,
-      ...,
-      verbosity_level = verbosity_level,
-      which = -1 + which,
-      .envir = .envir)
+msg_verbose <- function(
+    message,
+    msg_fun = cli::cli_alert,
+    ...,
+    .envir = parent.frame()) {
+  msg(
+    message,
+    levels_to_write = c("verbose", "debug"),
+    msg_fun = msg_fun,
+    ...,
+    .envir = .envir
+  )
 }
 
 #' @rdname msg
 #' @export
-msg_success <- function(message,
-                        ...,
-                        verbosity_level = NULL,
-                        which = -1,
-                        .envir = parent.frame()) {
-  msg(message,
-      levels_to_write = c("verbose", "debug"),
-      msg_fun = cli::cli_alert_success,
-      ...,
-      verbosity_level = verbosity_level,
-      which = -1 + which,
-      .envir = .envir)
+msg_debug <- function(
+    message,
+    msg_fun = cli::cli_alert,
+    ...,
+    .envir = parent.frame()) {
+  msg(
+    message,
+    levels_to_write = "debug",
+    msg_fun = msg_fun,
+    ...,
+    .envir = .envir
+  )
+}
+
+#' @rdname msg
+#' @export
+msg_success <- function(
+    message,
+    ...,
+    .envir = parent.frame()) {
+  msg(
+    message = message,
+    msg_fun = cli::cli_alert_success,
+    ...,
+    .envir = .envir
+  )
+}
+
+#' @rdname msg
+#' @export
+msg_danger <- function(
+    message,
+    ...,
+    .envir = parent.frame()) {
+  msg(
+    message = message,
+    msg_fun = cli::cli_alert_danger,
+    ...,
+    .envir = .envir
+  )
+}
+
+#' @rdname msg
+#' @export
+msg_warning <- function(
+    message,
+    ...,
+    .envir = parent.frame()) {
+  msg_verbose(
+    message = message,
+    msg_fun = cli::cli_alert_warning,
+    ...,
+    .envir = .envir
+  )
+}
+
+#' @rdname msg
+#' @export
+msg_info <- function(
+    message,
+    ...,
+    .envir = parent.frame()) {
+  msg_verbose(
+    message = message,
+    msg_fun = cli::cli_alert_info,
+    ...,
+    .envir = .envir
+  )
 }

@@ -4,11 +4,11 @@
 \name{zephyr-package}
 \alias{zephyr}
 \alias{zephyr-package}
-\title{zephyr: Tools for Informing Users Based on Package Options}
+\title{zephyr: Tools for Informing Users and Control Options}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Tools for helping developers of R packages inform their users. Package enables writing messages based on package level options.
+Tools for helping developers of R packages to create consistent messages for their users and enables a streamlined control of options in their packages.
 }
 \seealso{
 Useful links:

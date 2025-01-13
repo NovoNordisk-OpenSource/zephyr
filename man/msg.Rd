@@ -2,112 +2,84 @@
 % Please edit documentation in R/msg.R
 \name{msg}
 \alias{msg}
+\alias{msg_verbose}
 \alias{msg_debug}
 \alias{msg_success}
+\alias{msg_danger}
+\alias{msg_warning}
+\alias{msg_info}
 \title{Write messages based on verbosity level}
 \usage{
 msg(
   message,
-  levels_to_write = c("verbose", "debug"),
-  msg_fun = cli::cli_alert_info,
+  levels_to_write = c("minimal", "verbose", "debug"),
+  msg_fun = cli::cli_alert,
   ...,
-  verbosity_level = NULL,
-  which = -1,
   .envir = parent.frame()
 )
 
-msg_debug(
-  message,
-  ...,
-  verbosity_level = NULL,
-  which = -1,
-  .envir = parent.frame()
-)
+msg_verbose(message, msg_fun = cli::cli_alert, ..., .envir = parent.frame())
 
-msg_success(
-  message,
-  ...,
-  verbosity_level = NULL,
-  which = -1,
-  .envir = parent.frame()
-)
+msg_debug(message, msg_fun = cli::cli_alert, ..., .envir = parent.frame())
+
+msg_success(message, ..., .envir = parent.frame())
+
+msg_danger(message, ..., .envir = parent.frame())
+
+msg_warning(message, ..., .envir = parent.frame())
+
+msg_info(message, ..., .envir = parent.frame())
 }
 \arguments{
-\item{message}{\code{character} of message to write}
+\item{message}{\code{character} string with the text to display.}
 
-\item{levels_to_write}{\code{character} vector of levels of verbosity for which
-to display the message. Valid values are \code{quiet}, \code{verbose} and \code{debug}}
+\item{levels_to_write}{\code{character} vector with the verbosity levels for
+which the message should be displayed. Options are \code{minimal}, \code{verbose}, and
+\code{debug}.}
 
-\item{msg_fun}{\code{function} taking \code{message} as first argument. Usually a
-\code{cli_...} function}
+\item{msg_fun}{The function to use for writing the message. Most commonly
+from the cli package. Default is \code{cli::cli_alert()}.}
 
-\item{...}{Additional arguments passed to \code{msg_fun}}
+\item{...}{Additional arguments to pass to \code{msg_fun()}}
 
-\item{verbosity_level}{The verbosity level to use. If \code{NULL}, the function
-will use the \code{which} argument to determine the environment in which to find
-and option called \code{verbosity_level}. By default, it will look in the environment
-of the function calling \verb{msg(_...)}. If no option is set in this calling
-environment, it will look in the \code{zephyr} namespace.}
-
-\item{which}{\code{integer} passed to \code{\link[=sys.function]{sys.function()}} in case \code{verbosity_level = NULL}.
-Default is -1, meaning it will look in the environment of the function calling \verb{msg(_...)}.}
-
-\item{.envir}{\code{environment} passed to \code{msg_fun}}
+\item{.envir}{The \code{environment} to use for evaluating the verbosity level.
+Default \code{parent.frame()} will be sufficient for most use cases. Parsed on to
+\code{msg_fun()}.}
 }
 \value{
-None
+Return from \code{msg_fun()}
 }
 \description{
-The \code{msg} function is a general function for writing messages to the console
-based on options set using the \link{options} package. As a default, an option
-called \code{verbosity_level} set in the package defining a function calling \code{msg}
-is used. If a global option with prefix \code{zephyr.} is set, it will overwrite
-the package level option.
+The \code{msg()} function is a general utility function for writing messages to
+the console based on the \link{verbosity_level} set for your session and package.
 
-Valid values are \code{quiet}, \code{verbose} and \code{debug}.
-\code{verbose} is used in \code{levels_to_write} vector argument when the developer
-wants to inform the user about something. \code{debug} is ised when the developer
-wants to give the user extra information that can help with debugging. See
-example for possible use case.
+For simple messages in your functions the recommended approach is to use the
+following wrappers for consistency across packages:
+\itemize{
+\item \code{msg_success()}: To indicate a successful operation. Wrapper around \code{msg()}
+using \code{cli::cli_alert_success()} to display the message.
+\item \code{msg_danger()}: To indicate a failed operation. Wrapper around \code{msg()}
+using \code{cli::cli_alert_danger()} to display the message.
+\item \code{msg_warning()}: To indicate a warning. Wrapper around \code{msg_verbose()}
+using \code{cli::cli_alert_warning()} to display the message.
+\item \code{msg_info()}: To provide additional information. Wrapper around
+\code{msg_verbose()} using \code{cli::cli_alert_info()} to display the message.
 }
-\details{
-The \code{msg} function is a general function, which can be used to write messages
-based on options.
 
-The \code{msg_debug} function is a wrapper around \code{msg} with
-\code{levels_to_write = "debug"} and \code{msg_fun = cli::cli_inform}, while the
-\code{msg_success} function is a wrapper around \code{msg} with
-\code{levels_to_write = c("verbose", "debug")} and \code{msg_fun = cli::cli_alert_success}.
+For more control of how the messages are displayed use:
+\itemize{
+\item \code{msg()}: To write messages using custom \code{msg_fun} functions and define your
+own verbosity levels to write.
+\item \code{msg_verbose()}: To write verbose messages with a custom \code{msg_fun}.
+\item \code{msg_debug()}: To to report messages only relevant when debugging.
+}
+
+For more information on the verbosity levels, see \link{verbosity_level}.
 }
 \examples{
-filter_data <- function(data, infilter, ...) {
-
-  #Defusing the filter arguments
-  infilter_e <- rlang::enquo(infilter)
-  infilter_lb <- rlang::as_label(infilter_e)
-
-  msg("Attempting to filter {.field data} by {.field {infilter_lb}}",
-    levels_to_write = c("verbose", "debug"),
-    msg_fun = cli::cli_h2)
-
-  #Adding a debug message that only will appear if verbosity level is set to
-  "debug"
-  msg_debug("Trying to filter data")
-
-  data |>
-    dplyr::filter({{infilter}})
-
-  msg_success("Data filtered by {.field {infilter_lb}}")
- }
-
-withr::with_options(
-list(zephyr.verbosity_level = "verbose"),
-     filter_data(data = cars, infilter = speed > 12)
-)
-
-withr::with_options(
-  list(zephyr.verbosity_level = "debug"),
-       filter_data(data = cars, infilter = speed > 12)
-)
-
+msg("General message")
+msg_success("Operation successful")
+msg_danger("Operation failed")
+msg_warning("Warning message")
+msg_info("Additional information")
 }

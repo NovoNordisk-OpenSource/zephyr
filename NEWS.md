@@ -1,7 +1,4 @@
-# zephyr 0.0.2
+# zephyr 0.0.4.9000
 
-* Update for internal release on R version 4.4.1
-
-# zephyr 0.0.1
-
-* Added initial tools for writing messages to console based on package options
+* Initial release to CRAN.
+* Tools for writing messages based on `verbosity_level`.

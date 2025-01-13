@@ -1,5 +1,4 @@
 test_that("report assertions", {
-
   add_numbers <- function(a, b) {
     collection <- checkmate::makeAssertCollection()
     checkmate::assert_numeric(x = a, add = collection)
@@ -24,5 +23,4 @@ test_that("report assertions", {
   err$body |>
     as.character() |>
     expect_equal(c("Variable 'b': Must be of type 'numeric', not 'character'."))
-
 })

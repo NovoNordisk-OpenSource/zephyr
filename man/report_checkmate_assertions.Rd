@@ -6,24 +6,28 @@
 \usage{
 report_checkmate_assertions(
   collection,
-  msg = "Invalid input(s):",
-  env = parent.frame()
+  message = "Invalid input(s):",
+  .envir = parent.frame()
 )
 }
 \arguments{
-\item{collection}{A collection of assertions created with \code{\link[checkmate:AssertCollection]{checkmate::makeAssertCollection()}}}
+\item{collection}{\verb{[AssertCollection]} A collection of assertions created
+with \code{\link[checkmate:AssertCollection]{checkmate::makeAssertCollection()}}.}
 
-\item{msg}{\code{\link[=character]{character()}} Header of the error message if any assertions failed}
+\item{message}{\verb{[character(1)]} string with the header of the error message
+if any assertions failed}
 
-\item{env}{\code{\link[=environment]{environment()}} Environment to use for the error message}
+\item{.envir}{The \verb{[environment]} to use for the error message.
+Default \code{parent.frame()} will be sufficient for most use cases.}
 }
 \description{
-Improved reporting of \code{AssertCollections} created with the \code{\link[checkmate:AssertCollection]{checkmate::makeAssertCollection()}} package
-using \code{\link[cli:cli_abort]{cli::cli_abort()}} instead of \code{\link[checkmate:AssertCollection]{checkmate::reportAssertions()}} in order to provide a more
+Improved reporting of an \code{AssertCollection} created with the
+\code{\link[checkmate:AssertCollection]{checkmate::makeAssertCollection()}} using \code{\link[cli:cli_abort]{cli::cli_abort()}} instead of
+\code{\link[checkmate:AssertCollection]{checkmate::reportAssertions()}} in order to provide a more
 informative error message.
 
-The function is intended to be used inside a function that performs assertions on its input arguments.
-See below for an example.
+The function is intended to be used inside a function that performs
+assertions on its input arguments.
 }
 \examples{
 add_numbers <- function(a, b) {

@@ -1,78 +1,54 @@
-test_that("msg functions are muted with verbosity_level = 'quiet'", {
-  expect_no_message(msg("test", verbosity_level = "quiet"))
-  expect_no_message(msg_success("test", verbosity_level = "quiet"))
-  expect_no_message(msg_debug("test", verbosity_level = "quiet"))
+test_that("Default verbosity work as intented", {
+  msg("This gives a message because default verbosity level is verbose") |>
+    expect_message()
+
+  msg_verbose("This gives a message for the same reason") |>
+    expect_message()
+
+  msg_debug("But this one does not!") |>
+    expect_no_message()
+
+  msg_success("Succeses are also shown when verbosity is verbose") |>
+    expect_message()
+
+  msg_danger("And so are dangers,") |>
+    expect_message()
+
+  msg_warning("warnings,") |>
+    expect_message()
+
+  msg_info("And info messages!") |>
+    expect_message()
 })
 
-test_that("msg_debug is mutes when verbosity_level = 'verbose'", {
-  expect_message(msg("test", verbosity_level = "verbose"),
-                 "test")
-  expect_message(msg_success("test", verbosity_level = "verbose"),
-                 "test")
-  expect_no_message(msg_debug("test", verbosity_level = "verbose"))
+test_that("Minimal verbosity has the expected behaviour", {
+  withr::local_options(list(zephyr.verbosity_level = "minimal"))
+
+  msg("This gives a message for everything except quiet") |>
+    expect_message()
+
+  msg_verbose("This needs to be verbose or debug") |>
+    expect_no_message()
+
+  msg_debug("And thgis needs debug") |>
+    expect_no_message()
+
+  msg_success("Succeses are shown for minimal verbosity") |>
+    expect_message()
+
+  msg_danger("And so are dangers") |>
+    expect_message()
+
+  msg_warning("But not not warnings") |>
+    expect_no_message()
+
+  msg_info("or info messages!") |>
+    expect_no_message()
 })
 
-test_that("msg functions write messages with verbosity_level = 'debug'", {
-  expect_message(msg("test", verbosity_level = "debug"),
-                 "test")
-  expect_message(msg_success("test", verbosity_level = "debug"),
-                 "test")
-  expect_message(msg_debug("test", verbosity_level = "debug"),
-                 "test")
-})
+test_that("Quiet gives no messages", {
+  withr::local_options(list(zephyr.verbosity_level = "quiet"))
 
-#####
-# Using options to set verbosity level when used inside function in another
-# environment
-
-# Using helper function to create an environment with a function and set
-# verbosity.level inside to mimic having a package foo_pkg with function foo
-foo_pkg <- create_env_with_fun("foo",
-                               message = "test")
-
-test_that("verbosity_level is automatically chosen as value of option in calling function's environment", {
-  withr::with_options(list(foo_pkg.verbosity_level = "quiet"), {
-    expect_no_message(foo_pkg$foo())
-  })
-
-  withr::with_envvar(list(R_FOO_PKG_VERBOSITY_LEVEL = "quiet"), {
-    expect_no_message(foo_pkg$foo())
-  })
-
-  withr::with_options(list(foo_pkg.verbosity_level = "quiet"), {
-    withr::with_envvar(list(FOO_PKG_VERBOSITY_LEVEL = "verbose"), {
-      expect_no_message(foo_pkg$foo())
-    })
-  })
-
-  withr::with_options(list(foo_pkg.verbosity_level = "verbose"), {
-    expect_message(foo_pkg$foo(), "test")
-  })
-
-  withr::with_options(list(foo_pkg.verbosity_level = "verbose"), {
-    expect_message(foo_pkg$foo(msg_fun = msg_success), "test")
-  })
-
-  withr::with_options(list(foo_pkg.verbosity_level = "verbose"), {
-    expect_no_message(foo_pkg$foo(msg_fun = msg_debug))
-  })
-
-  withr::with_options(list(foo_pkg.verbosity_level = "debug"), {
-    expect_message(foo_pkg$foo(), "test")
-  })
-
-  withr::with_options(list(foo_pkg.verbosity_level = "debug"), {
-    expect_message(foo_pkg$foo(msg_fun = msg_debug), "test")
-  })
-})
-
-
-test_that("verbosity_level can be overwritten by zephyr level option", {
-  withr::with_options(list(
-    zephyr.verbosity_level = "quiet",
-    foo_pkg.verbosity_level = "verbose"
-  ),
-  {
-    expect_no_message(foo_pkg$foo())
-  })
+  msg("This gives a message for everything except quiet") |>
+    expect_no_message()
 })
