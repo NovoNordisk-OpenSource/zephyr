@@ -64,7 +64,7 @@
 <!-- badges: end -->
 <p>The zephyr package provides small functionalities for developers of R packages to inform users about progress and issues, while at the same time allowing the users to easily configure the amount of information they want to receive.</p>
 <p>zephyr also has utilities to create, get, and document options used in your packages.</p>
-<p>The scope of zephyr is to be used inside other R packages published under the <a href="https://novonordisk-opensource.github.io/R-packages/" class="external-link">Novo Nordisk Open Source</a> umbrella.</p>
+<p>The zephyr package is designed and intended for use within other R packages developed and published under the <a href="https://novonordisk-opensource.github.io/R-packages/" class="external-link">Novo Nordisk Open Source</a> ecosystem.</p>
 <p>For packages outside our ecosystem, we recommend using the <a href="https://cran.r-project.org/package=options" class="external-link">options</a> package<br>
 instead for a more complete implementation of package options.</p>
 <div class="section level2">
@@ -140,7 +140,7 @@ instead for a more complete implementation of package options.</p>
 <span>  new <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>zephyr.verbosity_level <span class="op">=</span> <span class="st">"debug"</span><span class="op">)</span>,</span>
 <span>  code <span class="op">=</span> <span class="fu">foo</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; ℹ Some important debug information about the function</span></span>
+<span><span class="co">#&gt; → Some important debug information about the function</span></span>
 <span><span class="co">#&gt; ℹ Starting calculations</span></span>
 <span><span class="co">#&gt; ✔ Output created</span></span>
 <span><span class="co">#&gt; [1] 2</span></span></code></pre></div>
