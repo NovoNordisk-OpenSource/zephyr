@@ -63,6 +63,7 @@ msg <- function(
 #' @rdname msg
 #' @export
 msg_verbose <- function(
+    message,
     msg_fun = cli::cli_alert,
     ...,
     .envir = parent.frame()) {

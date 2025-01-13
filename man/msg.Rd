@@ -18,7 +18,7 @@ msg(
   .envir = parent.frame()
 )
 
-msg_verbose(msg_fun = cli::cli_alert, ..., .envir = parent.frame())
+msg_verbose(message, msg_fun = cli::cli_alert, ..., .envir = parent.frame())
 
 msg_debug(message, msg_fun = cli::cli_alert, ..., .envir = parent.frame())
 
