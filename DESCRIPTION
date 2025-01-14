@@ -1,6 +1,6 @@
 Package: zephyr
 Title: Tools for Informing Users and Control Options
-Version: 0.0.4.9000
+Version: 0.0.4.9001
 Authors@R: c(
     person("Aksel", "Thomsen", , "oath@novonordisk.com", role = c("aut", "cre")),
     person("Mathias Lerbech", "Jeppesen", , "nmlj@novonordisk.com", role = "aut"),

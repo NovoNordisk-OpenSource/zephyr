@@ -15,12 +15,14 @@ NULL
 zephyr::create_option(
   name = "verbosity_level",
   default = NA_character_,
-  desc = "Verbosity level for functions in {pkg}. See [zephyr::verbosity_level] for details."
+  desc = "Verbosity level for functions in {pkg}. See [zephyr::verbosity_level] for details." # nolint: line_length_linter
 )
 
+# nolint start
 # To add more descriptions:
 # zephyr::create_option(
 #   name = "demo",
 #   default = "default",
 #   desc = "my description"
 # )
+# nolint end

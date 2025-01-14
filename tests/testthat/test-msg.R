@@ -1,4 +1,4 @@
-test_that("Default verbosity work as intented", {
+test_that("Default verbosity work as intended", {
   msg("This gives a message because default verbosity level is verbose") |>
     expect_message()
 
@@ -8,7 +8,7 @@ test_that("Default verbosity work as intented", {
   msg_debug("But this one does not!") |>
     expect_no_message()
 
-  msg_success("Succeses are also shown when verbosity is verbose") |>
+  msg_success("Successes are also shown when verbosity is verbose") |>
     expect_message()
 
   msg_danger("And so are dangers,") |>
@@ -21,7 +21,7 @@ test_that("Default verbosity work as intented", {
     expect_message()
 })
 
-test_that("Minimal verbosity has the expected behaviour", {
+test_that("Minimal verbosity has the expected behavior", {
   withr::local_options(list(zephyr.verbosity_level = "minimal"))
 
   msg("This gives a message for everything except quiet") |>
@@ -30,10 +30,10 @@ test_that("Minimal verbosity has the expected behaviour", {
   msg_verbose("This needs to be verbose or debug") |>
     expect_no_message()
 
-  msg_debug("And thgis needs debug") |>
+  msg_debug("And this needs debug") |>
     expect_no_message()
 
-  msg_success("Succeses are shown for minimal verbosity") |>
+  msg_success("Successes are shown for minimal verbosity") |>
     expect_message()
 
   msg_danger("And so are dangers") |>
