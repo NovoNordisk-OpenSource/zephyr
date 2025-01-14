@@ -12,6 +12,8 @@ test_that("use_zephyr", {
 
   usethis::with_project(mypkg, {
     use_zephyr() |>
+      expect_invisible() |>
+      expect_true() |>
       expect_snapshot()
 
     file.exists("R/mypkg-options.R") |>

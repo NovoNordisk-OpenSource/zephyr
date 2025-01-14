@@ -4,7 +4,7 @@ template:
 reference:
   - title: Messages and verbosity levels
     description: |
-      Functions to provide concistent messages to users across our packages,
+      Functions to provide consistent messages to users across our packages,
       including the handling of different levels of verbosity, and utility
       functions to retrieve the current verbosity level.
     contents:

@@ -32,10 +32,12 @@ use_zephyr <- function() {
   usethis::edit_file(path = path)
 
   cli::cli_alert_info("Add new options with {.code zephyr::create_option()}.")
-  cli::cli_alert(
-    "And reuse their documentation with in functions with {.code @inheritParams {pkgname}-options-params}." # nolint
+  cli::cli_alert_info(
+    "And reuse their documentation with in functions with {.code @inheritParams {pkgname}-options-params}." # nolint: line_length_linter
   )
-  cli::cli_alert(
+  cli::cli_alert_info(
     "Run {.run devtools::document()} to update documentation."
   )
+
+  return(invisible(TRUE))
 }
