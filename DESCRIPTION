@@ -1,5 +1,5 @@
 Package: zephyr
-Title: Tools for Informing Users and Control Options
+Title: Structured Messages and Options
 Version: 0.0.4.9000
 Authors@R: c(
     person("Aksel", "Thomsen", , "oath@novonordisk.com", role = c("aut", "cre")),
@@ -11,9 +11,8 @@ Authors@R: c(
     person("Vladimir", "Obucina", , "vlob@novonordisk.com", role = "aut"),
     person("Novo Nordisk A/S", role = "cph")
   )
-Description: Tools for helping developers of R packages to create consistent
-  messages for their users and enables a streamlined control of options
-  in their packages.
+Description: Provides a structured framework for consistent user communication and
+    configuration management for package developers.
 License: Apache License (>= 2)
 URL: https://novonordisk-opensource.github.io/zephyr/,
     https://github.com/NovoNordisk-OpenSource/zephyr
