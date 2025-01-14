@@ -14,7 +14,8 @@ Provides a structured framework for consistent user communication and configurat
 Useful links:
 \itemize{
   \item \url{https://novonordisk-opensource.github.io/zephyr/}
-  \item \url{https://github.com/NovoNordisk-OpenSource/zephyr}
+  \item \url{https://github.com/novonordisk-opensource/zephyr}
+  \item Report bugs at \url{https://github.com/novonordisk-opensource/zephyr/issues}
 }
 
 }

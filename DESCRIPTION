@@ -11,11 +11,12 @@ Authors@R: c(
     person("Vladimir", "Obucina", , "vlob@novonordisk.com", role = "aut"),
     person("Novo Nordisk A/S", role = "cph")
   )
-Description: Provides a structured framework for consistent user communication and
-    configuration management for package developers.
+Description: Provides a structured framework for consistent user
+    communication and configuration management for package developers.
 License: Apache License (>= 2)
 URL: https://novonordisk-opensource.github.io/zephyr/,
-    https://github.com/NovoNordisk-OpenSource/zephyr
+    https://github.com/novonordisk-opensource/zephyr
+BugReports: https://github.com/novonordisk-opensource/zephyr/issues
 Imports: 
     cli,
     glue,
