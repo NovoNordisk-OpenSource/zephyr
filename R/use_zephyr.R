@@ -9,6 +9,10 @@
 #' This code also creates an package specific `verbosity_level` option,
 #' enabling you to control the verbosity of your package functions using
 #' the [msg] functions.
+#' @returns `invisible(TRUE)`
+#' @examplesIf FALSE
+#' use_zephyr()
+#'
 #' @export
 use_zephyr <- function() {
   cli::cli_h1("Setting up {.pkg zephyr}")

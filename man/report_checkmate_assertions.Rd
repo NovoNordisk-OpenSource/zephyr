@@ -20,6 +20,9 @@ if any assertions failed}
 \item{.envir}{The \verb{[environment]} to use for the error message.
 Default \code{parent.frame()} will be sufficient for most use cases.}
 }
+\value{
+\code{invisible(TRUE)}
+}
 \description{
 Improved reporting of an \code{AssertCollection} created with the
 \code{\link[checkmate:AssertCollection]{checkmate::makeAssertCollection()}} using \code{\link[cli:cli_abort]{cli::cli_abort()}} instead of

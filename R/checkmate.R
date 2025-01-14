@@ -13,6 +13,7 @@
 #' if any assertions failed
 #' @param .envir The `[environment]` to use for the error message.
 #' Default `parent.frame()` will be sufficient for most use cases.
+#' @returns `invisible(TRUE)`
 #' @examples
 #' add_numbers <- function(a, b) {
 #'   collection <- checkmate::makeAssertCollection()

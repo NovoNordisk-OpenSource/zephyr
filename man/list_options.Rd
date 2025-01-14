@@ -23,6 +23,9 @@ each option.
 \item{.envir}{Environment in which the options are defined.
 Default is suitable for use inside your package.}
 }
+\value{
+\code{list} or \code{character} depending on \code{as}
+}
 \description{
 List all \code{zephyr_options} specified in a package. Either as an \code{list} or as
 as \code{character} vector formatted for use in your package documentation.

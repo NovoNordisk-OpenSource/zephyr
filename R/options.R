@@ -144,6 +144,7 @@ get_option <- function(name, .envir = sys.function(which = -1)) {
 #' each option.
 #' @param .envir Environment in which the options are defined.
 #' Default is suitable for use inside your package.
+#' @returns `list` or `character` depending on `as`
 #' @examples
 #' # List all options in zephyr
 #' x <- list_options(.envir = "zephyr")
