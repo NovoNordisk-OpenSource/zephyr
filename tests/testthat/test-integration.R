@@ -24,6 +24,7 @@ test_that("integration in new package", {
   skip_if_not_installed("withr")
   skip_if_not_installed("usethis")
   skip_if_not_installed("devtools")
+  skip_on_os("windows")
 
   # Settings
 
@@ -50,8 +51,8 @@ test_that("integration in new package", {
     pkg <- file.path(pkg, "zephyr")
   }
 
-  run_output( # nolint: brace_linter
-    \(p) devtools::install(
+  run_output(
+    \(p) devtools::install( # nolint: brace_linter
       pkg = p,
       quiet = TRUE,
       quick = TRUE
@@ -88,6 +89,7 @@ test_that("use in new package", {
   skip_if_not_installed("usethis")
   skip_if_not_installed("devtools")
   skip_if_not_installed("callr")
+  skip_on_os("windows")
 
   run_output(\() testpkg::greet("there"), libpath) |>
     expect_output("hello there")
