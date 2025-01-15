@@ -17,10 +17,12 @@ License: Apache License (>= 2)
 URL: https://novonordisk-opensource.github.io/zephyr/,
     https://github.com/novonordisk-opensource/zephyr
 BugReports: https://github.com/novonordisk-opensource/zephyr/issues
+Depends: 
+    R (>= 4.1)
 Imports: 
     cli,
     glue,
-    rlang
+    rlang (>= 1.0.0)
 Suggests: 
     callr,
     checkmate,
