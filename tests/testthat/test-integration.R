@@ -92,7 +92,7 @@ test_that("use in new package", {
   skip_if_not_installed("usethis")
   skip_if_not_installed("devtools")
   skip_if_not_installed("callr")
-  skip_on_os("windows")
+  skip_if(file.exists(file.path(libpath, "testpkg")), "testpkg not installed")
 
   run_output(\() testpkg::greet("there"), libpath) |>
     expect_output("hello there")
