@@ -56,7 +56,7 @@ test_that("integration in new package", {
       quick = TRUE
     ),
     libpath,
-    list(p = pkg)
+    list(p = normalizePath(pkg))
   ) |>
     expect_true()
 
