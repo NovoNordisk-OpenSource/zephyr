@@ -24,7 +24,6 @@ test_that("integration in new package", {
   skip_if_not_installed("withr")
   skip_if_not_installed("usethis")
   skip_if_not_installed("devtools")
-  skip_on_os("windows")
 
   # Settings
 
@@ -47,8 +46,12 @@ test_that("integration in new package", {
 
   # Install zephyr in tmp libpath
   pkg <- file.path(test_path(), "../..")
-  if (!file.exists(file.path(pkg, "DESCRIPTION"))) {
-    pkg <- file.path(pkg, "zephyr")
+  if (file.exists(file.path(pkg, "DESCRIPTION"))) {
+    pkg = "."
+  } else {
+    skip_on_os("windows")
+    pkg <- file.path(pkg, "zephyr") |>
+      normalizePath()
   }
 
   run_output(
@@ -58,7 +61,7 @@ test_that("integration in new package", {
       quick = TRUE
     ),
     libpath,
-    list(p = normalizePath(pkg))
+    list(p = pkg)
   ) |>
     expect_true()
 
