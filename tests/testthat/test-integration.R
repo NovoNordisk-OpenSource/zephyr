@@ -47,7 +47,7 @@ test_that("integration in new package", {
   # Install zephyr in tmp libpath
   pkg <- file.path(test_path(), "../..")
   if (file.exists(file.path(pkg, "DESCRIPTION"))) {
-    pkg = "."
+    pkg <- "."
   } else {
     skip_on_os("windows")
     pkg <- file.path(pkg, "zephyr") |>
