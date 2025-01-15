@@ -10,6 +10,8 @@ test_that("sys_getenv", {
   sys_getenv("fake_env") |>
     expect_null()
 
+  skip_if_not_installed("withr")
+
   withr::with_envvar(
     new = list(myenv = "myvalue"),
     code = {

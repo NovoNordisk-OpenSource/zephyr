@@ -22,6 +22,7 @@ test_that("Default verbosity work as intended", {
 })
 
 test_that("Minimal verbosity has the expected behavior", {
+  skip_if_not_installed("withr")
   withr::local_options(list(zephyr.verbosity_level = "minimal"))
 
   msg("This gives a message for everything except quiet") |>
@@ -47,6 +48,7 @@ test_that("Minimal verbosity has the expected behavior", {
 })
 
 test_that("Quiet gives no messages", {
+  skip_if_not_installed("withr")
   withr::local_options(list(zephyr.verbosity_level = "quiet"))
 
   msg("This gives a message for everything except quiet") |>

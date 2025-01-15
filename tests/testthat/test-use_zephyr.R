@@ -1,4 +1,7 @@
 test_that("use_zephyr", {
+  skip_if_not_installed("withr")
+  skip_if_not_installed("usethis")
+
   rlang::local_interactive(FALSE)
   withr::local_options(usethis.quiet = TRUE)
 

@@ -21,6 +21,9 @@ libpath <- withr::local_tempdir()
 test_that("integration in new package", {
   skip_on_cran()
   skip_on_covr()
+  skip_if_not_installed("withr")
+  skip_if_not_installed("usethis")
+  skip_if_not_installed("devtools")
 
   # Settings
 
@@ -69,6 +72,10 @@ test_that("integration in new package", {
 test_that("use in new package", {
   skip_on_cran()
   skip_on_covr()
+  skip_if_not_installed("withr")
+  skip_if_not_installed("usethis")
+  skip_if_not_installed("devtools")
+  skip_if_not_installed("callr")
 
   run_output(\() testpkg::greet("there"), libpath) |>
     expect_output("hello there")
