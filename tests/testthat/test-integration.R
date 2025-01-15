@@ -48,7 +48,6 @@ test_that("integration in new package", {
   pkg <- normalizePath(test_path(), winslash = "/")
   pkg <- gsub("/tests/testthat$", "", pkg)
   if (grepl("\\.Rcheck$", pkg)) pkg <- file.path(pkg, "zephyr")
-  cat("\n",pkg, "\n")
 
   run_output( # nolint: brace_linter
     \(p) devtools::install(
