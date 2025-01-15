@@ -1,6 +1,6 @@
-run_output <- function(func, extra_lib) {
+run_output <- function(func, extra_lib, args = list()) {
   libpath <- c(extra_lib, .libPaths())
-  callr::r(func = func, show = TRUE, libpath = libpath, spinner = FALSE)
+  callr::r(func = func, args = args, show = TRUE, libpath = libpath, spinner = FALSE)
 }
 
 run_output_project <- function(func, extra_lib, project) {
@@ -45,8 +45,20 @@ test_that("integration in new package", {
   )
 
   # Install zephyr in tmp libpath
+  pkg <- normalizePath(test_path(), winslash = "/")
+  pkg <- gsub("/tests/testthat$", "", pkg)
+  if (grepl("\\.Rcheck$", pkg)) pkg <- file.path(pkg, "zephyr")
+  cat("\n",pkg, "\n")
 
-  run_output(\() devtools::install(quiet = TRUE), libpath) |>
+  run_output( # nolint: brace_linter
+    \(p) devtools::install(
+      pkg = p,
+      quiet = TRUE,
+      quick = TRUE
+    ),
+    libpath,
+    list(p = pkg)
+  ) |>
     expect_true()
 
   # Use in new package
