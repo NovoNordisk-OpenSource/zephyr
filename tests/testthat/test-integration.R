@@ -1,6 +1,12 @@
 run_output <- function(func, extra_lib, args = list()) {
   libpath <- c(extra_lib, .libPaths())
-  callr::r(func = func, args = args, show = TRUE, libpath = libpath, spinner = FALSE)
+  callr::r(
+    func = func,
+    args = args,
+    show = TRUE,
+    libpath = libpath,
+    spinner = FALSE
+  )
 }
 
 run_output_project <- function(func, extra_lib, project) {
@@ -92,7 +98,10 @@ test_that("use in new package", {
   skip_if_not_installed("usethis")
   skip_if_not_installed("devtools")
   skip_if_not_installed("callr")
-  skip_if(file.exists(file.path(libpath, "testpkg")), "testpkg not installed")
+  skip_if(
+    condition = !file.exists(file.path(libpath, "testpkg")),
+    message = "testpkg not installed - expected if test above has been skipped"
+  )
 
   run_output(\() testpkg::greet("there"), libpath) |>
     expect_output("hello there")
