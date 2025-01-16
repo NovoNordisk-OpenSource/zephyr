@@ -29,6 +29,8 @@ test_that("get_option", {
   get_option("test_option", .envir = testenv) |>
     expect_equal(42, info = "Should return default when no option is set")
 
+  skip_if_not_installed("withr")
+
   withr::local_envvar(list(R_TESTENV_TEST_OPTION = "200"))
 
   get_option("test_option", .envir = testenv) |>

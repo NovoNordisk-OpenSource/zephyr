@@ -25,6 +25,15 @@ For packages outside our ecosystem, we recommend using the
 [options](https://cran.r-project.org/package=options) package  
 instead for a more complete implementation of package options.
 
+## Installation
+
+``` r
+# Install the released version from CRAN:
+install.packages("zephyr")
+# Install the development version from GitHub:
+pak::pak("NovoNordisk-OpenSource/zephyr")
+```
+
 ## Use zephyr
 
 The easiest way to use zephyr in your package is to set it up with the

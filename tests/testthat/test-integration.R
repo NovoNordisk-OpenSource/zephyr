@@ -1,6 +1,12 @@
-run_output <- function(func, extra_lib) {
+run_output <- function(func, extra_lib, args = list()) {
   libpath <- c(extra_lib, .libPaths())
-  callr::r(func = func, show = TRUE, libpath = libpath, spinner = FALSE)
+  callr::r(
+    func = func,
+    args = args,
+    show = TRUE,
+    libpath = libpath,
+    spinner = FALSE
+  )
 }
 
 run_output_project <- function(func, extra_lib, project) {
@@ -21,6 +27,9 @@ libpath <- withr::local_tempdir()
 test_that("integration in new package", {
   skip_on_cran()
   skip_on_covr()
+  skip_if_not_installed("withr")
+  skip_if_not_installed("usethis")
+  skip_if_not_installed("devtools")
 
   # Settings
 
@@ -42,8 +51,24 @@ test_that("integration in new package", {
   )
 
   # Install zephyr in tmp libpath
+  pkg <- file.path(test_path(), "../..")
+  if (file.exists(file.path(pkg, "DESCRIPTION"))) {
+    pkg <- "."
+  } else {
+    skip_on_os("windows")
+    pkg <- file.path(pkg, "zephyr") |>
+      normalizePath()
+  }
 
-  run_output(\() devtools::install(quiet = TRUE), libpath) |>
+  run_output(
+    \(p) devtools::install( # nolint: brace_linter
+      pkg = p,
+      quiet = TRUE,
+      quick = TRUE
+    ),
+    libpath,
+    list(p = pkg)
+  ) |>
     expect_true()
 
   # Use in new package
@@ -69,6 +94,14 @@ test_that("integration in new package", {
 test_that("use in new package", {
   skip_on_cran()
   skip_on_covr()
+  skip_if_not_installed("withr")
+  skip_if_not_installed("usethis")
+  skip_if_not_installed("devtools")
+  skip_if_not_installed("callr")
+  skip_if(
+    condition = !file.exists(file.path(libpath, "testpkg")),
+    message = "testpkg not installed - expected if test above has been skipped"
+  )
 
   run_output(\() testpkg::greet("there"), libpath) |>
     expect_output("hello there")

@@ -1,4 +1,6 @@
 test_that("report assertions", {
+  skip_if_not_installed("checkmate")
+
   add_numbers <- function(a, b) {
     collection <- checkmate::makeAssertCollection()
     checkmate::assert_numeric(x = a, add = collection)

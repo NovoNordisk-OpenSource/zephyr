@@ -4,17 +4,18 @@
 \name{zephyr-package}
 \alias{zephyr}
 \alias{zephyr-package}
-\title{zephyr: Tools for Informing Users and Control Options}
+\title{zephyr: Structured Messages and Options}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Tools for helping developers of R packages to create consistent messages for their users and enables a streamlined control of options in their packages.
+Provides a structured framework for consistent user communication and configuration management for package developers.
 }
 \seealso{
 Useful links:
 \itemize{
   \item \url{https://novonordisk-opensource.github.io/zephyr/}
-  \item \url{https://github.com/NovoNordisk-OpenSource/zephyr}
+  \item \url{https://github.com/novonordisk-opensource/zephyr}
+  \item Report bugs at \url{https://github.com/novonordisk-opensource/zephyr/issues}
 }
 
 }

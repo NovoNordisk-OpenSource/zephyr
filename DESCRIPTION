@@ -1,6 +1,6 @@
 Package: zephyr
-Title: Tools for Informing Users and Control Options
-Version: 0.0.4.9001
+Title: Structured Messages and Options
+Version: 0.0.5
 Authors@R: c(
     person("Aksel", "Thomsen", , "oath@novonordisk.com", role = c("aut", "cre")),
     person("Mathias Lerbech", "Jeppesen", , "nmlj@novonordisk.com", role = "aut"),
@@ -11,23 +11,25 @@ Authors@R: c(
     person("Vladimir", "Obucina", , "vlob@novonordisk.com", role = "aut"),
     person("Novo Nordisk A/S", role = "cph")
   )
-Description: Tools for helping developers of R packages to create consistent
-  messages for their users and enables a streamlined control of options
-  in their packages.
+Description: Provides a structured framework for consistent user
+    communication and configuration management for package developers.
 License: Apache License (>= 2)
 URL: https://novonordisk-opensource.github.io/zephyr/,
-    https://github.com/NovoNordisk-OpenSource/zephyr
+    https://github.com/novonordisk-opensource/zephyr
+BugReports: https://github.com/novonordisk-opensource/zephyr/issues
+Depends: 
+    R (>= 4.1)
 Imports: 
     cli,
     glue,
-    rlang
+    rlang (>= 1.0.0)
 Suggests: 
     callr,
     checkmate,
     devtools,
     knitr,
     rmarkdown,
-    testthat (>= 3.0.0),
+    testthat (>= 3.1.5),
     usethis,
     withr
 Config/testthat/edition: 3

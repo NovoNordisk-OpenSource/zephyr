@@ -6,6 +6,9 @@
 \usage{
 use_zephyr()
 }
+\value{
+\code{invisible(TRUE)}
+}
 \description{
 Utility function to set up the use of zephyr options and
 \link{verbosity_level} in your package.
@@ -16,4 +19,9 @@ and document options.
 This code also creates an package specific \code{verbosity_level} option,
 enabling you to control the verbosity of your package functions using
 the \link{msg} functions.
+}
+\examples{
+\dontshow{if (FALSE) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+use_zephyr()
+\dontshow{\}) # examplesIf}
 }

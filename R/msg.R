@@ -36,7 +36,7 @@
 #' Default `parent.frame()` will be sufficient for most use cases. Parsed on to
 #' `msg_fun()`.
 #'
-#' @return Return from `msg_fun()`
+#' @returns Return from `msg_fun()`
 #'
 #' @examples
 #' msg("General message")

@@ -2,6 +2,8 @@ test_that("simple verbosity level", {
   get_verbosity_level() |>
     expect_equal("verbose")
 
+  skip_if_not_installed("withr")
+
   withr::with_options(
     list(zephyr.verbosity_level = "invalid"),
     {
@@ -49,6 +51,8 @@ test_that("verbosity level respects priority hierarchy when used in package", {
   expect_equal(get_verbosity_level(test_env), "verbose")
 
   # Test 2: Package-specific option (highest priority)
+  skip_if_not_installed("withr")
+
   withr::with_options(list(testpkg.verbosity_level = "debug"), {
     expect_equal(get_verbosity_level(test_env), "debug")
   })
@@ -111,6 +115,8 @@ test_that("verbosity level respects priority hierarchy when used in package", {
 test_that("get_all_verbosity_levels", {
   get_all_verbosity_levels() |>
     expect_equal(c(zephyr = "verbose"))
+
+  skip_if_not_installed("withr")
 
   withr::with_namespace(c("cli", "glue"), {
     withr::local_options(list(
