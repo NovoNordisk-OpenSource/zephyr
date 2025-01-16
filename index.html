@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Tools for Informing Users and Control Options • zephyr</title>
+<title>Structured Messages and Options • zephyr</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
@@ -16,9 +16,9 @@
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Tools for Informing Users and Control Options">
-<meta name="description" content="Tools for helping developers of R packages to create consistent messages for their users and enables a streamlined control of options in their packages.">
-<meta property="og:description" content="Tools for helping developers of R packages to create consistent messages for their users and enables a streamlined control of options in their packages.">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Structured Messages and Options">
+<meta name="description" content="Provides a structured framework for consistent user communication and configuration management for package developers.">
+<meta property="og:description" content="Provides a structured framework for consistent user communication and configuration management for package developers.">
 <meta property="og:image" content="https://novonordisk-opensource.github.io/zephyr/logo.png">
 </head>
 <body>
@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="index.html">zephyr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,7 +45,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
 </form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/NovoNordisk-OpenSource/zephyr/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/novonordisk-opensource/zephyr/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -67,6 +67,15 @@
 <p>The zephyr package is designed and intended for use within other R packages developed and published under the <a href="https://novonordisk-opensource.github.io/R-packages/" class="external-link">Novo Nordisk Open Source</a> ecosystem.</p>
 <p>For packages outside our ecosystem, we recommend using the <a href="https://cran.r-project.org/package=options" class="external-link">options</a> package<br>
 instead for a more complete implementation of package options.</p>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Install the released version from CRAN:</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"zephyr"</span><span class="op">)</span></span>
+<span><span class="co"># Install the development version from GitHub:</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"NovoNordisk-OpenSource/zephyr"</span><span class="op">)</span></span></code></pre></div>
+</div>
 <div class="section level2">
 <h2 id="use-zephyr">Use zephyr<a class="anchor" aria-label="anchor" href="#use-zephyr"></a>
 </h2>
@@ -98,7 +107,7 @@ instead for a more complete implementation of package options.</p>
 </h3>
 <p>Let’s say we have a function that does some long and complicated calculations, and creates some output. We want to use zephyr <code><a href="reference/msg.html">msg()</a></code> functions to inform the user of the progress and the result.</p>
 <p>A skeleton to use for that function could be the <code>foo()</code> function below:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">foo</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="reference/msg.html">msg_debug</a></span><span class="op">(</span><span class="st">"Some important debug information about the function"</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="reference/msg.html">msg_info</a></span><span class="op">(</span><span class="st">"Starting calculations"</span><span class="op">)</span></span>
@@ -115,13 +124,13 @@ instead for a more complete implementation of package options.</p>
 <span><span class="op">}</span></span></code></pre></div>
 <p>Here we first provide some debugging information if requested. Then we inform that the calculations are starting. After the calculations, we inform the user if the output was created correctly or not.</p>
 <p>The default <code>verbosity_level</code> in zephyr is <code>verbose</code> which displays all messages expect debugging:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">foo</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ℹ Starting calculations</span></span>
 <span><span class="co">#&gt; ✔ Output created</span></span>
 <span><span class="co">#&gt; [1] 2</span></span></code></pre></div>
 <p>With <code>verbosity_level = "minimal"</code> only <code><a href="reference/msg.html">msg_success()</a></code> and <code><a href="reference/msg.html">msg_danger()</a></code> messages are shown:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_options.html" class="external-link">with_options</a></span><span class="op">(</span></span>
 <span>  new <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>zephyr.verbosity_level <span class="op">=</span> <span class="st">"minimal"</span><span class="op">)</span>,</span>
 <span>  code <span class="op">=</span> <span class="fu">foo</span><span class="op">(</span><span class="op">)</span></span>
@@ -129,7 +138,7 @@ instead for a more complete implementation of package options.</p>
 <span><span class="co">#&gt; ✔ Output created</span></span>
 <span><span class="co">#&gt; [1] 2</span></span></code></pre></div>
 <p>And they can be turned off completely with <code>verbosity_level = "quiet"</code>, while <code>verbosity_level = "debug"</code> gives all messages:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_options.html" class="external-link">with_options</a></span><span class="op">(</span></span>
 <span>  new <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>zephyr.verbosity_level <span class="op">=</span> <span class="st">"quiet"</span><span class="op">)</span>,</span>
 <span>  code <span class="op">=</span> <span class="fu">foo</span><span class="op">(</span><span class="op">)</span></span>
@@ -150,7 +159,8 @@ instead for a more complete implementation of package options.</p>
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/NovoNordisk-OpenSource/zephyr/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/novonordisk-opensource/zephyr/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/novonordisk-opensource/zephyr/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 
