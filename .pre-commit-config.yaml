@@ -52,6 +52,7 @@ repos:
           .*\.svg|
           .*\.ico|
           .*\.webmanifest|
+          CRAN-SUBMISSION|
           )$
     # -   id: lintr
     -   id: readme-rmd-rendered
