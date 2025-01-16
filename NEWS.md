@@ -1,4 +1,5 @@
-# zephyr 0.0.4.9000
+# zephyr 0.1.0
 
 * Initial release to CRAN.
-* Tools for writing messages based on `verbosity_level`.
+* Provides a structured framework for consistent user communication and 
+configuration management for package developers.
