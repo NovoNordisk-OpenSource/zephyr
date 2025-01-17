@@ -1,4 +1,5 @@
 ^.pre-commit-config\.yaml$
+^CRAN-SUBMISSION$
 ^LICENSE\.md$
 ^README\.Rmd$
 ^\.Rproj\.user$
