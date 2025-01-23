@@ -34,7 +34,10 @@ fix_env_class <- function(x, default = x) {
   if (is.null(x) || is.null(default) ||
         isTRUE(all.equal(class(x), class(default)))) {
     return(x)
+  } else if (is.character(x) && !is.vector(default)) {
+    return(eval(parse(text = x)))
   }
+
   if (is.character(x) && is.logical(default)) {
     x <- toupper(x)
     x[x %in% c("Y", "YES", "T")] <- "TRUE"
@@ -49,7 +52,7 @@ coalesce_dots <- function(...) {
   dots <- rlang::list2(...)
   for (i in seq_along(dots)) {
     dot <- dots[[i]]
-    if (!is.null(dot) && !all(is.na(dot))) {
+    if (!is.null(dot) && (!is.vector(dot) || !all(is.na(dot)))) {
       return(dot)
     }
   }

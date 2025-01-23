@@ -179,7 +179,7 @@ list_options <- function(as = c("list", "params", "markdown"),
       vapply(
         FUN = glue::glue_data,
         FUN.VALUE = character(1),
-        "@param {name} {description}. Default: `{default}`.",
+        "@param {name} {description}. Default: `{deparse1(default)}`.",
         USE.NAMES = FALSE
       ),
     "markdown" = options |>
@@ -189,7 +189,7 @@ list_options <- function(as = c("list", "params", "markdown"),
         "
         ## {name}
         {description}
-        * Default: `{default}`
+        * Default: `{deparse1(default)}`
         * Option: `{tolower(environment)}.{name}`
         * Environment: `R_{toupper(environment)}_{toupper(name)}`
         ",
