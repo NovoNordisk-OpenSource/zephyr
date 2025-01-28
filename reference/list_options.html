@@ -13,7 +13,7 @@ the created template as necessary."><meta property="og:image" content="https://n
 
     <a class="navbar-brand me-2" href="../index.html">zephyr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -101,14 +101,14 @@ Default is suitable for use inside your package.</p></dd>
 <span class="r-in"><span><span class="co"># Create @params tag entries for each option</span></span></span>
 <span class="r-in"><span><span class="fu">list_options</span><span class="op">(</span>as <span class="op">=</span> <span class="st">"params"</span>, .envir <span class="op">=</span> <span class="st">"zephyr"</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> @param verbosity_level test. Default: `verbose`.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> @param verbosity_level test. Default: `"verbose"`.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># List options in markdown format</span></span></span>
 <span class="r-in"><span><span class="fu">list_options</span><span class="op">(</span>as <span class="op">=</span> <span class="st">"markdown"</span>, .envir <span class="op">=</span> <span class="st">"zephyr"</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ## verbosity_level</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> test</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> * Default: `verbose`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> * Default: `"verbose"`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> * Option: `zephyr.verbosity_level`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> * Environment: `R_ZEPHYR_VERBOSITY_LEVEL`</span>
 </code></pre></div>
