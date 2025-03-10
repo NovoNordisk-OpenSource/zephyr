@@ -3,7 +3,7 @@ test_that("envname", {
     expect_equal("zephyr")
 
   envname(1) |>
-    expect_error()
+    expect_null()
 })
 
 test_that("sys_getenv", {
