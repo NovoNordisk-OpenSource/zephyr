@@ -23,6 +23,10 @@ test_that("create_option", {
 })
 
 test_that("get_option", {
+
+  get_option("does_not_exist", NULL) |>
+    expect_null()
+
   testenv <- simulate_package_env("testenv")
   create_option(name = "test_option", default = 42, .envir = testenv)
 
