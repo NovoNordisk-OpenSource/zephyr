@@ -1,3 +1,8 @@
+# zephyr dev
+
+* Fixes a bug in `msg()` where the verbosity level of the package using zephyr
+was not respected.
+
 # zephyr 0.1.1
 
 * Fixes a bug where `list_options()` was being able to document options with 
