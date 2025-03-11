@@ -23,6 +23,10 @@ test_that("create_option", {
 })
 
 test_that("get_option", {
+
+  get_option("does_not_exist", NULL) |>
+    expect_null()
+
   testenv <- simulate_package_env("testenv")
   create_option(name = "test_option", default = 42, .envir = testenv)
 
@@ -95,7 +99,7 @@ test_that("zephyr options", {
     expect_snapshot()
 })
 
-test_that("list_options - as list", {
+test_that("list_options", {
   testenv <- simulate_package_env("testenv")
   create_option(name = "test_option", default = 42, .envir = testenv)
 
@@ -105,41 +109,11 @@ test_that("list_options - as list", {
     print() |>
     expect_snapshot()
 
-  create_option(name = "test_null", default = NULL, .envir = testenv)
-  create_option(name = "test_long", default = letters, .envir = testenv)
-  create_option(name = "test_func", default = \(x) x + 1, .envir = testenv)
-
-  list_options(.envir = testenv) |>
-    expect_s3_class("zephyr_options") |>
-    expect_length(5) |>
-    print() |>
-    expect_snapshot()
-})
-
-test_that("list_options - as params", {
-  testenv <- simulate_package_env("testenv")
-  create_option(name = "test_option", default = 42, .envir = testenv)
-
   list_options(as = "params", .envir = testenv) |>
     expect_type("character") |>
     expect_length(2) |>
     print() |>
     expect_snapshot()
-
-  create_option(name = "test_null", default = NULL, .envir = testenv)
-  create_option(name = "test_long", default = letters, .envir = testenv)
-  create_option(name = "test_func", default = \(x) x + 1, .envir = testenv)
-
-  list_options(as = "params", .envir = testenv) |>
-    expect_type("character") |>
-    expect_length(5) |>
-    print() |>
-    expect_snapshot()
-})
-
-test_that("list_options - as markdown", {
-  testenv <- simulate_package_env("testenv")
-  create_option(name = "test_option", default = 42, .envir = testenv)
 
   list_options(as = "markdown", .envir = testenv) |>
     expect_type("character") |>
@@ -150,6 +124,18 @@ test_that("list_options - as markdown", {
   create_option(name = "test_null", default = NULL, .envir = testenv)
   create_option(name = "test_long", default = letters, .envir = testenv)
   create_option(name = "test_func", default = \(x) x + 1, .envir = testenv)
+
+  list_options(.envir = testenv) |>
+    expect_s3_class("zephyr_options") |>
+    expect_length(5) |>
+    print() |>
+    expect_snapshot()
+
+  list_options(as = "params", .envir = testenv) |>
+    expect_type("character") |>
+    expect_length(5) |>
+    print() |>
+    expect_snapshot()
 
   list_options(as = "markdown", .envir = testenv) |>
     expect_type("character") |>

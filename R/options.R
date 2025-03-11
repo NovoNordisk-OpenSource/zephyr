@@ -100,6 +100,10 @@ print.zephyr_options <- function(x, ...) {
 #' get_option(name = "verbosity_level", .envir = "zephyr")
 #' @export
 get_option <- function(name, .envir = sys.function(which = -1)) {
+  if (is.null(.envir)) {
+    return(NULL)
+  }
+
   if (!is.character(name) || length(name) > 1) {
     cli::cli_abort(
       "{.var name} must be of class {.cls character} and length {.val 1}"
@@ -109,7 +113,7 @@ get_option <- function(name, .envir = sys.function(which = -1)) {
   env <- envname(.envir)
 
   default <- NULL
-  if (env %in% loadedNamespaces()) {
+  if (!is.null(env) && env %in% loadedNamespaces()) {
     default <- getNamespace(env)[[".zephyr_options"]][[name]][["default"]]
   } else if (is.environment(.envir)) {
     default <- .envir[[".zephyr_options"]][[name]][["default"]]
@@ -166,7 +170,7 @@ list_options <- function(as = c("list", "params", "markdown"),
   env <- envname(.envir)
 
   options <- list()
-  if (env %in% loadedNamespaces()) {
+  if (!is.null(env) && env %in% loadedNamespaces()) {
     options <- getNamespace(env)[[".zephyr_options"]]
   } else if (is.environment(.envir)) {
     options <- .envir[[".zephyr_options"]]

@@ -152,5 +152,14 @@ test_that("use in new package", {
     ),
     libpath
   ) |>
-    expect_no_condition()
+    expect_output(NA)
+
+  run_output(
+    \() withr::with_options( # nolint: brace_linter
+      list(testpkg.verbosity_level = "quiet"),
+      testpkg::greet("there")
+    ),
+    libpath
+  ) |>
+    expect_output(NA)
 })

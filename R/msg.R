@@ -53,7 +53,7 @@ msg <- function(
     .envir = parent.frame()) {
   levels_to_write <- rlang::arg_match(arg = levels_to_write, multiple = TRUE)
 
-  if (!get_verbosity_level() %in% levels_to_write) {
+  if (!get_verbosity_level(.envir = .envir) %in% levels_to_write) {
     return(invisible())
   }
 

@@ -5,12 +5,14 @@ envname <- function(.envir) {
     .envir <- environment(.envir)
   }
   if (is.environment(.envir)) {
-    .envir <- environmentName(.envir)
+    if (nchar(environmentName(.envir)) > 0) {
+      .envir <- environmentName(.envir)
+    } else {
+      .envir <- environmentName(parent.env(.envir))
+    }
   }
   if (!is.character(.envir) || .envir == "") {
-    cli::cli_abort(
-      "{.var .envir} must be of class {.cls function}, {.cls environment}, or {.cls character}" # nolint: line_length_linter
-    )
+    return(NULL)
   }
   return(.envir)
 }
