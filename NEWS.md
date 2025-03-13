@@ -1,4 +1,4 @@
-# zephyr dev
+# zephyr 0.1.2
 
 * Fixes a bug in `msg()` where the verbosity level of the package using zephyr
 was not respected.
