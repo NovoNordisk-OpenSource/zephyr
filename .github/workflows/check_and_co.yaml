@@ -26,6 +26,7 @@ jobs:
   coverage:
     name: Coverage report
     uses: NovoNordisk-OpenSource/r.workflows/.github/workflows/coverage.yaml@feat/codecov
+    secrets: inherit
     with:
       use_codecov: true
   megalinter:
