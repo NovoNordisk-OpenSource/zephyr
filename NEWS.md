@@ -1,3 +1,7 @@
+# zephyr dev
+
+* Add upload of coverage results to codecov.io.
+
 # zephyr 0.1.2
 
 * Fixes a bug in `msg()` where the verbosity level of the package using zephyr

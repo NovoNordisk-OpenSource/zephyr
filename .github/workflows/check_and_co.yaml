@@ -25,7 +25,9 @@ jobs:
     uses: NovoNordisk-OpenSource/r.workflows/.github/workflows/pkgdown.yaml@main
   coverage:
     name: Coverage report
-    uses: NovoNordisk-OpenSource/r.workflows/.github/workflows/coverage.yaml@main
+    uses: NovoNordisk-OpenSource/r.workflows/.github/workflows/coverage.yaml@feat/codecov
+    with:
+      use_codecov: true
   megalinter:
     name: Megalinter
     uses: NovoNordisk-OpenSource/r.workflows/.github/workflows/megalinter.yaml@main
