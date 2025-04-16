@@ -25,7 +25,7 @@ jobs:
     uses: NovoNordisk-OpenSource/r.workflows/.github/workflows/pkgdown.yaml@main
   coverage:
     name: Coverage report
-    uses: NovoNordisk-OpenSource/r.workflows/.github/workflows/coverage.yaml@feat/codecov
+    uses: NovoNordisk-OpenSource/r.workflows/.github/workflows/coverage.yaml@main
     secrets: inherit
     with:
       use_codecov: true
