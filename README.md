@@ -6,7 +6,8 @@
 <!-- badges: start -->
 
 [![Checks](https://github.com/NovoNordisk-OpenSource/zephyr/actions/workflows/check_and_co.yaml/badge.svg)](https://github.com/NovoNordisk-OpenSource/zephyr/actions/workflows/check_and_co.yaml)
-
+[![Codecov test
+coverage](https://codecov.io/gh/NovoNordisk-OpenSource/zephyr/graph/badge.svg)](https://app.codecov.io/gh/NovoNordisk-OpenSource/zephyr)
 <!-- badges: end -->
 
 The zephyr package provides small functionalities for developers of R

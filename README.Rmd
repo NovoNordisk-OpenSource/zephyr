@@ -18,7 +18,6 @@ library(zephyr)
 # zephyr <a href="https://novonordisk-opensource.github.io/zephyr/"><img src="man/figures/logo.png" alt="zephyr website" align="right" height="138"/></a>
 
 <!-- badges: start -->
-
 [![Checks](https://github.com/NovoNordisk-OpenSource/zephyr/actions/workflows/check_and_co.yaml/badge.svg)](https://github.com/NovoNordisk-OpenSource/zephyr/actions/workflows/check_and_co.yaml)
 [![Codecov test coverage](https://codecov.io/gh/NovoNordisk-OpenSource/zephyr/graph/badge.svg)](https://app.codecov.io/gh/NovoNordisk-OpenSource/zephyr)
 <!-- badges: end -->
