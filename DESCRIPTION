@@ -1,6 +1,6 @@
 Package: zephyr
 Title: Structured Messages and Options
-Version: 0.1.2.9002
+Version: 0.1.2.9003
 Authors@R: c(
     person("Aksel", "Thomsen", , "oath@novonordisk.com", role = c("aut", "cre")),
     person("Mathias Lerbech", "Jeppesen", , "nmlj@novonordisk.com", role = "aut"),
