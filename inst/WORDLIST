@@ -26,6 +26,7 @@ Roxygen
 RoxygenNote
 Roxygenize
 Rproj
+Skander
 Steffen
 Sweave
 TESTENV
@@ -38,6 +39,7 @@ autoupdate
 callr
 cgid
 cli
+codecov
 compats
 covr
 cph
@@ -50,6 +52,7 @@ envname
 github
 http
 https
+interprocess
 io
 knitr
 ktqn
@@ -80,6 +83,7 @@ roxygen
 roxygenise
 rstudio
 sffl
+sktf
 sublicense
 svgjs
 testenv

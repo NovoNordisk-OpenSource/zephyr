@@ -1,5 +1,6 @@
 # zephyr dev
 
+* Add `with_spinner()` functionality
 * Add upload of coverage results to codecov.io.
 
 # zephyr 0.1.2
