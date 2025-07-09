@@ -1,11 +1,3 @@
----
-name: Feature request
-about: Suggest an idea for this project
-title: "[FEAT] Feature name"
-labels: ''
-assignees: ''
----
-
 ## Feature Request
 
 ### Description
