@@ -57,7 +57,6 @@ test_that("with_spinner - expression", {
 })
 
 test_that("with_spinner - expression", {
-  # Test that directly uses function arguments
   test_with_args <- function(arg1, arg2) {
     result <- with_spinner(
       {
@@ -68,7 +67,5 @@ test_that("with_spinner - expression", {
 
     expect_equal(result, "value1+value2")
   }
-
-  # Run the test with arguments
   test_with_args("value1", "value2")
 })
