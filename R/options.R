@@ -19,8 +19,12 @@
 #'   description = "This is supposed to be the question"
 #' )
 #' @export
-create_option <- function(name, default, description = name,
-                          .envir = parent.frame()) {
+create_option <- function(
+  name,
+  default,
+  description = name,
+  .envir = parent.frame()
+) {
   spec <- structure(
     list(
       default = default,
@@ -94,12 +98,25 @@ print.zephyr_options <- function(x, ...) {
 #' @param name `[character(1)]` Name of the option
 #' @param .envir Environment in which the option is defined.
 #' Default is suitable for use inside your package.
+#' @param default default value to return if the option is not set.
+#' If `NULL` uses the default set with `create_option()`.
 #' @returns Value of the option
 #' @examples
 #' # Retrieve the verbosity level option set by default in zephyr:
 #' get_option(name = "verbosity_level", .envir = "zephyr")
+#'
+#' # Try to retrieve an unset option, which will return the default value:
+#' get_option(
+#'   name = "my_unset_option",
+#'   .envir = "mypkg",
+#'   default = "my_default_value"
+#' )
 #' @export
-get_option <- function(name, .envir = sys.function(which = -1)) {
+get_option <- function(
+  name,
+  .envir = sys.function(which = -1),
+  default = NULL
+) {
   if (is.null(.envir)) {
     return(NULL)
   }
@@ -112,11 +129,12 @@ get_option <- function(name, .envir = sys.function(which = -1)) {
 
   env <- envname(.envir)
 
-  default <- NULL
-  if (!is.null(env) && env %in% loadedNamespaces()) {
-    default <- getNamespace(env)[[".zephyr_options"]][[name]][["default"]]
-  } else if (is.environment(.envir)) {
-    default <- .envir[[".zephyr_options"]][[name]][["default"]]
+  if (is.null(default)) {
+    if (!is.null(env) && env %in% loadedNamespaces()) {
+      default <- getNamespace(env)[[".zephyr_options"]][[name]][["default"]]
+    } else if (is.environment(.envir)) {
+      default <- .envir[[".zephyr_options"]][[name]][["default"]]
+    }
   }
 
   coalesce_dots(
@@ -163,8 +181,10 @@ get_option <- function(name, .envir = sys.function(which = -1)) {
 #' list_options(as = "markdown", .envir = "zephyr") |>
 #'   cat()
 #' @export
-list_options <- function(as = c("list", "params", "markdown"),
-                         .envir = sys.function(which = -1)) {
+list_options <- function(
+  as = c("list", "params", "markdown"),
+  .envir = sys.function(which = -1)
+) {
   as <- rlang::arg_match(as)
 
   env <- envname(.envir)
