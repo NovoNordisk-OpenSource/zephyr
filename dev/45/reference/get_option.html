@@ -3,6 +3,7 @@
 The value is looked up in the following order:
 User defined option: {pkgname}.{name}
 System variable: R_{PKGNAME}_{NAME}
+Value of default argument (if not NULL)
 Default value defined with create_option()
 
 
@@ -10,6 +11,7 @@ And returns the first set value."><meta property="og:description" content="Retri
 The value is looked up in the following order:
 User defined option: {pkgname}.{name}
 System variable: R_{PKGNAME}_{NAME}
+Value of default argument (if not NULL)
 Default value defined with create_option()
 
 
@@ -50,6 +52,7 @@ And returns the first set value."><meta property="og:image" content="https://nov
     <p>Retrieves the value of an <code>zephyr_option</code>.
 The value is looked up in the following order:</p><ol><li><p>User defined option: <code>{pkgname}.{name}</code></p></li>
 <li><p>System variable: <code>R_{PKGNAME}_{NAME}</code></p></li>
+<li><p>Value of <code>default</code> argument (if not <code>NULL</code>)</p></li>
 <li><p>Default value defined with <code><a href="create_option.html">create_option()</a></code></p></li>
 </ol><p>And returns the first set value.</p>
     </div>
