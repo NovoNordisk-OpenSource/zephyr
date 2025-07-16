@@ -78,6 +78,7 @@ print.zephyr_options <- function(x, ...) {
 #'
 #' 1. User defined option: `{pkgname}.{name}`
 #' 1. System variable: `R_{PKGNAME}_{NAME}`
+#' 1. Value of `default` argument (if not `NULL`)
 #' 1. Default value defined with [create_option()]
 #'
 #' And returns the first set value.

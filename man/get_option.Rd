@@ -24,6 +24,7 @@ The value is looked up in the following order:
 \enumerate{
 \item User defined option: \verb{\{pkgname\}.\{name\}}
 \item System variable: \verb{R_\{PKGNAME\}_\{NAME\}}
+\item Value of \code{default} argument (if not \code{NULL})
 \item Default value defined with \code{\link[=create_option]{create_option()}}
 }
 
