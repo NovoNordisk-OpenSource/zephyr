@@ -52,25 +52,25 @@
 #' }
 #' @export
 start_spinner <- function(msg = "Processing... ") {
-  interprocess::uid() -> spinner_id
-  interprocess::msg_queue(
+  spinner_id <- interprocess::uid()
+  mq <- interprocess::msg_queue(
     name = spinner_id,
     max_count = 10,
     max_nchar = 1024,
     cleanup = TRUE
-  ) -> mq
-  interprocess::semaphore(
+  )
+  sem <- interprocess::semaphore(
     name = paste0("s", spinner_id),
     value = 0,
     cleanup = TRUE
-  ) -> sem
-  callr::r_bg(
+  )
+  spinner_process <- callr::r_bg(
     .spinner_worker,
     args = list(id = spinner_id, text = msg),
     supervise = TRUE,
     stdout = "",
     stderr = ""
-  ) -> spinner_process
+  )
 
   if (!sem$wait(timeout_ms = 1000)) {
     warning("Spinner process didn't start properly. ")
@@ -163,6 +163,12 @@ stop_spinner <- function(ctx, status = NULL, error = FALSE) {
 spinner <- function(x = NULL, msg = "Processing... ") {
   if (!is.function(x)) {
     stop("Please pass a function to spinner()")
+  }
+  if (
+    !requireNamespace("interprocess", quietly = TRUE) ||
+      !requireNamespace("callr", quietly = TRUE)
+  ) {
+    return(x())
   }
   ctx <- start_spinner(msg)
   on.exit(stop_spinner(ctx))

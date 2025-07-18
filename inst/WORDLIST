@@ -47,6 +47,7 @@ cran
 cre
 dev
 devtools
+dontrun
 envir
 envname
 github
