@@ -1,5 +1,4 @@
 test_that("spinner - function", {
-  #skip_on_ci()
   expect_null(
     spinner(
       x = function() Sys.sleep(0.54),
@@ -10,7 +9,6 @@ test_that("spinner - function", {
 })
 
 test_that("spinner - function fails properly in error", {
-  #skip_on_ci()
   expect_error(
     spinner(
       x = function() stop("Error"),
@@ -22,7 +20,6 @@ test_that("spinner - function fails properly in error", {
 })
 
 test_that("with_spinner - various expressions", {
-  #skip_on_ci()
   cases <- list(
     list(
       env = list(
@@ -57,7 +54,6 @@ test_that("with_spinner - various expressions", {
 
 
 test_that("start and stop spinner", {
-  #skip_on_ci()
   ctx <- start_spinner("Manual spinner running: ")
   Sys.sleep(0.5)
   result <- "success"

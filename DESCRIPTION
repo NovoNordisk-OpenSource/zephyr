@@ -32,8 +32,8 @@ Suggests:
     rmarkdown,
     testthat (>= 3.1.5),
     usethis,
-    withr,
-    interprocess
+    interprocess,
+    withr
 Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
