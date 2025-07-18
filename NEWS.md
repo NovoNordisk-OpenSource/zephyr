@@ -1,6 +1,6 @@
 # zephyr dev
 
-* Add `with_spinner()` functionality.
+* Added `with_spinner()` functionality, which calls `spinner()`. The `spinner()` function internally handles `start_spinner` and `stop_spinner` to display a spinner and message during code execution. 
 * Add upload of coverage results to codecov.io.
 
 # zephyr 0.1.2
