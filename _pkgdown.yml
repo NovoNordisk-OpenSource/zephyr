@@ -28,3 +28,7 @@ reference:
       Other utility functions used across our packages.
     contents:
       - report_checkmate_assertions
+      - spinner
+      - start_spinner
+      - stop_spinner
+      - with_spinner
