@@ -4,9 +4,10 @@
 #' @param text Spinner message
 #' @keywords internal
 #' @noRd
+# nocov start
 .spinner_worker <- function(id, text) {
-  mq <- interprocess::msg_queue(name = id, assert = "exists")
-  sem <- interprocess::semaphore(name = paste0("s", id), assert = "exists")
+  mq <- msg_queue(name = id, assert = "exists")
+  sem <- semaphore(name = paste0("s", id), assert = "exists")
   spinner_chars <- c("-", "\\", "|", "/")
   idx <- 1
   sem$post()
@@ -33,6 +34,7 @@
     }
   }
 }
+# nocov end
 
 #' Start a CLI spinner
 #'
@@ -52,19 +54,22 @@
 #' }
 #' @export
 start_spinner <- function(msg = "Processing... ") {
-  spinner_id <- interprocess::uid()
-  mq <- interprocess::msg_queue(
+  if (!"package:interprocess" %in% search() || !"package:callr" %in% search()) {
+    return(NULL)
+  }
+  spinner_id <- uid()
+  mq <- msg_queue(
     name = spinner_id,
     max_count = 10,
     max_nchar = 1024,
     cleanup = TRUE
   )
-  sem <- interprocess::semaphore(
+  sem <- semaphore(
     name = paste0("s", spinner_id),
     value = 0,
     cleanup = TRUE
   )
-  spinner_process <- callr::r_bg(
+  spinner_process <- r_bg(
     .spinner_worker,
     args = list(id = spinner_id, text = msg),
     supervise = TRUE,
@@ -164,22 +169,8 @@ spinner <- function(x = NULL, msg = "Processing... ") {
   if (!is.function(x)) {
     stop("Please pass a function to spinner()")
   }
-  if (
-    !requireNamespace("interprocess", quietly = TRUE) ||
-      !requireNamespace("callr", quietly = TRUE)
-  ) {
-    return(x())
-  }
   ctx <- start_spinner(msg)
-  on.exit(stop_spinner(ctx))
-  x()
-}
-spinner <- function(x = NULL, msg = "Processing... ") {
-  if (!is.function(x)) {
-    stop("Please pass a function to spinner()")
-  }
-  ctx <- start_spinner(msg)
-  on.exit(stop_spinner(ctx))
+  on.exit(stop_spinner(ctx), add = TRUE)
   x()
 }
 #' `spinner` wrapper to avoid LHS priority eval limitations with `|>`
