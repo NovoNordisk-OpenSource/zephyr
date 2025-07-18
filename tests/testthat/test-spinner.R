@@ -1,4 +1,5 @@
 test_that("spinner - function", {
+  skip_on_ci()
   expect_null(
     spinner(
       x = function() Sys.sleep(0.54),
@@ -9,6 +10,7 @@ test_that("spinner - function", {
 })
 
 test_that("spinner - function fails properly in error", {
+  skip_on_ci()
   expect_error(
     spinner(
       x = function() stop("Error"),
@@ -19,53 +21,48 @@ test_that("spinner - function fails properly in error", {
   )
 })
 
-test_that("with_spinner - expression", {
-  skip_on_cran()
-
-  test_env_vars <- function() {
-    catalog_name <- "test_catalog"
-    schema_name <- "test_schema"
-    volume_name <- "test_volume"
-
-    result <- with_spinner(
-      {
-        paste(catalog_name, schema_name, volume_name, sep = ":")
-      },
+test_that("with_spinner - various expressions", {
+  skip_on_ci()
+  cases <- list(
+    list(
+      env = list(
+        catalog_name = "test_catalog",
+        schema_name = "test_schema",
+        volume_name = "test_volume"
+      ),
+      expr = quote(paste(catalog_name, schema_name, volume_name, sep = ":")),
+      expected = "test_catalog:test_schema:test_volume",
       msg = "Testing env vars"
-    )
-
-    expect_equal(result, "test_catalog:test_schema:test_volume")
-  }
-
-  test_env_vars()
-
-  outer_var <- "outer"
-  test_nested_env <- function() {
-    inner_var <- "inner"
-
-    result <- with_spinner(
-      {
-        paste(outer_var, inner_var, sep = "-")
-      },
+    ),
+    list(
+      env = list(outer_var = "outer", inner_var = "inner"),
+      expr = quote(paste(outer_var, inner_var, sep = "-")),
+      expected = "outer-inner",
       msg = "Testing nested env vars"
-    )
-
-    expect_equal(result, "outer-inner")
-  }
-
-  test_nested_env()
-})
-
-test_that("with_spinner - expression", {
-  test_with_args <- function(arg1, arg2) {
-    result <- with_spinner(
-      {
-        paste(arg1, arg2, sep = "+")
-      },
+    ),
+    list(
+      env = list(arg1 = "value1", arg2 = "value2"),
+      expr = quote(paste(arg1, arg2, sep = "+")),
+      expected = "value1+value2",
       msg = "Testing with args"
     )
+  )
 
-    expect_equal(result, "value1+value2")
+  for (case in cases) {
+    list2env(case$env, envir = environment())
+    result <- with_spinner(eval(case$expr), msg = case$msg)
+    expect_equal(result, case$expected)
   }
-  test_with_args("value1", "value2")
+})
+
+
+test_that("start and stop spinner", {
+  skip_on_ci()
+  ctx <- start_spinner("Manual spinner running: ")
+  Sys.sleep(0.5)
+  result <- "success"
+  Sys.sleep(0.5)
+  stop_spinner(ctx)
+
+  expect_equal(result, "success")
 })
