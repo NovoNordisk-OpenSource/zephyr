@@ -20,6 +20,17 @@ test_that("spinner - function fails properly in error", {
 })
 
 
+test_that('with_spinner - no msg', {
+  one <- {
+    print("This is a very long story, so that the code executed doesnt fit")
+    Sys.sleep(1)
+    1
+  } |>
+    with_spinner()
+  expect_equal(one, 1)
+})
+
+
 test_that("with_spinner - various expressions", {
   cases <- list(
     list(

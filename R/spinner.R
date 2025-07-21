@@ -156,37 +156,35 @@ stop_spinner <- function(ctx, status = NULL, error = FALSE) {
 #' })  # Will automatically display "Running..."
 #' print(result)
 #' @noRd
-spinner <- function(x = NULL, msg = NULL) {
+spinner <- function(x = NULL, msg = NULL, formatted = FALSE) {
   if (!is.function(x)) {
     stop("Please pass a function to spinner()")
   }
-
-  if (is.null(msg)) {
-    raw_msg <- body(x) |>
-      deparse() |>
-      paste(collapse = " ") |>
-      (\(txt) substr(txt, 1, min(50, nchar(txt))))()
-    msg <- cli::format_message(
-      "Running: {.code {raw_msg}}{if (nchar(raw_msg) > 50) '...' else ''}"
-    )
-  }
-
-  if (!interactive()) {
-    non_interactive_msg <- paste0(
-      msg,
-      " (Session non-interactive -> spinner disabled)"
-    )
-
-    zephyr::msg(non_interactive_msg)
-    return(x())
-  } else {
+  if (!is.null(msg)) {
+    if (!formatted) {
+      formatted_msg <- deparse(msg) |>
+        paste(collapse = " ") |>
+        (\(text) as.character(text))() |>
+        (\(expr_text) cli::format_message("Running: {.code {expr_text}}"))()
+    } else {
+      formatted_msg <- msg
+    }
+    if (!interactive()) {
+      non_interactive_msg <- paste0(
+        formatted_msg,
+        " (Session non-interactive -> spinner disabled)"
+      )
+      zephyr::msg_info(non_interactive_msg)
+      return(x())
+    }
     rlang::check_installed('callr')
     rlang::check_installed('interprocess')
-    ctx <- start_spinner(msg)
+    ctx <- start_spinner(formatted_msg)
+    on.exit(stop_spinner(ctx), add = TRUE)
+    return(x())
+  } else {
+    return(x())
   }
-
-  on.exit(stop_spinner(ctx), add = TRUE)
-  x()
 }
 #' `spinner` wrapper to avoid LHS priority eval limitations with `|>`
 #'
@@ -208,11 +206,16 @@ spinner <- function(x = NULL, msg = NULL) {
 #'   "Result"
 #' }, "Processing complex operation")
 #' @export
-with_spinner <- function(expr, msg = NULL) {
-  return(spinner(
-    function() {
-      rlang::eval_tidy(rlang::enquo(expr), env = rlang::caller_env())
-    },
-    msg = msg
-  ))
+with_spinner <- function(expr, msg = 'Running: {.expr}') {
+  msg <- glue::glue(
+    msg,
+    .expr = deparse(substitute(expr)) |> paste(collapse = " "),
+    .open = "{",
+    .close = "}"
+  )
+  spinner(
+    \() rlang::eval_tidy(rlang::enquo(expr), env = rlang::caller_env()),
+    msg = msg,
+    formatted = TRUE
+  )
 }

@@ -4,7 +4,7 @@
 \alias{with_spinner}
 \title{\code{spinner} wrapper to avoid LHS priority eval limitations with \verb{|>}}
 \usage{
-with_spinner(expr, msg = NULL)
+with_spinner(expr, msg = "Running: {.expr}")
 }
 \arguments{
 \item{expr}{The expression to evaluate}
