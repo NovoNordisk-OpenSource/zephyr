@@ -4,13 +4,16 @@
 \alias{get_option}
 \title{Get value of package option}
 \usage{
-get_option(name, .envir = sys.function(which = -1))
+get_option(name, .envir = sys.function(which = -1), default = NULL)
 }
 \arguments{
 \item{name}{\verb{[character(1)]} Name of the option}
 
 \item{.envir}{Environment in which the option is defined.
 Default is suitable for use inside your package.}
+
+\item{default}{default value to return if the option is not set.
+If \code{NULL} uses the default set with \code{create_option()}.}
 }
 \value{
 Value of the option
@@ -21,6 +24,7 @@ The value is looked up in the following order:
 \enumerate{
 \item User defined option: \verb{\{pkgname\}.\{name\}}
 \item System variable: \verb{R_\{PKGNAME\}_\{NAME\}}
+\item Value of \code{default} argument (if not \code{NULL})
 \item Default value defined with \code{\link[=create_option]{create_option()}}
 }
 
@@ -43,4 +47,11 @@ we should try to keep our options this simple.
 \examples{
 # Retrieve the verbosity level option set by default in zephyr:
 get_option(name = "verbosity_level", .envir = "zephyr")
+
+# Try to retrieve an unset option, which will return the default value:
+get_option(
+  name = "my_unset_option",
+  .envir = "mypkg",
+  default = "my_default_value"
+)
 }
