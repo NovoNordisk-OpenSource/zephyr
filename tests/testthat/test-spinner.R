@@ -123,3 +123,60 @@ test_that("stop_spinner sends correct error status", {
   expect_true(any(grepl("\\[ERR\\]", msgs)))
   expect_true(killed)
 })
+
+library(testthat)
+
+# Test: spinner outputs "STOP" when STOP signal is received
+test_that(".spinner_worker prints STOP if receives STOP", {
+  sem_posts <- 0
+
+  fake_mq <- list(receive = function(timeout_ms = 100) "STOP")
+  class(fake_mq) <- "fake_mq"
+  fake_sem <- list(post = function() sem_posts <<- sem_posts + 1)
+  class(fake_sem) <- "fake_sem"
+
+  mock_msg_queue <- function(...) fake_mq
+  mock_semaphore <- function(...) fake_sem
+
+  output <- capture.output(
+    with_mocked_bindings(
+      msg_queue = mock_msg_queue,
+      semaphore = mock_semaphore,
+      .package = "interprocess",
+      zephyr:::.spinner_worker("testid", "Test spinner")
+    )
+  )
+
+  expect_true(any(grepl("STOP", output)), "STOP not found in output")
+  expect_gte(sem_posts, 1, "post() not called on semaphore")
+})
+
+# Test: spinner outputs "[OK]" when NULL is received after STOP
+test_that(".spinner_worker prints [OK] if receives NULL after STOP", {
+  sem_posts <- 0
+  mq_responses <- list("foo", "STOP", NULL)
+  fake_mq <- list(
+    receive = function(timeout_ms = 100) {
+      val <- mq_responses[[1]]
+      mq_responses <<- mq_responses[-1]
+      val
+    }
+  )
+  class(fake_mq) <- "fake_mq"
+  fake_sem <- list(post = function() sem_posts <<- sem_posts + 1)
+  class(fake_sem) <- "fake_sem"
+  mock_msg_queue <- function(...) fake_mq
+  mock_semaphore <- function(...) fake_sem
+
+  output <- capture.output(
+    with_mocked_bindings(
+      msg_queue = mock_msg_queue,
+      semaphore = mock_semaphore,
+      .package = "interprocess",
+      zephyr:::.spinner_worker("testid", "Test spinner")
+    )
+  )
+
+  expect_true(any(grepl("\\[OK\\]", output)), "[OK] not found in output")
+  expect_gte(sem_posts, 1, "post() not called on semaphore")
+})

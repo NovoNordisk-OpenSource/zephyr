@@ -1,13 +1,37 @@
+#' Check for Availability of Multiple Packages
+#'
+#' Determines whether all specified R packages are either attached to the current session
+#' or available for loading via \code{requireNamespace}. This function returns \code{TRUE}
+#' only if \emph{all} listed packages are available, and \code{FALSE} otherwise.
+#'
+#' @param pkgs A character vector of package names to check.
+#'
+#' @return Logical \code{TRUE} if all specified packages are attached or can be loaded,
+#'   otherwise logical \code{FALSE}.
+#'
+#' @examples
+#' has_packages(c("stats", "utils"))
+#' @keywords internal
+#' @noRd
+has_packages <- function(pkgs) {
+  all(sapply(pkgs, function(pkg) {
+    pkgname <- paste0("package:", pkg)
+    pkgname %in%
+      search() ||
+      suppressWarnings(requireNamespace(pkg, quietly = TRUE))
+  }))
+}
+
 #' Spinner process function (internal helper)
 #'
 #' @param id Spinner (IPC) ID
 #' @param text Spinner message
 #' @keywords internal
 #' @noRd
-# nocov start
+
 .spinner_worker <- function(id, text) {
-  mq <- msg_queue(name = id, assert = "exists")
-  sem <- semaphore(name = paste0("s", id), assert = "exists")
+  mq <- interprocess::msg_queue(name = id, assert = "exists")
+  sem <- interprocess::semaphore(name = paste0("s", id), assert = "exists")
   spinner_chars <- c("-", "\\", "|", "/")
   idx <- 1
   sem$post()
@@ -34,7 +58,7 @@
     }
   }
 }
-# nocov end
+
 
 #' Start a CLI spinner
 #'
@@ -54,22 +78,23 @@
 #' }
 #' @export
 start_spinner <- function(msg = "Processing... ") {
-  if (!"package:interprocess" %in% search() || !"package:callr" %in% search()) {
+  if (!has_packages(pkgs = c('callr', 'interprocess'))) {
     return(NULL)
   }
-  spinner_id <- uid()
-  mq <- msg_queue(
+
+  spinner_id <- interprocess::uid()
+  mq <- interprocess::msg_queue(
     name = spinner_id,
     max_count = 10,
     max_nchar = 1024,
     cleanup = TRUE
   )
-  sem <- semaphore(
+  sem <- interprocess::semaphore(
     name = paste0("s", spinner_id),
     value = 0,
     cleanup = TRUE
   )
-  spinner_process <- r_bg(
+  spinner_process <- callr::r_bg(
     .spinner_worker,
     args = list(id = spinner_id, text = msg),
     supervise = TRUE,
