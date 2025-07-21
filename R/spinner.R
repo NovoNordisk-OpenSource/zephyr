@@ -1,34 +1,9 @@
-#' Check for Availability of Multiple Packages
-#'
-#' Determines whether all specified R packages are either attached to the current session
-#' or available for loading via \code{requireNamespace}. This function returns \code{TRUE}
-#' only if \emph{all} listed packages are available, and \code{FALSE} otherwise.
-#'
-#' @param pkgs A character vector of package names to check.
-#'
-#' @return Logical \code{TRUE} if all specified packages are attached or can be loaded,
-#'   otherwise logical \code{FALSE}.
-#'
-#' @examples
-#' has_packages(c("stats", "utils"))
-#' @keywords internal
-#' @noRd
-has_packages <- function(pkgs) {
-  all(sapply(pkgs, function(pkg) {
-    pkgname <- paste0("package:", pkg)
-    pkgname %in%
-      search() ||
-      suppressWarnings(requireNamespace(pkg, quietly = TRUE))
-  }))
-}
-
 #' Spinner process function (internal helper)
 #'
 #' @param id Spinner (IPC) ID
 #' @param text Spinner message
 #' @keywords internal
 #' @noRd
-
 .spinner_worker <- function(id, text) {
   mq <- interprocess::msg_queue(name = id, assert = "exists")
   sem <- interprocess::semaphore(name = paste0("s", id), assert = "exists")
@@ -59,15 +34,15 @@ has_packages <- function(pkgs) {
   }
 }
 
-
 #' Start a CLI spinner
 #'
 #' Start a spinner process to indicate work in progress on the CLI.
 #'
 #' @param msg Message to display alongside spinner
+#' @param timeout Timeout in mili-seconds
 #' @return A list containing spinner context information
-#' @examples
-#' \dontrun{
+#' @keywords internal
+#' @examplesIf FALSE
 #' # Start a spinner, do some work, then stop it
 #' ctx <- start_spinner("Starting some long task...")
 #' Sys.sleep(1)
@@ -75,13 +50,8 @@ has_packages <- function(pkgs) {
 #'
 #' # It is recommended to always pair with stop_spinner()
 #' # to properly clean up resources.
-#' }
-#' @export
-start_spinner <- function(msg = "Processing... ") {
-  if (!has_packages(pkgs = c('callr', 'interprocess'))) {
-    return(NULL)
-  }
-
+#' @noRd
+start_spinner <- function(msg = "Processing... ", timeout = 1000) {
   spinner_id <- interprocess::uid()
   mq <- interprocess::msg_queue(
     name = spinner_id,
@@ -102,7 +72,7 @@ start_spinner <- function(msg = "Processing... ") {
     stderr = ""
   )
 
-  if (!sem$wait(timeout_ms = 1000)) {
+  if (!sem$wait(timeout_ms = timeout)) {
     warning("Spinner process didn't start properly. ")
     if (spinner_process$is_alive()) {
       spinner_process$kill()
@@ -129,8 +99,8 @@ start_spinner <- function(msg = "Processing... ") {
 #' @param status Status message to display (NULL for default success message).
 #' @param error Logical; whether this is an error status.
 #' @return Invisibly returns NULL.
-#' @examples
-#' \dontrun{
+#' @keywords internal
+#' @examplesIf FALSE
 #' # Start a spinner, do work, then stop the spinner with default success
 #' ctx <- start_spinner("Doing work with spinner...")
 #' Sys.sleep(1)
@@ -145,8 +115,7 @@ start_spinner <- function(msg = "Processing... ") {
 #' ctx <- start_spinner("Failing operation...")
 #' Sys.sleep(1)
 #' stop_spinner(ctx, status = "Oops, something went wrong!", error = TRUE)
-#' }
-#' @export
+#' @noRd
 stop_spinner <- function(ctx, status = NULL, error = FALSE) {
   if (is.null(ctx)) {
     return(invisible())
@@ -155,8 +124,6 @@ stop_spinner <- function(ctx, status = NULL, error = FALSE) {
     paste0("[OK] ", ctx$msg, " ")
   } else if (error) {
     paste0("[ERR] ", ctx$msg, ": ", status, " ")
-  } else {
-    status
   }
   ctx$mq$send("STOP")
   ctx$mq$send(status_msg)
@@ -176,9 +143,9 @@ stop_spinner <- function(ctx, status = NULL, error = FALSE) {
 #' disappears when it finishes (whether successfully or not).
 #'
 #' @param x A function to execute while the spinner is running.
-#' @param msg Message to display alongside the spinner.#'
-#' @examples
-#' \dontrun{
+#' @param msg Message to display alongside the spinner.
+#' @keywords internal
+#' @examplesIf FALSE
 #' # Execute a function with a spinner
 #' spinner(function() Sys.sleep(1), msg = "Waiting with spinner...")
 #'
@@ -186,15 +153,38 @@ stop_spinner <- function(ctx, status = NULL, error = FALSE) {
 #' result <- spinner(function() {
 #'   Sys.sleep(0.5)
 #'   1 + 1
-#' }, msg = "Calculating 1+1...")
+#' })  # Will automatically display "Running..."
 #' print(result)
-#' }
-#' @export
-spinner <- function(x = NULL, msg = "Processing... ") {
+#' @noRd
+spinner <- function(x = NULL, msg = NULL) {
   if (!is.function(x)) {
     stop("Please pass a function to spinner()")
   }
-  ctx <- start_spinner(msg)
+
+  if (is.null(msg)) {
+    raw_msg <- body(x) |>
+      deparse() |>
+      paste(collapse = " ") |>
+      (\(txt) substr(txt, 1, min(50, nchar(txt))))()
+    msg <- cli::format_message(
+      "Running: {.code {raw_msg}}{if (nchar(raw_msg) > 50) '...' else ''}"
+    )
+  }
+
+  if (!interactive()) {
+    non_interactive_msg <- paste0(
+      msg,
+      " (Session non-interactive -> spinner disabled)"
+    )
+
+    zephyr::msg(non_interactive_msg)
+    return(x())
+  } else {
+    rlang::check_installed('callr')
+    rlang::check_installed('interprocess')
+    ctx <- start_spinner(msg)
+  }
+
   on.exit(stop_spinner(ctx), add = TRUE)
   x()
 }
@@ -208,7 +198,7 @@ spinner <- function(x = NULL, msg = "Processing... ") {
 #' @return The result of evaluating `expr`
 #' @examples
 #' #' # Simple delay with spinner
-#' \dontrun{
+#' @examplesIf FALSE
 #' with_spinner(Sys.sleep(2), "Waiting for 2 seconds")
 #'
 #' # Complex expressions
@@ -217,9 +207,8 @@ spinner <- function(x = NULL, msg = "Processing... ") {
 #'   Sys.sleep(1)
 #'   "Result"
 #' }, "Processing complex operation")
-#' }
-#'@export
-with_spinner <- function(expr, msg = "Processing... ") {
+#' @export
+with_spinner <- function(expr, msg = NULL) {
   return(spinner(
     function() {
       rlang::eval_tidy(rlang::enquo(expr), env = rlang::caller_env())

@@ -2,7 +2,7 @@ test_that("spinner - function", {
   expect_null(
     spinner(
       x = function() Sys.sleep(0.54),
-      msg = "testing: spinner works"
+      msg = NULL
     ),
     info = "Should return NULL when process completes successfully"
   )
@@ -18,6 +18,7 @@ test_that("spinner - function fails properly in error", {
     info = "Should propagate error from background process"
   )
 })
+
 
 test_that("with_spinner - various expressions", {
   cases <- list(
@@ -52,10 +53,15 @@ test_that("with_spinner - various expressions", {
   }
 })
 
+test_that("start_spinner gives correct warning when process doesn't start", {
+  expect_warning(
+    ctx <- start_spinner("Manual spinner running: ", timeout = 0),
+    regexp = "Spinner process didn't start properly"
+  )
+})
 
-test_that("start and stop spinner", {
-  ctx <- start_spinner("Manual spinner running: ")
-  Sys.sleep(0.5)
+test_that("start_spinner and stop_spinner", {
+  ctx <- start_spinner("Manual spinner running: ", timeout = 2000)
   result <- "success"
   Sys.sleep(0.5)
   stop_spinner(ctx)
@@ -124,9 +130,7 @@ test_that("stop_spinner sends correct error status", {
   expect_true(killed)
 })
 
-library(testthat)
 
-# Test: spinner outputs "STOP" when STOP signal is received
 test_that(".spinner_worker prints STOP if receives STOP", {
   sem_posts <- 0
 

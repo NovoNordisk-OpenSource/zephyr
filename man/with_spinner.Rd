@@ -4,7 +4,7 @@
 \alias{with_spinner}
 \title{\code{spinner} wrapper to avoid LHS priority eval limitations with \verb{|>}}
 \usage{
-with_spinner(expr, msg = "Processing... ")
+with_spinner(expr, msg = NULL)
 }
 \arguments{
 \item{expr}{The expression to evaluate}
@@ -20,7 +20,7 @@ with a custom message.
 }
 \examples{
 #' # Simple delay with spinner
-\dontrun{
+\dontshow{if (FALSE) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 with_spinner(Sys.sleep(2), "Waiting for 2 seconds")
 
 # Complex expressions
@@ -29,5 +29,5 @@ with_spinner({
   Sys.sleep(1)
   "Result"
 }, "Processing complex operation")
-}
+\dontshow{\}) # examplesIf}
 }
