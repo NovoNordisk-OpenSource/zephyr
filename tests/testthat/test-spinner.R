@@ -22,11 +22,10 @@ test_that("spinner - function fails properly in error", {
 
 test_that("with_spinner handles warnings correctly", {
   expect_warning(
-    {
+    with_spinner({
       Sys.sleep(1)
       warning()
-    } |>
-      with_spinner()
+    })
   )
 })
 
@@ -71,7 +70,6 @@ test_that("spinner handles errors correctly", {
 
 test_that('with_spinner - no msg', {
   one <- {
-    #print("This is a very long story, so that the code executed doesnt fit")
     Sys.sleep(1)
     Sys.sleep(1)
 

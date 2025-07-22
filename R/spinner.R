@@ -156,12 +156,12 @@ spinner <- function(x = NULL, msg = NULL, formatted = FALSE) {
       )
       zephyr::msg_info(non_interactive_msg)
     } else {
-      rlang::check_installed('callr')
-      rlang::check_installed('interprocess')
+      rlang::check_installed("callr")
+      rlang::check_installed("interprocess")
       ctx <- start_spinner(formatted_msg)
     }
   }
-  withr::defer(stop_spinner(ctx = if (exists('ctx')) ctx else NULL))
+  withr::defer(stop_spinner(ctx = if (exists("ctx")) ctx else NULL))
   return(x())
 }
 #' `spinner` wrapper to avoid LHS priority eval limitations with `|>`
@@ -184,7 +184,7 @@ spinner <- function(x = NULL, msg = NULL, formatted = FALSE) {
 #'   "Result"
 #' }, "Processing complex operation")
 #' @export
-with_spinner <- function(expr, msg = 'Running: {.expr}') {
+with_spinner <- function(expr, msg = "Running: {.expr}") {
   expr_quo <- rlang::enquo(expr)
 
   rlang::quo_get_expr(expr_quo) |>
