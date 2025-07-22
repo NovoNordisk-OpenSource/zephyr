@@ -34,7 +34,7 @@ test_that("with_spinner zephyr messaging", {
     {
       one <- with_spinner({
         Sys.sleep(1)
-        print('hello')
+        print("hello")
         1
       })
     },
@@ -72,7 +72,7 @@ test_that("spinner handles warnings correctly", {
   )
 })
 
-test_that('with_spinner - no msg', {
+test_that("with_spinner - no msg", {
   one <- with_spinner({
     Sys.sleep(1)
     Sys.sleep(1)
