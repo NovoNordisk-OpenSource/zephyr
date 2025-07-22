@@ -14,20 +14,11 @@
     cat("\r", spinner_chars[idx], " ", text, " ", sep = "")
     utils::flush.console()
     idx <- (idx %% 4) + 1
-    if (
-      !is.null(mq$receive(timeout_ms = 250)) &&
-        (mq$receive(timeout_ms = 0) == "STOP")
-    ) {
+
+    msg <- mq$receive(timeout_ms = 250)
+    if (!is.null(msg) && msg == "STOP") {
       cat("\r", strrep(" ", nchar(text) + 10), "\r", sep = "")
-      status <- mq$receive(timeout_ms = 250)
-      cat(
-        if (!is.null(status)) {
-          paste0(status, " ", text)
-        } else {
-          paste0("[OK] ", text, " ")
-        },
-        "\n"
-      )
+      utils::flush.console()
       sem$post()
       break
     }
@@ -51,7 +42,7 @@
 #' # It is recommended to always pair with stop_spinner()
 #' # to properly clean up resources.
 #' @noRd
-start_spinner <- function(msg = "Processing... ", timeout = 1000) {
+start_spinner <- function(msg = "Processing... ") {
   spinner_id <- interprocess::uid()
   mq <- interprocess::msg_queue(
     name = spinner_id,
@@ -71,17 +62,6 @@ start_spinner <- function(msg = "Processing... ", timeout = 1000) {
     stdout = "",
     stderr = ""
   )
-
-  if (!sem$wait(timeout_ms = timeout)) {
-    warning("Spinner process didn't start properly. ")
-    if (spinner_process$is_alive()) {
-      spinner_process$kill()
-    }
-    mq$remove()
-    sem$remove()
-    return(NULL)
-  }
-
   list(
     spinner_id = spinner_id,
     mq = mq,
@@ -210,7 +190,7 @@ with_spinner <- function(expr, msg = 'Running: {.expr}') {
   rlang::quo_get_expr(expr_quo) |>
     deparse() |>
     (\(str) {
-      paste0(trimws(str[if (trimws(str[1]) == "{") 2 else 1]), ", ...")
+      paste0(trimws(str[if (trimws(str[1]) == "{") 2 else 1]))
     })() |>
     (\(display) {
       tryCatch(
@@ -219,10 +199,42 @@ with_spinner <- function(expr, msg = 'Running: {.expr}') {
       )
     })() |>
     (\(formatted_msg) {
-      spinner(
-        \() rlang::eval_tidy(expr_quo, env = rlang::caller_env()),
-        msg = formatted_msg,
-        formatted = TRUE
+      tryCatch(
+        {
+          # Capture any print output from the expression
+          output_capture <- utils::capture.output(
+            {
+              result <- spinner(
+                \() rlang::eval_tidy(expr_quo, env = rlang::caller_env()),
+                msg = formatted_msg,
+                formatted = TRUE
+              )
+            },
+            type = "output"
+          )
+          has_output <- length(output_capture) > 0 && !all(output_capture == "")
+
+          if (has_output) {
+            for (line in output_capture) {
+              if (line != "") {
+                zephyr::msg_info(line)
+              }
+            }
+          } else {
+            zephyr::msg_success(formatted_msg)
+          }
+
+          result
+        },
+        warning = function(w) {
+          zephyr::msg_warning(formatted_msg)
+          warning(w)
+          NULL
+        },
+        error = function(e) {
+          zephyr::msg_danger(formatted_msg)
+          stop(e)
+        }
       )
     })()
 }
