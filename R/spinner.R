@@ -30,7 +30,7 @@
 #' Start a spinner process to indicate work in progress on the CLI.
 #'
 #' @param msg Message to display alongside spinner
-#' @param timeout Timeout in miliseconds
+#' @param timeout Timeout in milliseconds
 #' @return A list containing spinner context information
 #' @keywords internal
 #' @examplesIf FALSE
