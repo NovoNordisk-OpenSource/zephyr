@@ -32,12 +32,11 @@ test_that("with_spinner handles warnings correctly", {
 test_that("with_spinner zephyr messaging", {
   output <- capture.output(
     {
-      one <- {
+      one <- with_spinner({
         Sys.sleep(1)
         print('hello')
         1
-      } |>
-        with_spinner()
+      })
     },
     type = "message"
   )
@@ -48,34 +47,37 @@ test_that("with_spinner zephyr messaging", {
 })
 
 test_that("spinner handles successful execution", {
-  result <- {
+  result <- with_spinner({
     Sys.sleep(1)
     1 + 1
-  } |>
-    with_spinner()
-
+  })
   expect_equal(result, 2)
 })
 
 test_that("spinner handles errors correctly", {
   expect_error(
-    {
+    with_spinner({
       Sys.sleep(1)
       stop()
-    } |>
-      with_spinner()
+    })
   )
 })
 
+test_that("spinner handles warnings correctly", {
+  expect_warning(
+    with_spinner({
+      Sys.sleep(1)
+      warning()
+    })
+  )
+})
 
 test_that('with_spinner - no msg', {
-  one <- {
+  one <- with_spinner({
     Sys.sleep(1)
     Sys.sleep(1)
-
     1
-  } |>
-    with_spinner()
+  })
   expect_equal(one, 1)
 })
 
