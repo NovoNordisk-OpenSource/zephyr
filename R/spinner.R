@@ -15,11 +15,11 @@
     utils::flush.console()
     idx <- (idx %% 4) + 1
     if (
-      !is.null(mq$receive(timeout_ms = 100)) &&
+      !is.null(mq$receive(timeout_ms = 250)) &&
         (mq$receive(timeout_ms = 0) == "STOP")
     ) {
       cat("\r", strrep(" ", nchar(text) + 10), "\r", sep = "")
-      status <- mq$receive(timeout_ms = 100)
+      status <- mq$receive(timeout_ms = 250)
       cat(
         if (!is.null(status)) {
           paste0(status, " ", text)
@@ -175,16 +175,14 @@ spinner <- function(x = NULL, msg = NULL, formatted = FALSE) {
         " (Session non-interactive -> spinner disabled)"
       )
       zephyr::msg_info(non_interactive_msg)
-      return(x())
+    } else {
+      rlang::check_installed('callr')
+      rlang::check_installed('interprocess')
+      ctx <- start_spinner(formatted_msg)
     }
-    rlang::check_installed('callr')
-    rlang::check_installed('interprocess')
-    ctx <- start_spinner(formatted_msg)
-    on.exit(stop_spinner(ctx), add = TRUE)
-    return(x())
-  } else {
-    return(x())
   }
+  withr::defer(stop_spinner(ctx = if (exists('ctx')) ctx else NULL))
+  return(x())
 }
 #' `spinner` wrapper to avoid LHS priority eval limitations with `|>`
 #'
@@ -192,7 +190,7 @@ spinner <- function(x = NULL, msg = NULL, formatted = FALSE) {
 #' with a custom message.
 #'
 #' @param expr The expression to evaluate
-#' @param msg The message to display alongside the spinner
+#' @param msg The message to display alongside the spinner default is `'Running: {.expr}'`
 #' @return The result of evaluating `expr`
 #' @examples
 #' #' # Simple delay with spinner
@@ -207,15 +205,24 @@ spinner <- function(x = NULL, msg = NULL, formatted = FALSE) {
 #' }, "Processing complex operation")
 #' @export
 with_spinner <- function(expr, msg = 'Running: {.expr}') {
-  msg <- glue::glue(
-    msg,
-    .expr = deparse(substitute(expr)) |> paste(collapse = " "),
-    .open = "{",
-    .close = "}"
-  )
-  spinner(
-    \() rlang::eval_tidy(rlang::enquo(expr), env = rlang::caller_env()),
-    msg = msg,
-    formatted = TRUE
-  )
+  expr_quo <- rlang::enquo(expr)
+
+  rlang::quo_get_expr(expr_quo) |>
+    deparse() |>
+    (\(str) {
+      paste0(trimws(str[if (trimws(str[1]) == "{") 2 else 1]), ", ...")
+    })() |>
+    (\(display) {
+      tryCatch(
+        glue::glue(msg, .expr = display, .open = "{", .close = "}"),
+        error = \(e) paste0("Running: ", display)
+      )
+    })() |>
+    (\(formatted_msg) {
+      spinner(
+        \() rlang::eval_tidy(expr_quo, env = rlang::caller_env()),
+        msg = formatted_msg,
+        formatted = TRUE
+      )
+    })()
 }

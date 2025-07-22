@@ -9,7 +9,7 @@ with_spinner(expr, msg = "Running: {.expr}")
 \arguments{
 \item{expr}{The expression to evaluate}
 
-\item{msg}{The message to display alongside the spinner}
+\item{msg}{The message to display alongside the spinner default is \code{'Running: {.expr}'}}
 }
 \value{
 The result of evaluating \code{expr}
