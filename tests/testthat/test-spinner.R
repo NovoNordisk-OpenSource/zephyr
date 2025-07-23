@@ -21,12 +21,11 @@ test_that("spinner - function fails properly in error", {
 
 
 test_that("with_spinner handles warnings correctly", {
-  expect_warning(
-    with_spinner({
-      Sys.sleep(1)
-      warning()
-    })
-  )
+  with_spinner({
+    Sys.sleep(1)
+    warning('hello warning')
+  }) |>
+    expect_message()
 })
 
 test_that("with_spinner zephyr messaging", {
@@ -42,7 +41,7 @@ test_that("with_spinner zephyr messaging", {
     type = "message"
   )
   if (interactive()) {
-    expect_equal(nchar(output), c(13, 14))
+    expect_equal(nchar(output), c(13, 14, 23))
   }
   expect_equal(1, one)
 })
@@ -65,10 +64,10 @@ test_that("spinner handles errors correctly", {
 })
 
 test_that("spinner handles warnings correctly", {
-  expect_warning(
+  expect_message(
     two <- with_spinner({
       Sys.sleep(1)
-      warning()
+      warning('')
       2
     })
   )

@@ -154,7 +154,7 @@ spinner <- function(x = NULL, msg = NULL, formatted = FALSE) {
         formatted_msg,
         " (Session non-interactive -> spinner disabled)"
       )
-      zephyr::msg_info(non_interactive_msg)
+      msg_info(non_interactive_msg)
     } else {
       rlang::check_installed("callr")
       rlang::check_installed("interprocess")
@@ -198,33 +198,50 @@ with_spinner <- function(expr, msg = "Running: {.expr}") {
       )
     })() |>
     (\(formatted_msg) {
-      result <- withCallingHandlers(
+      result <- tryCatch(
         {
+          warnings_collector <- local({
+            warnings <- character(0)
+            list(
+              add = function(w) {
+                warnings <<- c(warnings, conditionMessage(w))
+                invokeRestart("muffleWarning") #do we want this?
+              },
+              get = function() warnings
+            )
+          })
+
           output_capture <- utils::capture.output(
             {
-              res <- spinner(
-                \() rlang::eval_tidy(expr_quo, env = rlang::caller_env()),
-                msg = formatted_msg,
-                formatted = TRUE
+              res <- withCallingHandlers(
+                spinner(
+                  \() rlang::eval_tidy(expr_quo, env = rlang::caller_env()),
+                  msg = formatted_msg,
+                  formatted = TRUE
+                ),
+                warning = warnings_collector$add
               )
             },
             type = "output"
           )
 
-          if (length(output_capture) > 0 && !all(output_capture == "")) {
-            output_capture[output_capture != ""] |>
-              lapply(zephyr::msg_info)
-          } else {
-            zephyr::msg_success(formatted_msg)
+          warning_messages <- warnings_collector$get()
+
+          if (length(output_capture != 0)) {
+            output_capture |>
+              lapply(msg_info)
           }
 
+          if (length(warning_messages != 0)) {
+            warning_messages |>
+              lapply(msg_warning)
+          }
+
+          msg_success(formatted_msg)
           res
         },
-        warning = function(w) {
-          zephyr::msg_warning(formatted_msg)
-        },
         error = function(e) {
-          zephyr::msg_danger(formatted_msg)
+          msg_danger(formatted_msg)
           stop(e)
         }
       )
