@@ -28,3 +28,4 @@ reference:
       Other utility functions used across our packages.
     contents:
       - report_checkmate_assertions
+      - with_spinner
