@@ -186,7 +186,6 @@ spinner <- function(x = NULL, msg = NULL, formatted = FALSE) {
 #' @export
 with_spinner <- function(expr, msg = "Running: {.expr}") {
   expr_quo <- rlang::enquo(expr)
-
   rlang::quo_get_expr(expr_quo) |>
     deparse() |>
     (\(str) {
@@ -199,12 +198,11 @@ with_spinner <- function(expr, msg = "Running: {.expr}") {
       )
     })() |>
     (\(formatted_msg) {
-      tryCatch(
+      result <- withCallingHandlers(
         {
-          # Capture any print output from the expression
           output_capture <- utils::capture.output(
             {
-              result <- spinner(
+              res <- spinner(
                 \() rlang::eval_tidy(expr_quo, env = rlang::caller_env()),
                 msg = formatted_msg,
                 formatted = TRUE
@@ -212,29 +210,25 @@ with_spinner <- function(expr, msg = "Running: {.expr}") {
             },
             type = "output"
           )
-          has_output <- length(output_capture) > 0 && !all(output_capture == "")
 
-          if (has_output) {
-            for (line in output_capture) {
-              if (line != "") {
-                zephyr::msg_info(line)
-              }
-            }
+          if (length(output_capture) > 0 && !all(output_capture == "")) {
+            output_capture[output_capture != ""] |>
+              lapply(zephyr::msg_info)
           } else {
             zephyr::msg_success(formatted_msg)
           }
 
-          result
+          res
         },
         warning = function(w) {
           zephyr::msg_warning(formatted_msg)
-          warning(w)
-          NULL
         },
         error = function(e) {
           zephyr::msg_danger(formatted_msg)
           stop(e)
         }
       )
+
+      result
     })()
 }

@@ -35,13 +35,14 @@ test_that("with_spinner zephyr messaging", {
       one <- with_spinner({
         Sys.sleep(1)
         print("hello")
+        print('world!')
         1
       })
     },
     type = "message"
   )
   if (interactive()) {
-    expect_equal(nchar(output), 13)
+    expect_equal(nchar(output), c(13, 14))
   }
   expect_equal(1, one)
 })
@@ -65,11 +66,13 @@ test_that("spinner handles errors correctly", {
 
 test_that("spinner handles warnings correctly", {
   expect_warning(
-    with_spinner({
+    two <- with_spinner({
       Sys.sleep(1)
       warning()
+      2
     })
   )
+  expect_equal(two, 2)
 })
 
 test_that("with_spinner - no msg", {
