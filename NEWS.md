@@ -1,6 +1,7 @@
-# zephyr dev
+# zephyr 0.1.3
 
-* Add upload of coverage results to codecov.io.
+* Added new default argument to `get_option()`.
+* Added upload of coverage results to codecov.io.
 
 # zephyr 0.1.2
 
