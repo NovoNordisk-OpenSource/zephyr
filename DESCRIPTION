@@ -25,7 +25,6 @@ Imports:
     rlang (>= 1.0.0)
 Suggests: 
     callr,
-    checkmate,
     devtools,
     knitr,
     rmarkdown,

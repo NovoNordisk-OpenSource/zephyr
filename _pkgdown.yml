@@ -23,8 +23,3 @@ reference:
       - create_option
       - get_option
       - list_options
-  - title: Utilities
-    description: |
-      Other utility functions used across our packages.
-    contents:
-      - report_checkmate_assertions
