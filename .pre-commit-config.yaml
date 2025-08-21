@@ -12,6 +12,7 @@ repos:
           - glue
           - rlang
           - callr
+          - checkmate
           - devtools
           - knitr
           - rmarkdown

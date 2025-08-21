@@ -1,9 +1,7 @@
 # zephyr 0.1.3
 
-* Added new `default` argument to `get_option()`.
+* Added new default argument to `get_option()`.
 * Added upload of coverage results to codecov.io.
-* Removed `report_checkmate_assertions()` since it was not used by dependent packages,
-and should be considered out of scope for zephyr.
 
 # zephyr 0.1.2
 
