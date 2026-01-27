@@ -1,7 +1,11 @@
-# zephyr dev
+# zephyr (development version)
 
-* Added a `with_spinner()` functionality.  
-* Add upload of coverage results to codecov.io.
+* Added a `with_spinner()` functionality. 
+
+# zephyr 0.1.3
+
+* Added new default argument to `get_option()`.
+* Added upload of coverage results to codecov.io.
 
 # zephyr 0.1.2
 

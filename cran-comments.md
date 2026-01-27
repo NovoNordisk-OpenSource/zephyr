@@ -2,4 +2,5 @@
 
 0 errors | 0 warnings | 0 note
 
-* This is a patch release to fix a bug in the package.
+* Patch release adding a new default argument to `get_option()`.
+

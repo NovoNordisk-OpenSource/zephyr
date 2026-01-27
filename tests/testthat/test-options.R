@@ -23,7 +23,6 @@ test_that("create_option", {
 })
 
 test_that("get_option", {
-
   get_option("does_not_exist", NULL) |>
     expect_null()
 
@@ -89,6 +88,21 @@ test_that("get_option - advanced use cases", {
     expect_true(is.function(f))
     expect_equal(f(1), 11)
   })
+})
+
+test_that("get_option - unset", {
+  get_option(
+    name = "my_unset_option",
+    .envir = "mypkg",
+    default = "my_default_value"
+  ) |>
+    expect_equal("my_default_value")
+
+  get_option(
+    name = "my_unset_option",
+    .envir = "mypkg",
+  ) |>
+    expect_null()
 })
 
 test_that("zephyr options", {
