@@ -1,0 +1,200 @@
+# zephyr
+
+The zephyr package provides small functionalities for developers of R
+packages to inform users about progress and issues, while at the same
+time allowing the users to easily configure the amount of information
+they want to receive.
+
+zephyr also has utilities to create, get, and document options used in
+your packages.
+
+The zephyr package is designed and intended for use within other R
+packages developed and published under the [Novo Nordisk Open
+Source](https://novonordisk-opensource.github.io/R-packages/) ecosystem.
+
+For packages outside our ecosystem, we recommend using the
+[options](https://cran.r-project.org/package=options) package  
+instead for a more complete implementation of package options.
+
+## Installation
+
+``` r
+# Install the released version from CRAN:
+install.packages("zephyr")
+# Install the development version from GitHub:
+pak::pak("NovoNordisk-OpenSource/zephyr")
+```
+
+## Use zephyr
+
+The easiest way to use zephyr in your package is to set it up with the
+[`use_zephyr()`](https://novonordisk-opensource.github.io/zephyr/reference/use_zephyr.md)
+function.
+
+This creates a new script `R/{pkgname}-options.R` with all the relevant
+boilerplate code to use zephyr options in the package.
+
+It adds the `verbosity_level` option, that the user can change to
+configure the amount of information. For more information and the
+different levels see
+[`?verbosity_level`](https://novonordisk-opensource.github.io/zephyr/reference/verbosity_level.md).
+
+New options in your package can be added with
+[`create_option()`](https://novonordisk-opensource.github.io/zephyr/reference/create_option.md)
+and used afterwards with
+[`get_option()`](https://novonordisk-opensource.github.io/zephyr/reference/get_option.md)
+inside your functions. Documentation is automatically generated with
+[`list_options()`](https://novonordisk-opensource.github.io/zephyr/reference/list_options.md).
+
+## Messages and verbosity
+
+The backbone of zephyr is the
+[`msg()`](https://novonordisk-opensource.github.io/zephyr/reference/msg.md)
+and friends functions. They are to be used inside your functions to give
+consistent levels of information to your users.
+
+The main functions are:
+
+- [`msg_success()`](https://novonordisk-opensource.github.io/zephyr/reference/msg.md):
+  To show the success of a long or complicated operation.
+- [`msg_danger()`](https://novonordisk-opensource.github.io/zephyr/reference/msg.md):
+  To show a failed operation. Note this is not throwing an error. Use
+  [`cli::cli_abort()`](https://cli.r-lib.org/reference/cli_abort.html)
+  in that case.
+- [`msg_warning()`](https://novonordisk-opensource.github.io/zephyr/reference/msg.md):
+  To indicate a warning.
+- [`msg_info()`](https://novonordisk-opensource.github.io/zephyr/reference/msg.md):
+  To give detailed information.
+- [`msg_debug()`](https://novonordisk-opensource.github.io/zephyr/reference/msg.md):
+  To give debugging information.
+
+These functions are already wrapped around the appropriate {cli}
+functions and the relevant `verbosity_level`.
+
+### Example
+
+Let’s say we have a function that does some long and complicated
+calculations, and creates some output. We want to use zephyr
+[`msg()`](https://novonordisk-opensource.github.io/zephyr/reference/msg.md)
+functions to inform the user of the progress and the result.
+
+A skeleton to use for that function could be the `foo()` function below:
+
+``` r
+foo <- function() {
+  msg_debug("Some important debug information about the function")
+  msg_info("Starting calculations")
+
+  result <- 1 + 1 # Replace with long calculations and how to create output
+
+  if (result == 2) {
+    msg_success("Output created")
+  } else {
+    msg_danger("Output not created correctly")
+  }
+
+  return(result)
+}
+```
+
+Here we first provide some debugging information if requested. Then we
+inform that the calculations are starting. After the calculations, we
+inform the user if the output was created correctly or not.
+
+The default `verbosity_level` in zephyr is `verbose` which displays all
+messages expect debugging:
+
+``` r
+foo()
+#> ℹ Starting calculations
+#> ✔ Output created
+#> [1] 2
+```
+
+With `verbosity_level = "minimal"` only
+[`msg_success()`](https://novonordisk-opensource.github.io/zephyr/reference/msg.md)
+and
+[`msg_danger()`](https://novonordisk-opensource.github.io/zephyr/reference/msg.md)
+messages are shown:
+
+``` r
+withr::with_options(
+  new = list(zephyr.verbosity_level = "minimal"),
+  code = foo()
+)
+#> ✔ Output created
+#> [1] 2
+```
+
+And they can be turned off completely with `verbosity_level = "quiet"`,
+while `verbosity_level = "debug"` gives all messages:
+
+``` r
+withr::with_options(
+  new = list(zephyr.verbosity_level = "quiet"),
+  code = foo()
+)
+#> [1] 2
+
+withr::with_options(
+  new = list(zephyr.verbosity_level = "debug"),
+  code = foo()
+)
+#> → Some important debug information about the function
+#> ℹ Starting calculations
+#> ✔ Output created
+#> [1] 2
+```
+
+# Package index
+
+## Messages and verbosity levels
+
+Functions to provide consistent messages to users across our packages,
+including the handling of different levels of verbosity, and utility
+functions to retrieve the current verbosity level.
+
+- [`msg()`](https://novonordisk-opensource.github.io/zephyr/reference/msg.md)
+  [`msg_verbose()`](https://novonordisk-opensource.github.io/zephyr/reference/msg.md)
+  [`msg_debug()`](https://novonordisk-opensource.github.io/zephyr/reference/msg.md)
+  [`msg_success()`](https://novonordisk-opensource.github.io/zephyr/reference/msg.md)
+  [`msg_danger()`](https://novonordisk-opensource.github.io/zephyr/reference/msg.md)
+  [`msg_warning()`](https://novonordisk-opensource.github.io/zephyr/reference/msg.md)
+  [`msg_info()`](https://novonordisk-opensource.github.io/zephyr/reference/msg.md)
+  : Write messages based on verbosity level
+- [`verbosity_level`](https://novonordisk-opensource.github.io/zephyr/reference/verbosity_level.md)
+  : Verbosity level to control package behavior
+- [`get_verbosity_level()`](https://novonordisk-opensource.github.io/zephyr/reference/get_verbosity_level.md)
+  : Get verbosity level
+- [`get_all_verbosity_levels()`](https://novonordisk-opensource.github.io/zephyr/reference/get_all_verbosity_levels.md)
+  : Get all verbosity levels
+
+## Options
+
+Functions to create and use package specific options. This framework is
+heavily inspired by the
+[options](https://cran.r-project.org/package=options) package. For
+packages outside our ecosystem, we recommend using options instead for a
+more complete implementation.
+
+- [`use_zephyr()`](https://novonordisk-opensource.github.io/zephyr/reference/use_zephyr.md)
+  : Use zephyr options and verbosity levels
+- [`create_option()`](https://novonordisk-opensource.github.io/zephyr/reference/create_option.md)
+  : Create package option
+- [`get_option()`](https://novonordisk-opensource.github.io/zephyr/reference/get_option.md)
+  : Get value of package option
+- [`list_options()`](https://novonordisk-opensource.github.io/zephyr/reference/list_options.md)
+  : List package options
+
+## Utilities
+
+Other utility functions used across our packages.
+
+- [`report_checkmate_assertions()`](https://novonordisk-opensource.github.io/zephyr/reference/report_checkmate_assertions.md)
+  : Report collection of assertions
+
+- [`with_spinner()`](https://novonordisk-opensource.github.io/zephyr/reference/with_spinner.md)
+  :
+
+  `spinner` wrapper to avoid LHS priority eval limitations with `|>`
+
