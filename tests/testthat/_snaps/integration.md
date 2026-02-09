@@ -17,6 +17,13 @@
       testpkg)
     Output
       ℹ Loading testpkg
+      ✖ testpkg-options.R:10: @details Could not resolve link to topic
+        "testpkg-options" in the dependencies or base packages.
+      ℹ If you haven't documented "testpkg-options" yet, or just changed its name,
+        this is normal. Once "testpkg-options" is documented, this warning goes away.
+      ℹ Make sure that the name of the topic is spelled correctly.
+      ℹ Always list the linked package as a dependency.
+      ℹ Alternatively, you can fully qualify the link with a package name.
       Writing 'NAMESPACE'
       Writing 'greet.Rd'
       Writing 'testpkg-options.Rd'

@@ -122,7 +122,7 @@ get_option <- function(
     return(NULL)
   }
 
-  if (!is.character(name) || length(name) > 1) {
+  if (!is.character(name) || length(name) != 1) {
     cli::cli_abort(
       "{.var name} must be of class {.cls character} and length {.val 1}"
     )
@@ -148,6 +148,52 @@ get_option <- function(
       fix_env_class(default = default),
     default
   )
+}
+
+#' Set value of package option
+#' @description
+#' Sets the value of a zephyr option. This is a convenience wrapper around
+#' [options()] that handles the option naming convention.
+#'
+#' The option is set as `{pkgname}.{name}` (lowercase).
+#'
+#' @inheritParams get_option
+#' @param value Value to set for the option. Use `NULL` to unset previously set R option.
+#' @returns Invisible previous value of the option (from [get_option()])
+#' @examplesIf FALSE
+#' # example code
+#' set_option(name = "my_option", value = "my_value", .envir = "my_pkg")
+#'
+#' @export
+set_option <- function(name, value, .envir = parent.frame()) {
+  if (!is.character(name) || length(name) != 1) {
+    cli::cli_abort(
+      "{.var name} must be of class {.cls character} and length {.val 1}"
+    )
+  }
+
+  env <- envname(.envir)
+
+  if (is.null(env)) {
+    cli::cli_abort(
+      "Could not determine package name from {.var .envir}"
+    )
+  }
+
+  defined_options <- names(list_options(as = "list", .envir = .envir))
+  if (!name %in% defined_options) {
+    cli::cli_abort(
+      "Option {.val {name}} is not defined in {.val {env}}."
+    )
+  }
+
+  old <- get_option(name = name, .envir = .envir)
+
+  args <- list(value)
+  names(args) <- paste(env, name, sep = ".") |> tolower()
+  do.call(options, args)
+
+  invisible(old)
 }
 
 #' List package options

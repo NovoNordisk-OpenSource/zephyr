@@ -21,7 +21,7 @@ enabling you to control the verbosity of your package functions using
 the \link{msg} functions.
 }
 \examples{
-\dontshow{if (FALSE) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (FALSE) withAutoprint(\{ # examplesIf}
 use_zephyr()
 \dontshow{\}) # examplesIf}
 }

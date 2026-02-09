@@ -27,7 +27,7 @@ environment of your package.
 For more information and how to get started see \code{\link[=use_zephyr]{use_zephyr()}}.
 }
 \examples{
-\dontshow{if (FALSE) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (FALSE) withAutoprint(\{ # examplesIf}
 create_option(
   name = "answer",
   default = 42,
