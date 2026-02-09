@@ -112,8 +112,9 @@ get_verbosity_level <- function(.envir = sys.function(which = -1)) {
 #'
 #' @param level `[character(1)]` Verbosity level to set. Must be one of
 #' `"quiet"`, `"minimal"`, `"verbose"`, or `"debug"`.
-#' @inheritParams get_verbosity_level
-#' @returns Invisible `[character(1)]` of the previous verbosity lebel.
+#' @param .envir Environment in which the options are defined.
+#' Default `zephyr` is suitable to affect all packages using zephyr.
+#' @returns Invisible `[character(1)]` of the previous verbosity level.
 #' @examplesIf FALSE
 #' # Set verbosity level to minimal for zephyr
 #' set_verbosity_level("minimal")

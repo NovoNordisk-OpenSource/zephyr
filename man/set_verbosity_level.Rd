@@ -14,10 +14,10 @@ set_verbosity_level(
 \code{"quiet"}, \code{"minimal"}, \code{"verbose"}, or \code{"debug"}.}
 
 \item{.envir}{Environment in which the options are defined.
-Default is suitable for use inside your package.}
+Default \code{zephyr} is suitable to affect all packages using zephyr.}
 }
 \value{
-Invisible \verb{[character(1)]} of the previous verbosity lebel.
+Invisible \verb{[character(1)]} of the previous verbosity level.
 }
 \description{
 Sets the verbosity level for a package. This is a convenience wrapper around
