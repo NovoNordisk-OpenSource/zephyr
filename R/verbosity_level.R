@@ -15,7 +15,7 @@
 #' in your package and its functions.
 #'
 #' Verbosity level is a special kind of option that can be scoped both for a
-#' specific package and and globally for the ecosystem
+#' specific package and globally for the ecosystem
 #' (assigned to the zephyr package).
 #' It can be set using either R `options()` or environment variables.
 #'
