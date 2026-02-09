@@ -20,7 +20,7 @@
 #' It can be set using either R `options()` or environment variables.
 #'
 #' Verbosity level is retrieved using the [get_verbosity_level()] function.
-#' Since the level can have multiples scopes, the following hierarchy is used:
+#' Since the level can have multiple scopes, the following hierarchy is used:
 #'
 #' 1. Package specific option: `{pkgname}.verbosity_level`
 #' 1. Package specific environment variable: `R_{PKGNAME}_VERBOSITY_LEVEL`

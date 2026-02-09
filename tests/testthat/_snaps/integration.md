@@ -7,7 +7,7 @@
       
       ── Setting up zephyr ───────────────────────────────────────────────────────────
       ℹ Add new options with `zephyr::create_option()`.
-      ℹ And reuse their documentation with in functions with `@inheritParams testpkg-options-params`.
+      ℹ And reuse their documentation within functions with `@inheritParams testpkg-options-params`.
       ℹ Run `devtools::document()` to update documentation.
 
 ---

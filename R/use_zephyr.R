@@ -37,7 +37,7 @@ use_zephyr <- function() {
 
   cli::cli_alert_info("Add new options with {.code zephyr::create_option()}.")
   cli::cli_alert_info(
-    "And reuse their documentation with in functions with {.code @inheritParams {pkgname}-options-params}." # nolint: line_length_linter
+    "And reuse their documentation within functions with {.code @inheritParams {pkgname}-options-params}." # nolint: line_length_linter
   )
   cli::cli_alert_info(
     "Run {.run devtools::document()} to update documentation."
