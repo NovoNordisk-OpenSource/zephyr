@@ -8,10 +8,10 @@ envname <- function(.envir) {
     if (nchar(environmentName(.envir)) > 0) {
       .envir <- environmentName(.envir)
     } else {
-      .envir <- environmentName(parent.env(.envir))
+      .envir <- environmentName(topenv(.envir))
     }
   }
-  if (!is.character(.envir) || .envir == "") {
+  if (!is.character(.envir) || .envir == "" || .envir == "R_GlobalEnv") {
     return(NULL)
   }
   return(.envir)
