@@ -20,7 +20,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Aksel Thomsen \email{oath@novonordisk.com}
+\strong{Maintainer}: Aksel Thomsen \email{oath@novonordisk.com} (\href{https://orcid.org/0009-0006-0633-4070}{ORCID})
 
 Authors:
 \itemize{

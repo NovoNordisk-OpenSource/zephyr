@@ -157,3 +157,28 @@ test_that("list_options", {
     cat() |>
     expect_snapshot()
 })
+
+test_that("set_option", {
+  testenv <- simulate_package_env("testenv")
+  create_option(name = "test_option", default = 42, .envir = testenv)
+
+  set_option(name = "test_option", value = 100, .envir = testenv) |>
+    expect_invisible() |>
+    expect_equal(42)
+
+  get_option(name = "test_option", .envir = testenv) |>
+    expect_equal(100)
+
+  set_option(name = "test_option", value = NULL, .envir = testenv)
+
+  get_option(name = "test_option", .envir = testenv) |>
+    expect_equal(42)
+
+  expect_error(set_option(name = 1, value = "x", .envir = testenv))
+  expect_error(set_option(name = c("a", "b"), value = "x", .envir = testenv))
+  expect_error(set_option(name = "test", value = 1, .envir = NULL))
+  expect_error(
+    set_option(name = "undefined_option", value = "x", .envir = testenv),
+    "not defined"
+  )
+})

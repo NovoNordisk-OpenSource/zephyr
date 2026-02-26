@@ -15,12 +15,12 @@
 #' in your package and its functions.
 #'
 #' Verbosity level is a special kind of option that can be scoped both for a
-#' specific package and and globally for the ecosystem
+#' specific package and globally for the ecosystem
 #' (assigned to the zephyr package).
 #' It can be set using either R `options()` or environment variables.
 #'
 #' Verbosity level is retrieved using the [get_verbosity_level()] function.
-#' Since the level can have multiples scopes, the following hierarchy is used:
+#' Since the level can have multiple scopes, the following hierarchy is used:
 #'
 #' 1. Package specific option: `{pkgname}.verbosity_level`
 #' 1. Package specific environment variable: `R_{PKGNAME}_VERBOSITY_LEVEL`
@@ -103,6 +103,29 @@ get_verbosity_level <- function(.envir = sys.function(which = -1)) {
     get_option(name = "verbosity_level", .envir = "zephyr")
   ) |>
     validate_verbosity_level()
+}
+
+#' Set verbosity level
+#' @description
+#' Sets the verbosity level for a package. This is a convenience wrapper around
+#' [set_option()] for the `verbosity_level` option.
+#'
+#' @param level `[character(1)]` Verbosity level to set. Must be one of
+#' `"quiet"`, `"minimal"`, `"verbose"`, or `"debug"`.
+#' @param .envir Environment in which the options are defined.
+#' Default `zephyr` is suitable to affect all packages using zephyr.
+#' @returns Invisible `[character(1)]` of the previous verbosity level.
+#' @examplesIf FALSE
+#' # Set verbosity level to minimal for zephyr
+#' set_verbosity_level("minimal")
+#'
+#' @export
+set_verbosity_level <- function(
+  level = c("quiet", "minimal", "verbose", "debug"),
+  .envir = "zephyr"
+) {
+  level <- rlang::arg_match(level)
+  set_option(name = "verbosity_level", value = level, .envir = .envir)
 }
 
 #' @noRd

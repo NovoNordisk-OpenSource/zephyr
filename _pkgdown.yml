@@ -11,6 +11,7 @@ reference:
       - msg
       - verbosity_level
       - get_verbosity_level
+      - set_verbosity_level
       - get_all_verbosity_levels
   - title: Options
     description: |
@@ -22,6 +23,7 @@ reference:
       - use_zephyr
       - create_option
       - get_option
+      - set_option
       - list_options
   - title: Utilities
     description: |

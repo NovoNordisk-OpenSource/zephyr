@@ -20,12 +20,12 @@ See \code{\link[=use_zephyr]{use_zephyr()}} and \link{msg} for how to implement 
 in your package and its functions.
 
 Verbosity level is a special kind of option that can be scoped both for a
-specific package and and globally for the ecosystem
+specific package and globally for the ecosystem
 (assigned to the zephyr package).
 It can be set using either R \code{options()} or environment variables.
 
 Verbosity level is retrieved using the \code{\link[=get_verbosity_level]{get_verbosity_level()}} function.
-Since the level can have multiples scopes, the following hierarchy is used:
+Since the level can have multiple scopes, the following hierarchy is used:
 \enumerate{
 \item Package specific option: \verb{\{pkgname\}.verbosity_level}
 \item Package specific environment variable: \verb{R_\{PKGNAME\}_VERBOSITY_LEVEL}

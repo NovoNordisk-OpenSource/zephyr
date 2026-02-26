@@ -1,3 +1,8 @@
+# zephyr (development version)
+
+* Added `set_option()` for setting package options programmatically.
+* Added `set_verbosity_level()` as a convenience wrapper for setting verbosity level.
+
 # zephyr 0.1.3
 
 * Added new default argument to `get_option()`.

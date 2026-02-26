@@ -130,3 +130,13 @@ test_that("get_all_verbosity_levels", {
       )
   })
 })
+
+test_that("set_verbosity_level", {
+  withr::local_options(list(zephyr.verbosity_level = "minimal"))
+
+  set_verbosity_level(level = "quiet", .envir = "zephyr") |>
+    expect_equal("minimal")
+
+  get_verbosity_level(.envir = "zephyr") |>
+    expect_equal("quiet")
+})
