@@ -17,6 +17,7 @@ Useful links:
 ## Author
 
 **Maintainer**: Aksel Thomsen <oath@novonordisk.com>
+([ORCID](https://orcid.org/0009-0006-0633-4070))
 
 Authors:
 

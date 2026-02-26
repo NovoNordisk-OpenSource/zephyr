@@ -1,5 +1,14 @@
 # Changelog
 
+## zephyr (development version)
+
+- Added
+  [`set_option()`](https://novonordisk-opensource.github.io/zephyr/reference/set_option.md)
+  for setting package options programmatically.
+- Added
+  [`set_verbosity_level()`](https://novonordisk-opensource.github.io/zephyr/reference/set_verbosity_level.md)
+  as a convenience wrapper for setting verbosity level.
+
 ## zephyr 0.1.3
 
 CRAN release: 2025-08-22

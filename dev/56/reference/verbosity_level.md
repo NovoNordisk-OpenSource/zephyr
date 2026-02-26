@@ -22,14 +22,14 @@ for how to implement the use of verbosity levels in your package and its
 functions.
 
 Verbosity level is a special kind of option that can be scoped both for
-a specific package and and globally for the ecosystem (assigned to the
+a specific package and globally for the ecosystem (assigned to the
 zephyr package). It can be set using either R
 [`options()`](https://rdrr.io/r/base/options.html) or environment
 variables.
 
 Verbosity level is retrieved using the
 [`get_verbosity_level()`](https://novonordisk-opensource.github.io/zephyr/reference/get_verbosity_level.md)
-function. Since the level can have multiples scopes, the following
+function. Since the level can have multiple scopes, the following
 hierarchy is used:
 
 1.  Package specific option: `{pkgname}.verbosity_level`

@@ -3,6 +3,7 @@
 ## Authors
 
 - **Aksel Thomsen**. Author, maintainer.
+  [](https://orcid.org/0009-0006-0633-4070)
 
 - **Mathias Lerbech Jeppesen**. Author.
 
@@ -25,12 +26,12 @@ Source:
 
 Thomsen A, Jeppesen M, Girard C, Troejelsgaard K, Gakava L, Larsen S,
 Obucina V (2026). *zephyr: Structured Messages and Options*. R package
-version 0.1.3, <https://novonordisk-opensource.github.io/zephyr/>.
+version 0.1.3.9000, <https://novonordisk-opensource.github.io/zephyr/>.
 
     @Manual{,
       title = {zephyr: Structured Messages and Options},
       author = {Aksel Thomsen and Mathias Lerbech Jeppesen and Cervan Girard and Kristian Troejelsgaard and Lovemore Gakava and Steffen Falgreen Larsen and Vladimir Obucina},
       year = {2026},
-      note = {R package version 0.1.3},
+      note = {R package version 0.1.3.9000},
       url = {https://novonordisk-opensource.github.io/zephyr/},
     }

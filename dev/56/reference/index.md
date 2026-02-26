@@ -18,6 +18,8 @@ functions to retrieve the current verbosity level.
   : Verbosity level to control package behavior
 - [`get_verbosity_level()`](https://novonordisk-opensource.github.io/zephyr/reference/get_verbosity_level.md)
   : Get verbosity level
+- [`set_verbosity_level()`](https://novonordisk-opensource.github.io/zephyr/reference/set_verbosity_level.md)
+  : Set verbosity level
 - [`get_all_verbosity_levels()`](https://novonordisk-opensource.github.io/zephyr/reference/get_all_verbosity_levels.md)
   : Get all verbosity levels
 
@@ -35,6 +37,8 @@ more complete implementation.
   : Create package option
 - [`get_option()`](https://novonordisk-opensource.github.io/zephyr/reference/get_option.md)
   : Get value of package option
+- [`set_option()`](https://novonordisk-opensource.github.io/zephyr/reference/set_option.md)
+  : Set value of package option
 - [`list_options()`](https://novonordisk-opensource.github.io/zephyr/reference/list_options.md)
   : List package options
 
