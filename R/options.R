@@ -139,11 +139,9 @@ get_option <- function(
   }
 
   coalesce_dots(
-    paste(env, name, sep = ".") |>
-      tolower() |>
+    create_option_name(env, name) |>
       getOption(),
-    paste("R", env, name, sep = "_") |>
-      toupper() |>
+    create_envvar_name(env, name) |>
       sys_getenv() |>
       fix_env_class(default = default),
     default
@@ -190,7 +188,7 @@ set_option <- function(name, value, .envir = parent.frame()) {
   old <- get_option(name = name, .envir = .envir)
 
   args <- list(value)
-  names(args) <- paste(env, name, sep = ".") |> tolower()
+  names(args) <- create_option_name(env, name)
   do.call(options, args)
 
   invisible(old)
