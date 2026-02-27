@@ -6,6 +6,28 @@ test_that("envname", {
     expect_null()
 })
 
+test_that("envname should return the top level env for multilevel nested envs", {
+  # Arrange
+  devtools::load_all(
+    path = test_path("test.pkg.nested.envs"),
+    export_all = FALSE,
+    helpers = FALSE,
+    quiet = TRUE
+  )
+  withr::defer(devtools::unload("test.pkg.nested.envs"))
+
+  # Act
+  get_nested_env_child <- getExportedValue(
+    ns = "test.pkg.nested.envs",
+    name = "get_nested_env_child"
+  )
+
+  result <- get_nested_env_child() |> envname()
+
+  # Assert
+  expect_equal(result, "test.pkg.nested.envs")
+})
+
 test_that("sys_getenv", {
   sys_getenv("fake_env") |>
     expect_null()
