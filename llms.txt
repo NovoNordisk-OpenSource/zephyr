@@ -19,6 +19,7 @@ instead for a more complete implementation of package options.
 ## Installation
 
 ``` r
+
 # Install the released version from CRAN:
 install.packages("zephyr")
 # Install the development version from GitHub:
@@ -81,6 +82,7 @@ functions to inform the user of the progress and the result.
 A skeleton to use for that function could be the `foo()` function below:
 
 ``` r
+
 foo <- function() {
   msg_debug("Some important debug information about the function")
   msg_info("Starting calculations")
@@ -105,6 +107,7 @@ The default `verbosity_level` in zephyr is `verbose` which displays all
 messages expect debugging:
 
 ``` r
+
 foo()
 #> ℹ Starting calculations
 #> ✔ Output created
@@ -118,6 +121,7 @@ and
 messages are shown:
 
 ``` r
+
 withr::with_options(
   new = list(zephyr.verbosity_level = "minimal"),
   code = foo()
@@ -130,6 +134,7 @@ And they can be turned off completely with `verbosity_level = "quiet"`,
 while `verbosity_level = "debug"` gives all messages:
 
 ``` r
+
 withr::with_options(
   new = list(zephyr.verbosity_level = "quiet"),
   code = foo()
