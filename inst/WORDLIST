@@ -73,6 +73,7 @@ params
 pkgdown
 pkgload
 pkgname
+rcmd
 rdname
 renv
 rlang
