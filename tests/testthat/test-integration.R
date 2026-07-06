@@ -74,7 +74,7 @@ test_that("integration in new package", {
     libpath,
     list(p = pkg)
   ) |>
-    expect_true()
+    expect_no_error()
 
   # Use in new package
 
@@ -98,7 +98,7 @@ test_that("integration in new package", {
     libpath,
     testpkg
   ) |>
-    expect_true()
+    expect_no_error()
 })
 
 test_that("use in new package", {
