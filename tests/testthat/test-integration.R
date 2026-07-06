@@ -5,7 +5,8 @@ run_output <- function(func, extra_lib, args = list()) {
     args = args,
     show = TRUE,
     libpath = libpath,
-    spinner = FALSE
+    spinner = FALSE,
+    env = c(callr::rcmd_safe_env(), R_USER_CACHE_DIR = tempfile())
   )
 }
 
@@ -18,7 +19,8 @@ run_output_project <- function(func, extra_lib, project) {
     args = list(project = project, func = func),
     show = TRUE,
     libpath = libpath,
-    spinner = FALSE
+    spinner = FALSE,
+    env = c(callr::rcmd_safe_env(), R_USER_CACHE_DIR = tempfile())
   )
 }
 
