@@ -248,7 +248,9 @@ list_options <- function(
       vapply(
         FUN = glue::glue_data,
         FUN.VALUE = character(1),
-        "@param {name} {description}. Default: `{deparse1(default)}`.",
+        "@param {name} ",
+        "{trimws(description, which = 'right', whitespace = '[.[:space:]]')}. ",
+        "Default: `{deparse1(default)}`.",
         USE.NAMES = FALSE
       ),
     "markdown" = options |>
