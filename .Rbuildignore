@@ -10,3 +10,5 @@
 ^docs$
 ^pkgdown$
 ^zephyr\.Rproj$
+^.superpowers$
+^.claude$
