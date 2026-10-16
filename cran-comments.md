@@ -2,5 +2,4 @@
 
 0 errors | 0 warnings | 0 note
 
-* Patch release adding a new default argument to `get_option()`.
-
+* Patch release with a few quality of life improvement.
