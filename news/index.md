@@ -8,6 +8,9 @@
 - Added
   [`set_verbosity_level()`](https://novonordisk-opensource.github.io/zephyr/reference/set_verbosity_level.md)
   as a convenience wrapper for setting verbosity level.
+- `list_options(as = "params")` no longer adds an extra `.` after
+  descriptions ending with a period
+  ([\#58](https://github.com/novonordisk-opensource/zephyr/issues/58)).
 
 ## zephyr 0.1.3
 
