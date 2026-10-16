@@ -158,6 +158,19 @@ test_that("list_options", {
     expect_snapshot()
 })
 
+test_that("list_options params does not duplicate trailing period", {
+  testenv <- simulate_package_env("testenv")
+  create_option(
+    name = "test_period",
+    default = 1,
+    description = "Ends with period. ",
+    .envir = testenv
+  )
+
+  list_options(as = "params", .envir = testenv)[[2]] |>
+    expect_identical("@param test_period Ends with period. Default: `1`.")
+})
+
 test_that("set_option", {
   testenv <- simulate_package_env("testenv")
   create_option(name = "test_option", default = 42, .envir = testenv)

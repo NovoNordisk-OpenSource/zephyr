@@ -2,6 +2,8 @@
 
 * Added `set_option()` for setting package options programmatically.
 * Added `set_verbosity_level()` as a convenience wrapper for setting verbosity level.
+* `list_options(as = "params")` no longer adds an extra `.` after descriptions
+ending with a period (#58).
 
 # zephyr 0.1.3
 
