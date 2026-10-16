@@ -1,6 +1,6 @@
 # Changelog
 
-## zephyr (development version)
+## zephyr 0.1.4
 
 - Added
   [`set_option()`](https://novonordisk-opensource.github.io/zephyr/reference/set_option.md)
