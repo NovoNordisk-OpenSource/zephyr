@@ -1,6 +1,10 @@
 # Changelog
 
+## zephyr (development version)
+
 ## zephyr 0.1.4
+
+CRAN release: 2026-10-16
 
 - Added
   [`set_option()`](https://novonordisk-opensource.github.io/zephyr/reference/set_option.md)
