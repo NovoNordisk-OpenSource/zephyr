@@ -1,3 +1,5 @@
+# zephyr (development version)
+
 # zephyr 0.1.4
 
 * Added `set_option()` for setting package options programmatically.
